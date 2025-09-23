@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { AppController } from '@/app/app.controller';
+import { AppService } from '@/app/app.service';
+import { CryptoModule } from '@/crypto/crypto.module';
+import mikroOrmConfig from '@/mikro-orm.config';
 
 @Module({
-  imports: [],
+  imports: [MikroOrmModule.forRoot(mikroOrmConfig), CryptoModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -88,5 +88,16 @@
       }
     }
   },
-  "dependencies": {}
+  "scripts": {
+    "migration:create": "mikro-orm migration:create",
+    "migration:up": "mikro-orm migration:up",
+    "migration:down": "mikro-orm migration:down",
+    "migration:list": "mikro-orm migration:list",
+    "schema:create": "mikro-orm schema:create",
+    "schema:update": "mikro-orm schema:update",
+    "schema:drop": "mikro-orm schema:drop"
+  },
+  "devDependencies": {
+    "@mikro-orm/cli": "^6.5.5"
+  }
 }
