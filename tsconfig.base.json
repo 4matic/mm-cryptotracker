@@ -16,6 +16,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "customConditions": ["@mm-cryptotracker/source"]
   }
 }

@@ -5,7 +5,7 @@ import {
   OneToMany,
   Collection,
 } from '@mikro-orm/core';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { PriceHistory } from './price-history.entity';
 
 /**
  * Represents a data provider for cryptocurrency prices

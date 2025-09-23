@@ -7,8 +7,8 @@ import {
   Unique,
   Enum,
 } from '@mikro-orm/core';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { TradingPair } from './trading-pair.entity';
+import { DataProvider } from './data-provider.entity';
 
 export enum TimeInterval {
   ONE_MINUTE = '1m',

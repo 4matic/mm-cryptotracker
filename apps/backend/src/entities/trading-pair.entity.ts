@@ -7,8 +7,8 @@ import {
   Collection,
   Unique,
 } from '@mikro-orm/core';
-import { Asset } from '@/entities/asset.entity';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { Asset } from './asset.entity';
+import { PriceHistory } from './price-history.entity';
 
 /**
  * Represents a trading pair (e.g., BTC/USD, ETH/BTC)

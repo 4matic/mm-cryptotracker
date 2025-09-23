@@ -1,39 +1,49 @@
-import { defineConfig } from '@mikro-orm/core';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { Migrator } from '@mikro-orm/migrations';
-import { config } from 'dotenv';
+import 'reflect-metadata';
 import { join } from 'path';
 import { register } from 'tsconfig-paths';
+// Register tsconfig paths for alias resolution
+register({
+  baseUrl: join(__dirname, '..'),
+  paths: {
+    '@/*': ['src/*'],
+  },
+});
 
-// Register TypeScript path aliases
-// register({
-//   baseUrl: join(__dirname, ''),
-//   paths: {
-//     '@/*': ['src/*'],
-//   },
-// });
+import { config } from 'dotenv';
+import { defineConfig, ReflectMetadataProvider } from '@mikro-orm/core';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { Migrator } from '@mikro-orm/migrations';
 
-// Load environment variables from .env file
+import { Asset } from '@/entities/asset.entity';
+import { TradingPair } from '@/entities/trading-pair.entity';
+import { PriceHistory } from '@/entities/price-history.entity';
+import { DataProvider } from '@/entities/data-provider.entity';
+
 config({ path: join(__dirname, '../.env') });
+
+// Configure ts-node for proper decorator support
+// process.env.TS_NODE_PROJECT = join(__dirname, '../tsconfig.app.json');
 
 export default defineConfig({
   driver: PostgreSqlDriver,
   host: process.env.DATABASE_HOST,
+  metadataProvider: ReflectMetadataProvider,
   port: parseInt(process.env.DATABASE_PORT || '5432', 10),
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   dbName: process.env.DATABASE_NAME,
-  entities: ['apps/backend/dist/**/*.entity.js'],
-  entitiesTs: ['apps/backend/src/**/*.entity.ts'],
+  entities: [Asset, TradingPair, PriceHistory, DataProvider],
+  // entitiesTs: ['./src/entities/*.entity.ts'],
   discovery: {
     warnWhenNoEntities: true,
+    requireEntitiesArray: false,
+    alwaysAnalyseProperties: true,
   },
   debug: process.env.NODE_ENV !== 'production',
   migrations: {
-    path: 'apps/backend/dist/migrations',
-    pathTs: 'apps/backend/src/migrations',
+    path: './src/migrations',
     glob: '!(*.d).{js,ts}',
   },
   extensions: [Migrator],
-  preferTs: true,
+  // preferTs: true,
 });
