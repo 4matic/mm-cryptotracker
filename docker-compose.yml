@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cryptotracker-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cryptotracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: chee_w<a0quod5Aiphah
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./runtime/postgres-data:/var/lib/postgresql/data
+    networks:
+      - cryptotracker-network
+
+  adminer:
+    image: adminer:4-standalone
+    container_name: cryptotracker-adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: dracula
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - cryptotracker-network
+
+networks:
+  cryptotracker-network:
+    driver: bridge

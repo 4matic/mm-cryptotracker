@@ -5,6 +5,7 @@ import {
   OneToMany,
   Collection,
 } from '@mikro-orm/core';
+import { PriceHistory } from '@/entities/price-history.entity';
 
 /**
  * Represents a data provider for cryptocurrency prices
@@ -45,8 +46,8 @@ export class DataProvider {
   @Property({ type: 'timestamp', onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @OneToMany('PriceHistory', 'dataProvider')
-  priceHistories = new Collection<object>(this);
+  @OneToMany(() => PriceHistory, 'dataProvider')
+  priceHistories = new Collection<PriceHistory>(this);
 
   constructor(name: string, description?: string) {
     this.name = name;

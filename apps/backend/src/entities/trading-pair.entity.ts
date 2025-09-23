@@ -8,6 +8,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { Asset } from '@/entities/asset.entity';
+import { PriceHistory } from '@/entities/price-history.entity';
 
 /**
  * Represents a trading pair (e.g., BTC/USD, ETH/BTC)
@@ -57,8 +58,8 @@ export class TradingPair {
   @Property({ type: 'timestamp', onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @OneToMany('PriceHistory', 'tradingPair')
-  priceHistories = new Collection<object>(this);
+  @OneToMany(() => PriceHistory, 'tradingPair')
+  priceHistories = new Collection<PriceHistory>(this);
 
   constructor(baseAsset: Asset, quoteAsset: Asset) {
     this.baseAsset = baseAsset;

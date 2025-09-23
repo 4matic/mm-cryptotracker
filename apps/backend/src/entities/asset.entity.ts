@@ -5,6 +5,7 @@ import {
   OneToMany,
   Collection,
 } from '@mikro-orm/core';
+import { TradingPair } from '@/entities/trading-pair.entity';
 
 /**
  * Represents a cryptocurrency or trading asset
@@ -41,11 +42,11 @@ export class Asset {
   @Property({ type: 'timestamp', onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @OneToMany('TradingPair', 'baseAsset')
-  basePairs = new Collection<object>(this);
+  @OneToMany(() => TradingPair, 'baseAsset')
+  basePairs = new Collection<TradingPair>(this);
 
-  @OneToMany('TradingPair', 'quoteAsset')
-  quotePairs = new Collection<object>(this);
+  @OneToMany(() => TradingPair, 'quoteAsset')
+  quotePairs = new Collection<TradingPair>(this);
 
   constructor(symbol: string, name: string, description?: string) {
     this.symbol = symbol.toUpperCase();
