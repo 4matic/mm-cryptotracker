@@ -95,7 +95,9 @@
     "migration:list": "mikro-orm migration:list",
     "schema:create": "mikro-orm schema:create",
     "schema:update": "mikro-orm schema:update",
-    "schema:drop": "mikro-orm schema:drop"
+    "schema:drop": "mikro-orm schema:drop",
+    "seeder:run": "mikro-orm seeder:run",
+    "seeder:create": "mikro-orm seeder:create"
   },
   "devDependencies": {
     "@mikro-orm/cli": "^6.5.5"

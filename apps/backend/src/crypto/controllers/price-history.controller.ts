@@ -10,20 +10,19 @@ import {
   PriceHistoryService,
   PriceHistoryQuery,
 } from '@/crypto/services/price-history.service';
-import { PriceHistory, TimeInterval } from '@/entities/price-history.entity';
+import { PriceHistory } from '@/entities/price-history.entity';
 
 export class CreatePriceHistoryDto {
   tradingPairId!: number;
   dataProviderId!: number;
   timestamp!: Date;
-  openPrice!: string;
-  highPrice!: string;
-  lowPrice!: string;
-  closePrice!: string;
-  interval?: TimeInterval;
-  volume?: string;
-  volumeQuote?: string;
-  tradesCount?: number;
+  price!: string;
+}
+
+export class UpdatePriceDto {
+  tradingPairId!: number;
+  dataProviderId!: number;
+  price!: string;
 }
 
 /**
@@ -44,14 +43,21 @@ export class PriceHistoryController {
       createPriceHistoryDto.tradingPairId,
       createPriceHistoryDto.dataProviderId,
       createPriceHistoryDto.timestamp,
-      createPriceHistoryDto.openPrice,
-      createPriceHistoryDto.highPrice,
-      createPriceHistoryDto.lowPrice,
-      createPriceHistoryDto.closePrice,
-      createPriceHistoryDto.interval,
-      createPriceHistoryDto.volume,
-      createPriceHistoryDto.volumeQuote,
-      createPriceHistoryDto.tradesCount
+      createPriceHistoryDto.price
+    );
+  }
+
+  /**
+   * Updates price for a trading pair
+   */
+  @Post('update-price')
+  async updatePrice(
+    @Body() updatePriceDto: UpdatePriceDto
+  ): Promise<PriceHistory> {
+    return this.priceHistoryService.updatePrice(
+      updatePriceDto.tradingPairId,
+      updatePriceDto.dataProviderId,
+      updatePriceDto.price
     );
   }
 
@@ -62,7 +68,6 @@ export class PriceHistoryController {
   async getPriceHistory(
     @Query('tradingPairId') tradingPairId?: number,
     @Query('dataProviderId') dataProviderId?: number,
-    @Query('interval') interval?: TimeInterval,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
     @Query('limit') limit?: number
@@ -70,7 +75,6 @@ export class PriceHistoryController {
     const query: PriceHistoryQuery = {
       tradingPairId,
       dataProviderId,
-      interval,
       limit,
     };
 
@@ -105,14 +109,12 @@ export class PriceHistoryController {
   @Get('chart')
   async getChartData(
     @Query('tradingPairId', ParseIntPipe) tradingPairId: number,
-    @Query('interval') interval: TimeInterval,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
     @Query('dataProviderId') dataProviderId?: number
   ): Promise<PriceHistory[]> {
     return this.priceHistoryService.getChartData(
       tradingPairId,
-      interval,
       new Date(startDate),
       new Date(endDate),
       dataProviderId
@@ -131,9 +133,8 @@ export class PriceHistoryController {
   ): Promise<{
     high: string;
     low: string;
-    open: string;
-    close: string;
-    volume: string;
+    first: string;
+    last: string;
     count: number;
   } | null> {
     return this.priceHistoryService.getPriceStatistics(

@@ -17,6 +17,9 @@ export class DataProvider {
   id!: number;
 
   @Property({ unique: true })
+  slug!: string;
+
+  @Property({ unique: true })
   name!: string;
 
   @Property({ type: 'text', nullable: true })
@@ -34,8 +37,8 @@ export class DataProvider {
   @Property({ type: 'boolean', default: true })
   isActive = true;
 
-  @Property({ type: 'integer', default: 1000 })
-  rateLimitPerHour = 1000;
+  @Property({ type: 'integer', default: 30 })
+  rateLimitPerMinute = 30;
 
   @Property({ type: 'integer', default: 1 })
   priority = 1;
@@ -49,7 +52,8 @@ export class DataProvider {
   @OneToMany(() => PriceHistory, 'dataProvider')
   priceHistories = new Collection<PriceHistory>(this);
 
-  constructor(name: string, description?: string) {
+  constructor(slug: string, name: string, description?: string) {
+    this.slug = slug;
     this.name = name;
     this.description = description;
   }

@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository, EntityManager } from '@mikro-orm/core';
-import { PriceHistory, TimeInterval } from '@/entities/price-history.entity';
+import { PriceHistory } from '@/entities/price-history.entity';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { DataProvider } from '@/entities/data-provider.entity';
 
 export interface PriceHistoryQuery {
   tradingPairId?: number;
   dataProviderId?: number;
-  interval?: TimeInterval;
   startDate?: Date;
   endDate?: Date;
   limit?: number;
@@ -36,14 +35,7 @@ export class PriceHistoryService {
     tradingPairId: number,
     dataProviderId: number,
     timestamp: Date,
-    openPrice: string,
-    highPrice: string,
-    lowPrice: string,
-    closePrice: string,
-    interval: TimeInterval = TimeInterval.ONE_HOUR,
-    volume?: string,
-    volumeQuote?: string,
-    tradesCount?: number
+    price: string
   ): Promise<PriceHistory | null> {
     const tradingPair = await this.tradingPairRepository.findOne(tradingPairId);
     const dataProvider = await this.dataProviderRepository.findOne(
@@ -58,18 +50,11 @@ export class PriceHistoryService {
       tradingPair,
       dataProvider,
       timestamp,
-      interval,
     });
 
     if (existingEntry) {
       // Update existing entry
-      existingEntry.openPrice = openPrice;
-      existingEntry.highPrice = highPrice;
-      existingEntry.lowPrice = lowPrice;
-      existingEntry.closePrice = closePrice;
-      existingEntry.volume = volume;
-      existingEntry.volumeQuote = volumeQuote;
-      existingEntry.tradesCount = tradesCount;
+      existingEntry.updatePrice(price);
       await this.em.flush();
       return existingEntry;
     }
@@ -78,16 +63,8 @@ export class PriceHistoryService {
       tradingPair,
       dataProvider,
       timestamp,
-      openPrice,
-      highPrice,
-      lowPrice,
-      closePrice,
-      interval
+      price
     );
-
-    if (volume) priceHistory.volume = volume;
-    if (volumeQuote) priceHistory.volumeQuote = volumeQuote;
-    if (tradesCount) priceHistory.tradesCount = tradesCount;
 
     await this.em.persistAndFlush(priceHistory);
     return priceHistory;
@@ -105,10 +82,6 @@ export class PriceHistoryService {
 
     if (query.dataProviderId) {
       where.dataProvider = query.dataProviderId;
-    }
-
-    if (query.interval) {
-      where.interval = query.interval;
     }
 
     if (query.startDate || query.endDate) {
@@ -156,14 +129,12 @@ export class PriceHistoryService {
    */
   async getChartData(
     tradingPairId: number,
-    interval: TimeInterval,
     startDate: Date,
     endDate: Date,
     dataProviderId?: number
   ): Promise<PriceHistory[]> {
     const where: Record<string, unknown> = {
       tradingPair: tradingPairId,
-      interval,
       timestamp: { $gte: startDate, $lte: endDate },
     };
 
@@ -187,9 +158,8 @@ export class PriceHistoryService {
   ): Promise<{
     high: string;
     low: string;
-    open: string;
-    close: string;
-    volume: string;
+    first: string;
+    last: string;
     count: number;
   } | null> {
     const where: Record<string, unknown> = {
@@ -209,25 +179,47 @@ export class PriceHistoryService {
       return null;
     }
 
-    const high = Math.max(
-      ...priceData.map((p) => parseFloat(p.highPrice))
-    ).toString();
-    const low = Math.min(
-      ...priceData.map((p) => parseFloat(p.lowPrice))
-    ).toString();
-    const open = priceData[0].openPrice;
-    const close = priceData[priceData.length - 1].closePrice;
-    const volume = priceData
-      .reduce((sum, p) => sum + parseFloat(p.volume || '0'), 0)
-      .toString();
+    const prices = priceData.map((p) => parseFloat(p.price));
+    const high = Math.max(...prices).toString();
+    const low = Math.min(...prices).toString();
+    const first = priceData[0].price;
+    const last = priceData[priceData.length - 1].price;
 
     return {
       high,
       low,
-      open,
-      close,
-      volume,
+      first,
+      last,
       count: priceData.length,
     };
+  }
+
+  /**
+   * Updates price for a specific trading pair and data provider
+   */
+  async updatePrice(
+    tradingPairId: number,
+    dataProviderId: number,
+    price: string
+  ): Promise<PriceHistory> {
+    const tradingPair = await this.tradingPairRepository.findOne(tradingPairId);
+    const dataProvider = await this.dataProviderRepository.findOne(
+      dataProviderId
+    );
+
+    if (!tradingPair || !dataProvider) {
+      throw new Error('Trading pair or data provider not found');
+    }
+
+    const timestamp = new Date();
+    const priceHistory = new PriceHistory(
+      tradingPair,
+      dataProvider,
+      timestamp,
+      price
+    );
+
+    await this.em.persistAndFlush(priceHistory);
+    return priceHistory;
   }
 }

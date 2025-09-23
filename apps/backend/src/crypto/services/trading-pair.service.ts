@@ -82,26 +82,6 @@ export class TradingPairService {
   }
 
   /**
-   * Updates trading pair price information
-   */
-  async updatePrice(
-    id: number,
-    price: string,
-    volume24h?: string,
-    high24h?: string,
-    low24h?: string
-  ): Promise<TradingPair | null> {
-    const tradingPair = await this.tradingPairRepository.findOne(id);
-    if (!tradingPair) {
-      return null;
-    }
-
-    tradingPair.updatePrice(price, volume24h, high24h, low24h);
-    await this.em.flush();
-    return tradingPair;
-  }
-
-  /**
    * Gets trading pairs for a specific base asset
    */
   async findByBaseAsset(baseSymbol: string): Promise<TradingPair[]> {
@@ -136,5 +116,19 @@ export class TradingPairService {
     );
 
     return { pairs, total };
+  }
+
+  /**
+   * Toggles the active status of a trading pair
+   */
+  async toggleActiveStatus(id: number): Promise<TradingPair | null> {
+    const tradingPair = await this.tradingPairRepository.findOne(id);
+    if (!tradingPair) {
+      return null;
+    }
+
+    tradingPair.isActive = !tradingPair.isActive;
+    await this.em.flush();
+    return tradingPair;
   }
 }

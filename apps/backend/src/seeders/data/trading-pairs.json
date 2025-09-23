@@ -1,0 +1,32 @@
+[
+    {
+        "baseAsset": {
+            "symbol": "TON"
+        },
+        "quoteAsset": {
+            "symbol": "USD"
+        },
+        "currentPrice": "2.810449386101078",
+        "lastUpdated": "2025-09-23T18:01:00.000Z"
+    },
+    {
+        "baseAsset": {
+            "symbol": "TON"
+        },
+        "quoteAsset": {
+            "symbol": "USD"
+        },
+        "currentPrice": "2.8142897736006036",
+        "lastUpdated": "2025-09-23T18:45:00.000Z"
+    },
+    {
+        "baseAsset": {
+            "symbol": "USDT"
+        },
+        "quoteAsset": {
+            "symbol": "USD"
+        },
+        "currentPrice": "1.0003112866279147",
+        "lastUpdated": "2025-09-23T18:57:00.000Z"
+    }
+]

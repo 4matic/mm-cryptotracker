@@ -5,29 +5,16 @@ import {
   ManyToOne,
   Index,
   Unique,
-  Enum,
 } from '@mikro-orm/core';
 import { TradingPair } from './trading-pair.entity';
 import { DataProvider } from './data-provider.entity';
 
-export enum TimeInterval {
-  ONE_MINUTE = '1m',
-  FIVE_MINUTES = '5m',
-  FIFTEEN_MINUTES = '15m',
-  THIRTY_MINUTES = '30m',
-  ONE_HOUR = '1h',
-  FOUR_HOURS = '4h',
-  ONE_DAY = '1d',
-  ONE_WEEK = '1w',
-  ONE_MONTH = '1M',
-}
-
 /**
- * Represents historical price data for a trading pair from a specific data provider
+ * Represents current price data for a trading pair from a specific data provider
  */
 @Entity()
 @Unique({
-  properties: ['tradingPair', 'dataProvider', 'timestamp', 'interval'],
+  properties: ['tradingPair', 'dataProvider', 'timestamp'],
 })
 @Index({ properties: ['tradingPair', 'timestamp'] })
 @Index({ properties: ['dataProvider', 'timestamp'] })
@@ -45,29 +32,11 @@ export class PriceHistory {
   @Index()
   timestamp!: Date;
 
-  @Enum(() => TimeInterval)
-  interval: TimeInterval = TimeInterval.ONE_HOUR;
-
   @Property({ type: 'decimal', precision: 20, scale: 8 })
-  openPrice!: string;
+  price!: string;
 
-  @Property({ type: 'decimal', precision: 20, scale: 8 })
-  highPrice!: string;
-
-  @Property({ type: 'decimal', precision: 20, scale: 8 })
-  lowPrice!: string;
-
-  @Property({ type: 'decimal', precision: 20, scale: 8 })
-  closePrice!: string;
-
-  @Property({ type: 'decimal', precision: 20, scale: 8, nullable: true })
-  volume?: string;
-
-  @Property({ type: 'decimal', precision: 20, scale: 8, nullable: true })
-  volumeQuote?: string;
-
-  @Property({ type: 'integer', nullable: true })
-  tradesCount?: number;
+  @Property({ type: 'timestamp', nullable: true })
+  lastUpdated?: Date;
 
   @Property({ type: 'json', nullable: true })
   metadata?: Record<string, unknown>;
@@ -79,42 +48,20 @@ export class PriceHistory {
     tradingPair: TradingPair,
     dataProvider: DataProvider,
     timestamp: Date,
-    openPrice: string,
-    highPrice: string,
-    lowPrice: string,
-    closePrice: string,
-    interval: TimeInterval = TimeInterval.ONE_HOUR
+    price: string
   ) {
     this.tradingPair = tradingPair;
     this.dataProvider = dataProvider;
     this.timestamp = timestamp;
-    this.openPrice = openPrice;
-    this.highPrice = highPrice;
-    this.lowPrice = lowPrice;
-    this.closePrice = closePrice;
-    this.interval = interval;
+    this.price = price;
+    this.lastUpdated = timestamp;
   }
 
   /**
-   * Checks if this price data represents a bullish candle
+   * Updates the price
    */
-  isBullish(): boolean {
-    return parseFloat(this.closePrice) > parseFloat(this.openPrice);
-  }
-
-  /**
-   * Calculates the price change for this period
-   */
-  getPriceChange(): number {
-    return parseFloat(this.closePrice) - parseFloat(this.openPrice);
-  }
-
-  /**
-   * Calculates the price change percentage for this period
-   */
-  getPriceChangePercentage(): number {
-    const openPrice = parseFloat(this.openPrice);
-    const closePrice = parseFloat(this.closePrice);
-    return ((closePrice - openPrice) / openPrice) * 100;
+  updatePrice(price: string): void {
+    this.price = price;
+    this.lastUpdated = new Date();
   }
 }

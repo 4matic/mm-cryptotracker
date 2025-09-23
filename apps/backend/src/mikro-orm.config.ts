@@ -13,6 +13,7 @@ import { config } from 'dotenv';
 import { defineConfig, ReflectMetadataProvider } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
+import { SeedManager } from '@mikro-orm/seeder';
 
 import { Asset } from '@/entities/asset.entity';
 import { TradingPair } from '@/entities/trading-pair.entity';
@@ -44,6 +45,11 @@ export default defineConfig({
     path: './src/migrations',
     glob: '!(*.d).{js,ts}',
   },
-  extensions: [Migrator],
+  seeder: {
+    path: './src/seeders',
+    glob: '!(*.d).{js,ts}',
+    defaultSeeder: 'DatabaseSeeder',
+  },
+  extensions: [Migrator, SeedManager],
   // preferTs: true,
 });

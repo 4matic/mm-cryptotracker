@@ -6,6 +6,7 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  Patch,
 } from '@nestjs/common';
 import { TradingPairService } from '@/crypto/services/trading-pair.service';
 import { TradingPair } from '@/entities/trading-pair.entity';
@@ -13,13 +14,6 @@ import { TradingPair } from '@/entities/trading-pair.entity';
 export class CreateTradingPairDto {
   baseSymbol!: string;
   quoteSymbol!: string;
-}
-
-export class UpdatePriceDto {
-  price!: string;
-  volume24h?: string;
-  high24h?: string;
-  low24h?: string;
 }
 
 /**
@@ -97,20 +91,13 @@ export class TradingPairController {
   }
 
   /**
-   * Updates the price of a trading pair
+   * Toggles the active status of a trading pair
    */
-  @Post(':id/price')
-  async updatePrice(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updatePriceDto: UpdatePriceDto
+  @Patch(':id/toggle-active')
+  async toggleActiveStatus(
+    @Param('id', ParseIntPipe) id: number
   ): Promise<TradingPair | null> {
-    return this.tradingPairService.updatePrice(
-      id,
-      updatePriceDto.price,
-      updatePriceDto.volume24h,
-      updatePriceDto.high24h,
-      updatePriceDto.low24h
-    );
+    return this.tradingPairService.toggleActiveStatus(id);
   }
 
   /**

@@ -30,11 +30,11 @@ export class Asset {
   @Property({ nullable: true })
   website?: string;
 
-  @Property({ nullable: true })
-  marketCapRank?: number;
-
   @Property({ type: 'boolean', default: true })
   isActive = true;
+
+  @Property({ type: 'boolean', default: false })
+  isFiat = false;
 
   @Property({ type: 'timestamp' })
   createdAt: Date = new Date();
