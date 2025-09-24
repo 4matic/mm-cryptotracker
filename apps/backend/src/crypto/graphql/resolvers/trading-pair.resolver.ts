@@ -8,16 +8,22 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { TradingPairService } from '@/crypto/services/trading-pair.service';
+import { PriceHistoryService } from '@/crypto/services/price-history.service';
 import { TradingPairModel } from '@/crypto/graphql/models/trading-pair.model';
 import { AssetModel } from '@/crypto/graphql/models/asset.model';
+import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
 import { TradingPair } from '@/entities/trading-pair.entity';
+import { PriceHistory } from '@/entities/price-history.entity';
 
 /**
  * GraphQL resolver for TradingPair entity
  */
 @Resolver(() => TradingPairModel)
 export class TradingPairResolver {
-  constructor(private readonly tradingPairService: TradingPairService) {}
+  constructor(
+    private readonly tradingPairService: TradingPairService,
+    private readonly priceHistoryService: PriceHistoryService
+  ) {}
 
   @Query(() => [TradingPairModel])
   async tradingPairs(): Promise<TradingPair[]> {
@@ -63,5 +69,12 @@ export class TradingPairResolver {
   async quoteAsset(@Parent() tradingPair: TradingPair): Promise<AssetModel> {
     // The quoteAsset should already be populated if the service is called correctly
     return tradingPair.quoteAsset;
+  }
+
+  @ResolveField(() => PriceHistoryModel, { nullable: true })
+  async latestPrice(
+    @Parent() tradingPair: TradingPair
+  ): Promise<PriceHistory | null> {
+    return this.priceHistoryService.getLatestPrice(tradingPair.id);
   }
 }

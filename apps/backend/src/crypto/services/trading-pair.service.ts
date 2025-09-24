@@ -76,6 +76,7 @@ export class TradingPairService {
   /**
    * Gets all active trading pairs
    */
+  @EnsureRequestContext()
   async findAllActive(): Promise<TradingPair[]> {
     return this.tradingPairRepository.find(
       { isActive: true },

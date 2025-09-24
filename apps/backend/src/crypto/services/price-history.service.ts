@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EntityManager } from '@mikro-orm/core';
+import {
+  EntityRepository,
+  EntityManager,
+  EnsureRequestContext,
+} from '@mikro-orm/core';
 import { PriceHistory } from '@/entities/price-history.entity';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { DataProvider } from '@/entities/data-provider.entity';
@@ -105,6 +109,7 @@ export class PriceHistoryService {
   /**
    * Gets the latest price for a trading pair
    */
+  @EnsureRequestContext()
   async getLatestPrice(
     tradingPairId: number,
     dataProviderId?: number
