@@ -91,8 +91,40 @@ query {
 
 ### Price History
 ```graphql
+# Get price histories with optional filtering
 query {
   priceHistories(tradingPairId: 1, limit: 10) {
+    id
+    price
+    timestamp
+    lastUpdated
+    metadata
+    createdAt
+    tradingPair {
+      symbol
+      baseAsset {
+        symbol
+      }
+      quoteAsset {
+        symbol
+      }
+    }
+    dataProvider {
+      name
+      slug
+    }
+  }
+}
+
+# Get price histories with date range filtering
+query {
+  priceHistories(
+    tradingPairId: 1,
+    dataProviderId: 1,
+    startDate: "2024-01-01T00:00:00Z",
+    endDate: "2024-12-31T23:59:59Z",
+    limit: 100
+  ) {
     id
     price
     timestamp
@@ -105,8 +137,28 @@ query {
   }
 }
 
+# Get latest price for a trading pair
 query {
   latestPrice(tradingPairId: 1) {
+    price
+    timestamp
+    lastUpdated
+    tradingPair {
+      symbol
+    }
+    dataProvider {
+      name
+    }
+  }
+}
+
+# Get chart data for a specific time period
+query {
+  chartData(
+    tradingPairId: 1,
+    startDate: "2024-01-01T00:00:00Z",
+    endDate: "2024-01-31T23:59:59Z"
+  ) {
     price
     timestamp
     tradingPair {

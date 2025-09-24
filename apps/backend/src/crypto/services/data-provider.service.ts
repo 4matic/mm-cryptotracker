@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EntityManager } from '@mikro-orm/core';
+import {
+  EntityRepository,
+  EntityManager,
+  EnsureRequestContext,
+} from '@mikro-orm/core';
 import { DataProvider } from '@/entities/data-provider.entity';
 
 /**
@@ -21,7 +25,7 @@ export class DataProviderService {
     name: string,
     description?: string
   ): Promise<DataProvider> {
-    const dataProvider = new DataProvider(name, description);
+    const dataProvider = new DataProvider(name, description || '');
     await this.em.persistAndFlush(dataProvider);
     return dataProvider;
   }
@@ -36,6 +40,7 @@ export class DataProviderService {
   /**
    * Finds a data provider by ID
    */
+  @EnsureRequestContext()
   async findById(id: number): Promise<DataProvider | null> {
     return this.dataProviderRepository.findOne(id);
   }

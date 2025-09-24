@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EntityManager } from '@mikro-orm/core';
+import {
+  EntityRepository,
+  EntityManager,
+  EnsureRequestContext,
+} from '@mikro-orm/core';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { Asset } from '@/entities/asset.entity';
 
@@ -62,6 +66,7 @@ export class TradingPairService {
   /**
    * Finds a trading pair by ID
    */
+  @EnsureRequestContext()
   async findById(id: number): Promise<TradingPair | null> {
     return this.tradingPairRepository.findOne(id, {
       populate: ['baseAsset', 'quoteAsset'],

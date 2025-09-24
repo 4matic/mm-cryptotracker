@@ -8,12 +8,10 @@ import { PriceHistoryService } from '@/crypto/services/price-history.service';
 import { AssetController } from '@/crypto/controllers/asset.controller';
 import { TradingPairController } from '@/crypto/controllers/trading-pair.controller';
 import { PriceHistoryController } from '@/crypto/controllers/price-history.controller';
-import { GraphQLApiModule } from '@/crypto/graphql/graphql.module';
 
 @Module({
   imports: [
     MikroOrmModule.forFeature([Asset, TradingPair, DataProvider, PriceHistory]),
-    GraphQLApiModule,
   ],
   controllers: [AssetController, TradingPairController, PriceHistoryController],
   providers: [

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EntityManager } from '@mikro-orm/core';
+import {
+  EntityRepository,
+  EntityManager,
+  EnsureRequestContext,
+} from '@mikro-orm/core';
 import { Asset } from '@/entities/asset.entity';
 
 /**
@@ -37,6 +41,7 @@ export class AssetService {
   /**
    * Finds an asset by ID
    */
+  @EnsureRequestContext()
   async findById(id: number): Promise<Asset | null> {
     return this.assetRepository.findOne(id);
   }
