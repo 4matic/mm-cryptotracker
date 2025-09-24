@@ -1,7 +1,8 @@
 'use server';
 
 import { GraphQLClient } from 'graphql-request';
-import { TradingPairsResponse, TradingPairsParams } from '@/lib/types';
+import { TradingPairsParams } from '@/lib/types';
+import type { PaginatedTradingPairsModel } from '@mm-cryptotracker/shared-graphql';
 import { GetTradingPairs as GetTradingPairsQuery } from '@/graphql/GetTradingPairs.gql';
 
 /**
@@ -9,7 +10,7 @@ import { GetTradingPairs as GetTradingPairsQuery } from '@/graphql/GetTradingPai
  */
 export async function getTradingPairs(
   params: TradingPairsParams = {}
-): Promise<TradingPairsResponse> {
+): Promise<PaginatedTradingPairsModel> {
   const backendUrl = process.env.BACKEND_GRAPHQL_URL;
 
   if (!backendUrl) {
@@ -25,7 +26,7 @@ export async function getTradingPairs(
     const { page = 1, limit = 20, isVisible } = params;
     const variables = { page, limit, isVisible };
 
-    const data: { tradingPairsWithPagination: TradingPairsResponse } =
+    const data: { tradingPairsWithPagination: PaginatedTradingPairsModel } =
       await client.request(GetTradingPairsQuery, variables);
 
     return data.tradingPairsWithPagination;

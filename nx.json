@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -12,7 +15,9 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ]
   },
   "neverConnectToCloud": true,
   "plugins": [
@@ -28,7 +33,10 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
+      },
+      "exclude": [
+        "libs/shared/graphql/*"
+      ]
     },
     {
       "plugin": "@nx/webpack/plugin",
@@ -52,7 +60,9 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/backend-e2e/**/*"]
+      "exclude": [
+        "apps/backend-e2e/**/*"
+      ]
     },
     {
       "plugin": "@nx/docker",
@@ -77,11 +87,24 @@
       "options": {
         "targetName": "e2e"
       }
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "include": [
+        "libs/shared/graphql/*"
+      ],
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        }
+      }
     }
   ],
   "targetDefaults": {
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     }
   },
   "generators": {

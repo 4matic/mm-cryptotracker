@@ -8,11 +8,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -23,14 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["jest", "node"],
     "outDir": "dist",
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
@@ -43,7 +34,8 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "@types/../*.ts"
   ],
   "exclude": [
     "out-tsc",
@@ -53,5 +45,10 @@
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     ".next"
+  ],
+  "references": [
+    {
+      "path": "../../libs/shared/graphql"
+    }
   ]
 }

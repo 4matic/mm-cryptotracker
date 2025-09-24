@@ -1,17 +1,14 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { TradingPair } from '@/lib/types';
+import type { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 
 interface PriceTableProps {
-  tradingPairs: TradingPair[];
+  tradingPairs: Pick<
+    TradingPairModel,
+    'id' | 'symbol' | 'latestPrice' | 'calculatedPrice'
+  >[];
 }
 
 export function PriceTable({ tradingPairs }: PriceTableProps) {
@@ -39,9 +36,6 @@ export function PriceTable({ tradingPairs }: PriceTableProps) {
                   {pair.symbol}
                 </CardTitle>
               </div>
-              <CardDescription>
-                {pair.baseSymbol} / {pair.quoteSymbol}
-              </CardDescription>
             </CardHeader>
 
             <CardContent className="space-y-4">
