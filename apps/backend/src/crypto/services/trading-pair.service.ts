@@ -103,10 +103,17 @@ export class TradingPairService {
    */
   async findWithPagination(
     page = 1,
-    limit = 20
+    limit = 20,
+    isVisible?: boolean
   ): Promise<{ pairs: TradingPair[]; total: number }> {
+    const whereCondition: Record<string, unknown> = { isActive: true };
+
+    if (isVisible !== undefined) {
+      whereCondition.isVisible = isVisible;
+    }
+
     const [pairs, total] = await this.tradingPairRepository.findAndCount(
-      { isActive: true },
+      whereCondition,
       {
         populate: ['baseAsset', 'quoteAsset'],
         orderBy: { symbol: 'ASC' },

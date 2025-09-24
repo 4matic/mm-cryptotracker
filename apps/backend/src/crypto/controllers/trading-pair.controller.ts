@@ -42,7 +42,8 @@ export class TradingPairController {
   @Get()
   async getTradingPairs(
     @Query('page') page = 1,
-    @Query('limit') limit = 20
+    @Query('limit') limit = 20,
+    @Query('isVisible') isVisible?: boolean
   ): Promise<{
     pairs: TradingPair[];
     total: number;
@@ -51,7 +52,8 @@ export class TradingPairController {
   }> {
     const result = await this.tradingPairService.findWithPagination(
       page,
-      limit
+      limit,
+      isVisible
     );
     return {
       ...result,

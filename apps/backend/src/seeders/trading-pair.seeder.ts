@@ -84,7 +84,55 @@ export class TradingPairSeeder extends Seeder {
 
     await em.flush();
 
+    // Add custom trading pairs
+    await this.addCustomTradingPairs(em);
+
     // Save trading pairs with their price data to context
     context.tradingPairsWithPriceData = tradingPairs;
+  }
+
+  /**
+   * Adds custom trading pairs with isVisible = true
+   */
+  private async addCustomTradingPairs(em: EntityManager): Promise<void> {
+    const customPairs = [
+      {
+        baseSymbol: 'TON',
+        quoteSymbol: 'USDT',
+      },
+      {
+        baseSymbol: 'USDT',
+        quoteSymbol: 'TON',
+      },
+    ];
+
+    for (const customPair of customPairs) {
+      // Find or create base asset
+      const baseAsset = await em.findOne(Asset, {
+        symbol: customPair.baseSymbol,
+      });
+
+      // Find or create quote asset
+      const quoteAsset = await em.findOne(Asset, {
+        symbol: customPair.quoteSymbol,
+      });
+
+      // Check if trading pair already exists
+      const existingPair = await em.findOne(TradingPair, {
+        baseAsset: baseAsset,
+        quoteAsset: quoteAsset,
+      });
+
+      if (!existingPair) {
+        // Create new trading pair with isVisible = true
+        if (baseAsset && quoteAsset) {
+          const tradingPair = new TradingPair(baseAsset, quoteAsset);
+          tradingPair.isVisible = true;
+          em.persist(tradingPair);
+        }
+      }
+    }
+
+    await em.flush();
   }
 }

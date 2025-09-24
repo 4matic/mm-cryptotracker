@@ -31,6 +31,9 @@ export class TradingPair {
   @Property({ type: 'boolean', default: true })
   isActive = true;
 
+  @Property({ type: 'boolean', default: false })
+  isVisible = false;
+
   @Property({ type: 'timestamp' })
   createdAt: Date = new Date();
 

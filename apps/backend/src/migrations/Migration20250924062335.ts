@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20250923193554 extends Migration {
+export class Migration20250924062335 extends Migration {
 
   override async up(): Promise<void> {
     this.addSql(`create table "asset" ("id" serial primary key, "symbol" varchar(255) not null, "name" varchar(255) not null, "description" text null, "logo_url" varchar(255) null, "website" varchar(255) null, "is_active" boolean not null default true, "is_fiat" boolean not null default false, "created_at" timestamptz not null, "updated_at" timestamptz not null);`);
@@ -10,7 +10,7 @@ export class Migration20250923193554 extends Migration {
     this.addSql(`alter table "data_provider" add constraint "data_provider_slug_unique" unique ("slug");`);
     this.addSql(`alter table "data_provider" add constraint "data_provider_name_unique" unique ("name");`);
 
-    this.addSql(`create table "trading_pair" ("id" serial primary key, "base_asset_id" int not null, "quote_asset_id" int not null, "symbol" varchar(255) not null, "is_active" boolean not null default true, "created_at" timestamptz not null, "updated_at" timestamptz not null);`);
+    this.addSql(`create table "trading_pair" ("id" serial primary key, "base_asset_id" int not null, "quote_asset_id" int not null, "symbol" varchar(255) not null, "is_active" boolean not null default true, "is_visible" boolean not null default false, "created_at" timestamptz not null, "updated_at" timestamptz not null);`);
     this.addSql(`alter table "trading_pair" add constraint "trading_pair_base_asset_id_quote_asset_id_unique" unique ("base_asset_id", "quote_asset_id");`);
 
     this.addSql(`create table "price_history" ("id" serial primary key, "trading_pair_id" int not null, "data_provider_id" int not null, "timestamp" timestamptz not null, "price" numeric(20,8) not null, "last_updated" timestamptz null, "metadata" jsonb null, "created_at" timestamptz not null);`);
