@@ -107,6 +107,7 @@ export class TradingPairService {
   /**
    * Gets trading pairs with pagination
    */
+  @EnsureRequestContext()
   async findWithPagination(
     page = 1,
     limit = 20,

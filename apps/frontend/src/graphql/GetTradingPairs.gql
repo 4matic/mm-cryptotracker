@@ -1,0 +1,24 @@
+query GetTradingPairs($page: Int, $limit: Int, $isVisible: Boolean) {
+  tradingPairsWithPagination(
+    page: $page
+    limit: $limit
+    isVisible: $isVisible
+  ) {
+    pairs {
+      id
+      symbol
+      latestPrice {
+        price
+        lastUpdated
+      }
+      calculatedPrice {
+        price
+        timestamp
+        metadata
+      }
+    }
+    total
+    page
+    limit
+  }
+}

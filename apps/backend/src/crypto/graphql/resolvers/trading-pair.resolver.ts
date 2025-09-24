@@ -15,6 +15,7 @@ import { AssetModel } from '@/crypto/graphql/models/asset.model';
 import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { PriceHistory } from '@/entities/price-history.entity';
+import { PaginatedTradingPairsModel } from '@/crypto/graphql/models/paginated-trading-pairs.model';
 
 /**
  * GraphQL resolver for TradingPair entity
@@ -46,19 +47,19 @@ export class TradingPairResolver {
     return this.tradingPairService.findBySymbol(symbol);
   }
 
-  @Query(() => [TradingPairModel])
+  @Query(() => PaginatedTradingPairsModel)
   async tradingPairsWithPagination(
     @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
     @Args('limit', { type: () => Int, defaultValue: 20 }) limit: number,
     @Args('isVisible', { type: () => Boolean, nullable: true })
     isVisible?: boolean
-  ): Promise<TradingPair[]> {
+  ): Promise<PaginatedTradingPairsModel> {
     const result = await this.tradingPairService.findWithPagination(
       page,
       limit,
       isVisible
     );
-    return result.pairs;
+    return { ...result, page, limit };
   }
 
   @ResolveField(() => AssetModel)
