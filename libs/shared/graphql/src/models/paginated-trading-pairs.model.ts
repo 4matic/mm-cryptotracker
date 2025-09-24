@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { TradingPairModel } from '@/crypto/graphql/models/trading-pair.model';
+import { TradingPairModel } from './trading-pair.model.js';
 
 @ObjectType()
 export class PaginatedTradingPairsModel {

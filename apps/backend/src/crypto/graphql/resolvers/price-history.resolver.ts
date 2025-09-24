@@ -7,9 +7,9 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { PriceHistoryService } from '@/crypto/services/price-history.service';
-import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
-import { TradingPairModel } from '@/crypto/graphql/models/trading-pair.model';
-import { DataProviderModel } from '@/crypto/graphql/models/data-provider.model';
+import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
+import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
+import { DataProviderModel } from '@mm-cryptotracker/shared-graphql';
 import { PriceHistory } from '@/entities/price-history.entity';
 
 /**

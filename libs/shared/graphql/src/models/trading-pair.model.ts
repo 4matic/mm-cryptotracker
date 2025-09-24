@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { AssetModel } from '@/crypto/graphql/models/asset.model';
-import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
+import { AssetModel } from './asset.model.js';
+import { PriceHistoryModel } from './price-history.model.js';
 
 /**
  * GraphQL model for TradingPair entity

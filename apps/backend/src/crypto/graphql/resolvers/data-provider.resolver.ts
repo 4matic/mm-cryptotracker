@@ -1,6 +1,6 @@
 import { Resolver, Query, Args, ID } from '@nestjs/graphql';
 import { DataProviderService } from '@/crypto/services/data-provider.service';
-import { DataProviderModel } from '@/crypto/graphql/models/data-provider.model';
+import { DataProviderModel } from '@mm-cryptotracker/shared-graphql';
 import { DataProvider } from '@/entities/data-provider.entity';
 
 /**

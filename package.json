@@ -66,6 +66,7 @@
     "jest-environment-jsdom": "^30.0.2",
     "jest-environment-node": "^30.0.2",
     "jest-util": "^30.0.2",
+    "jsonc-eslint-parser": "^2.1.0",
     "nx": "21.5.3",
     "prettier": "^2.6.2",
     "sass": "1.62.1",
@@ -77,6 +78,7 @@
     "webpack-cli": "^5.1.4"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "libs/shared/*"
   ]
 }

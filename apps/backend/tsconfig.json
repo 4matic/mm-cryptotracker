@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/shared/graphql"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {

@@ -10,12 +10,12 @@ import {
 import { TradingPairService } from '@/crypto/services/trading-pair.service';
 import { PriceHistoryService } from '@/crypto/services/price-history.service';
 import { PriceCalculationService } from '@/crypto/services/price-calculation.service';
-import { TradingPairModel } from '@/crypto/graphql/models/trading-pair.model';
-import { AssetModel } from '@/crypto/graphql/models/asset.model';
-import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
+import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
+import { AssetModel } from '@mm-cryptotracker/shared-graphql';
+import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { PriceHistory } from '@/entities/price-history.entity';
-import { PaginatedTradingPairsModel } from '@/crypto/graphql/models/paginated-trading-pairs.model';
+import { PaginatedTradingPairsModel } from '@mm-cryptotracker/shared-graphql';
 
 /**
  * GraphQL resolver for TradingPair entity
