@@ -9,6 +9,7 @@ import {
 } from '@nestjs/graphql';
 import { TradingPairService } from '@/crypto/services/trading-pair.service';
 import { PriceHistoryService } from '@/crypto/services/price-history.service';
+import { PriceCalculationService } from '@/crypto/services/price-calculation.service';
 import { TradingPairModel } from '@/crypto/graphql/models/trading-pair.model';
 import { AssetModel } from '@/crypto/graphql/models/asset.model';
 import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
@@ -22,7 +23,8 @@ import { PriceHistory } from '@/entities/price-history.entity';
 export class TradingPairResolver {
   constructor(
     private readonly tradingPairService: TradingPairService,
-    private readonly priceHistoryService: PriceHistoryService
+    private readonly priceHistoryService: PriceHistoryService,
+    private readonly priceCalculationService: PriceCalculationService
   ) {}
 
   @Query(() => [TradingPairModel])
@@ -76,5 +78,23 @@ export class TradingPairResolver {
     @Parent() tradingPair: TradingPair
   ): Promise<PriceHistory | null> {
     return this.priceHistoryService.getLatestPrice(tradingPair.id);
+  }
+
+  @ResolveField(() => PriceHistoryModel, { nullable: true })
+  async calculatedPrice(
+    @Parent() tradingPair: TradingPair
+  ): Promise<PriceHistory | null> {
+    // First check if latestPrice exists
+    const latestPrice = await this.priceHistoryService.getLatestPrice(
+      tradingPair.id
+    );
+
+    // If latestPrice exists, return null (no calculation needed)
+    if (latestPrice) {
+      return null;
+    }
+
+    // If no latestPrice, calculate using smart algorithm
+    return this.priceCalculationService.calculateIndirectPrice(tradingPair);
   }
 }

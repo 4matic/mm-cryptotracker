@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
-import { TradingPairModel } from './trading-pair.model';
-import { DataProviderModel } from './data-provider.model';
+import { TradingPairModel } from '@/crypto/graphql/models/trading-pair.model';
+import { DataProviderModel } from '@/crypto/graphql/models/data-provider.model';
 
 /**
  * GraphQL model for PriceHistory entity

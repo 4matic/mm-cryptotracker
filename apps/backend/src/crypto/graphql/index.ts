@@ -1,3 +1,3 @@
-export * from './models';
-export * from './resolvers';
-export * from './graphql.module';
+export * from '@/crypto/graphql/models';
+export * from '@/crypto/graphql/resolvers';
+export * from '@/crypto/graphql/graphql.module';

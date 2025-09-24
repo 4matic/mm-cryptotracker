@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { AssetModel } from './asset.model';
-import { PriceHistoryModel } from './price-history.model';
+import { AssetModel } from '@/crypto/graphql/models/asset.model';
+import { PriceHistoryModel } from '@/crypto/graphql/models/price-history.model';
 
 /**
  * GraphQL model for TradingPair entity
@@ -33,4 +33,7 @@ export class TradingPairModel {
 
   @Field(() => PriceHistoryModel, { nullable: true })
   latestPrice?: PriceHistoryModel;
+
+  @Field(() => PriceHistoryModel, { nullable: true })
+  calculatedPrice?: PriceHistoryModel;
 }
