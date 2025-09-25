@@ -1,3 +1,3 @@
 export enum DataProviderSlug {
-  CoinMarketCap = 'coinmarketcap',
+  Coinmarketcap = 'coinmarketcap',
 }

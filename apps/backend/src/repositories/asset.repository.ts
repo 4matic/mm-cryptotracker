@@ -16,7 +16,6 @@ export class AssetRepository extends EntityRepository<Asset> {
    * Transforms asset logoUrl using environment variable
    */
   private transformAsset<T>(asset: T): T {
-    console.log('transformAsset');
     if (asset && typeof asset === 'object' && 'logoUrl' in asset) {
       const transformed = { ...asset };
       const assetWithLogo = transformed as T & { logoUrl?: string };
@@ -32,7 +31,6 @@ export class AssetRepository extends EntityRepository<Asset> {
    * Transforms array of assets logoUrl using environment variable
    */
   private transformAssets<T>(assets: T[]): T[] {
-    console.log('transformAssets');
     return assets.map((asset) => this.transformAsset(asset));
   }
 

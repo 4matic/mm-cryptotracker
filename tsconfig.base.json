@@ -18,6 +18,7 @@
     "target": "es2022",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "sourceMap": true,
     "customConditions": ["@mm-cryptotracker/source"]
   }
 }

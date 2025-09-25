@@ -3,6 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AppController } from '@/app/app.controller';
 import { AppService } from '@/app/app.service';
 import { CryptoModule } from '@/crypto/crypto.module';
+import { PriceFetchingModule } from '@/price-fetching/price-fetching.module';
 // import mikroOrmConfig from '@/mikro-orm.config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -22,6 +23,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
       autoLoadEntities: true,
     }),
     CryptoModule,
+    PriceFetchingModule,
     GraphQLApiModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

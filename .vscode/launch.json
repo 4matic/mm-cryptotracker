@@ -9,21 +9,31 @@
       "runtimeArgs": [
         "nx",
         "serve",
-        "@mm-cryptotracker/backend"
+        "@mm-cryptotracker/backend",
+        "--outputStyle",
+        "stream"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9229"
       },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "sourceMaps": true,
+      "smartStep": true,
       "outFiles": [
-        "${workspaceFolder}/apps/backend/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/backend/dist/**/*.js",
+        "${workspaceFolder}/apps/backend/dist/**/*.js.map"
+      ],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
         "!**/node_modules/**"
-      ]
+      ],
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "restart": true,
+      "timeout": 30000
     }
   ]
 }

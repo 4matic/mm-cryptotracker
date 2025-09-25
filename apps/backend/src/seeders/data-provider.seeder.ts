@@ -15,7 +15,7 @@ export class DataProviderSeeder extends Seeder {
 
     if (!existingProvider) {
       const coinMarketCap = new DataProvider(
-        DataProviderSlug.CoinMarketCap,
+        DataProviderSlug.Coinmarketcap,
         'CoinMarketCap',
         'Leading cryptocurrency market capitalization and pricing data provider'
       );
