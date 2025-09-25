@@ -1,4 +1,4 @@
-import { TrendingUp } from "lucide-react"
+import { TrendingUp } from 'lucide-react';
 
 export function Header() {
   return (
@@ -11,15 +11,13 @@ export function Header() {
             </div>
             <div>
               <h1 className="text-xl font-bold">MM CryptoTracker</h1>
-              <p className="text-sm text-muted-foreground">Cryptocurrency Price Monitor</p>
+              <p className="text-sm text-muted-foreground">
+                Cryptocurrency Price Monitor
+              </p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">Last updated: {new Date().toLocaleTimeString()}</div>
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 }

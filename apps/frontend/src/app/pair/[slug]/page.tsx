@@ -80,7 +80,7 @@ export default async function PairPage({ params }: PairPageProps) {
                     allTimeHigh: additionalStats.allTimeHigh,
                     allTimeLow: additionalStats.allTimeLow,
                   }}
-                  disabled={false}
+                  disabled={true}
                 />
               </div>
             </div>

@@ -38,7 +38,10 @@ export default async function HomePage() {
 
             <div className="flex justify-center">
               <Link href="/methodology">
-                <Button variant="outline" className="gap-2 bg-transparent">
+                <Button
+                  variant="outline"
+                  className="gap-2 bg-transparent cursor-pointer"
+                >
                   <Info className="h-4 w-4" />
                   View Data Methodology
                 </Button>
