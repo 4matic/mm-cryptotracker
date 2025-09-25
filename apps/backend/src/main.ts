@@ -6,22 +6,22 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from '@/app/app.module';
 import { join } from 'path';
+import { pino } from 'pino';
 
 async function bootstrap() {
-  // <NestFastifyApplication>
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({
-      logger: {
+      loggerInstance: pino({
         level: 'debug',
-      },
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+          },
+        },
+      }),
     })
-    // {
-    //   // logger: new ConsoleLogger({
-    //   //   timestamp: true,
-    //   //   json: true,
-    //   // }),
-    // }
   );
   app.useStaticAssets({
     root: join(__dirname, '..', 'public'),
