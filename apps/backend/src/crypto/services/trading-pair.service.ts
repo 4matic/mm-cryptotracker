@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  EntityRepository,
-  EntityManager,
-  EnsureRequestContext,
-} from '@mikro-orm/core';
+import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { Asset } from '@/entities/asset.entity';
+import { TradingPairRepository } from '@/repositories/trading-pair.repository';
+import { AssetRepository } from '@/repositories/asset.repository';
 
 /**
  * Service for managing trading pairs
@@ -15,9 +13,9 @@ import { Asset } from '@/entities/asset.entity';
 export class TradingPairService {
   constructor(
     @InjectRepository(TradingPair)
-    private readonly tradingPairRepository: EntityRepository<TradingPair>,
+    private readonly tradingPairRepository: TradingPairRepository,
     @InjectRepository(Asset)
-    private readonly assetRepository: EntityRepository<Asset>,
+    private readonly assetRepository: AssetRepository,
     private readonly em: EntityManager
   ) {}
 

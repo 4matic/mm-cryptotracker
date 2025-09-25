@@ -11,12 +11,10 @@ import { TradingPairService } from '@/crypto/services/trading-pair.service';
 import { PriceHistoryService } from '@/crypto/services/price-history.service';
 import { PriceCalculationService } from '@/crypto/services/price-calculation.service';
 import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
-import { AssetModel } from '@mm-cryptotracker/shared-graphql';
 import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { PriceHistory } from '@/entities/price-history.entity';
 import { PaginatedTradingPairsModel } from '@mm-cryptotracker/shared-graphql';
-import { AddAssetUrl } from '@/decorators';
 
 /**
  * GraphQL resolver for TradingPair entity
@@ -61,20 +59,6 @@ export class TradingPairResolver {
       isVisible
     );
     return { ...result, page, limit };
-  }
-
-  @AddAssetUrl()
-  @ResolveField(() => AssetModel)
-  async baseAsset(@Parent() tradingPair: TradingPair): Promise<AssetModel> {
-    // The baseAsset should already be populated if the service is called correctly
-    return tradingPair.baseAsset;
-  }
-
-  @AddAssetUrl()
-  @ResolveField(() => AssetModel)
-  async quoteAsset(@Parent() tradingPair: TradingPair): Promise<AssetModel> {
-    // The quoteAsset should already be populated if the service is called correctly
-    return tradingPair.quoteAsset;
   }
 
   @ResolveField(() => PriceHistoryModel, { nullable: true })

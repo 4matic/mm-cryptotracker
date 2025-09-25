@@ -4,14 +4,17 @@ import {
   Property,
   OneToMany,
   Collection,
+  EntityRepositoryType,
 } from '@mikro-orm/core';
 import { TradingPair } from '@/entities/trading-pair.entity';
+import { AssetRepository } from '@/repositories/asset.repository';
 
 /**
  * Represents a cryptocurrency or trading asset
  */
-@Entity()
+@Entity({ repository: () => AssetRepository })
 export class Asset {
+  [EntityRepositoryType]?: AssetRepository;
   @PrimaryKey()
   id!: number;
 
