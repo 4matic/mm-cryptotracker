@@ -8,6 +8,10 @@ const nextConfig: WithNxOptions = {
 
   poweredByHeader: false,
 
+  images: {
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+  },
+
   webpack: (config, options) => {
     config.module.rules.push({
       test: /\.(graphql|gql)/,

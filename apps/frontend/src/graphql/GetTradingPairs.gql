@@ -7,9 +7,15 @@ query GetTradingPairs($page: Int, $limit: Int, $isVisible: Boolean) {
     pairs {
       id
       symbol
-      latestPrice {
-        price
-        lastUpdated
+      baseAsset {
+        symbol
+        name
+        logoUrl
+      }
+      quoteAsset {
+        symbol
+        name
+        logoUrl
       }
       calculatedPrice {
         price

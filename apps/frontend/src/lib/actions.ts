@@ -3,7 +3,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { TradingPairsParams } from '@/lib/types';
 import type { PaginatedTradingPairsModel } from '@mm-cryptotracker/shared-graphql';
-import { GetTradingPairs as GetTradingPairsQuery } from '@/graphql/GetTradingPairs.gql';
+import GetTradingPairsQuery from '@/graphql/GetTradingPairs.gql';
 
 /**
  * Server action to fetch trading pairs from the backend API
@@ -26,8 +26,9 @@ export async function getTradingPairs(
     const { page = 1, limit = 20, isVisible } = params;
     const variables = { page, limit, isVisible };
 
-    const data: { tradingPairsWithPagination: PaginatedTradingPairsModel } =
-      await client.request(GetTradingPairsQuery, variables);
+    const data = await client.request<{
+      tradingPairsWithPagination: PaginatedTradingPairsModel;
+    }>(GetTradingPairsQuery, variables);
 
     return data.tradingPairsWithPagination;
   } catch (error) {

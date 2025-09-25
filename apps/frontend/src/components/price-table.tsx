@@ -2,12 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 
 interface PriceTableProps {
   tradingPairs: Pick<
     TradingPairModel,
-    'id' | 'symbol' | 'latestPrice' | 'calculatedPrice'
+    'id' | 'symbol' | 'quoteAsset' | 'calculatedPrice' | 'baseAsset'
   >[];
 }
 
@@ -32,9 +33,49 @@ export function PriceTable({ tradingPairs }: PriceTableProps) {
           >
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl font-bold">
-                  {pair.symbol}
-                </CardTitle>
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center -space-x-2">
+                    {pair.baseAsset.logoUrl && (
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-background z-10">
+                        <Image
+                          src={pair.baseAsset.logoUrl}
+                          alt={pair.baseAsset.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    {pair.quoteAsset.logoUrl && (
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-background">
+                        <Image
+                          src={pair.quoteAsset.logoUrl}
+                          alt={pair.quoteAsset.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <CardTitle className="text-xl font-bold">
+                    {pair.symbol}
+                  </CardTitle>
+                </div>
+                {pair.calculatedPrice && (
+                  <div className="text-right">
+                    <div className="text-2xl font-bold">
+                      {parseFloat(pair.calculatedPrice.price).toLocaleString(
+                        undefined,
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 8,
+                        }
+                      )}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {pair.quoteAsset.symbol}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardHeader>
 
