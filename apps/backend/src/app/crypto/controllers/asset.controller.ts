@@ -1,8 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
   Param,
   Query,
   ParseIntPipe,
@@ -17,10 +15,7 @@ import {
 } from '@nestjs/swagger';
 import { AssetService } from '@/app/crypto/services/asset.service';
 import { Asset } from '@/entities/asset.entity';
-import {
-  PaginatedAssetsResponseDto,
-  AdminTestResponseDto,
-} from '@/app/crypto/dto/asset.dto';
+import { PaginatedAssetsResponseDto } from '@/app/crypto/dto/asset.dto';
 
 /**
  * Controller for managing cryptocurrency assets
@@ -151,27 +146,5 @@ export class AssetController {
     }
 
     return asset;
-  }
-
-  /**
-   * Admin test endpoint
-   */
-  @Get('admin/test')
-  @ApiOperation({
-    summary: 'Admin test endpoint',
-    description: 'Health check endpoint for the asset controller',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Controller is working properly',
-    type: AdminTestResponseDto,
-  })
-  async adminTest(): Promise<{ message: string; timestamp: string }> {
-    this.logger.log('Admin test endpoint called');
-
-    return {
-      message: 'Asset controller is working',
-      timestamp: new Date().toISOString(),
-    };
   }
 }

@@ -18,11 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { TradingPairService } from '@/app/crypto/services/trading-pair.service';
 import { TradingPair } from '@/entities/trading-pair.entity';
-import {
-  CreateTradingPairDto,
-  PaginatedTradingPairsResponseDto,
-  AdminTestResponseDto,
-} from '@/app/crypto/dto/trading-pair.dto';
+import { PaginatedTradingPairsResponseDto } from '@/app/crypto/dto/trading-pair.dto';
 
 /**
  * Controller for managing trading pairs

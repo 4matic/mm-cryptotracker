@@ -32,8 +32,14 @@ type PriceGraph = Map<number, { pair: TradingPair; price: PriceHistory }[]>;
 @Injectable()
 export class PriceCalculationService {
   private readonly logger = new Logger(PriceCalculationService.name);
+
+  /** Maximum number of trading pair hops allowed in indirect price calculation paths */
   private readonly MAX_HOPS = 3;
+
+  /** Confidence multiplier applied for each hop in the path (0.8 = 20% confidence reduction per hop) */
   private readonly CONFIDENCE_DECAY = 0.8;
+
+  /** Time window in hours for considering price data as recent and valid for calculations */
   private readonly TIME_DECAY_HOURS = 24;
 
   constructor(
@@ -285,49 +291,6 @@ export class PriceCalculationService {
       }
     }
     return allPaths;
-  }
-
-  /**
-   * Gets the most recent price for a trading pair within acceptable time window
-   */
-  private async getRecentPrice(
-    pair: TradingPair
-  ): Promise<PriceHistory | null> {
-    const cutoffTime = new Date(
-      Date.now() - this.TIME_DECAY_HOURS * 60 * 60 * 1000
-    );
-
-    this.logger.debug(
-      `Looking for recent price for ${pair.baseAsset.symbol}/${
-        pair.quoteAsset.symbol
-      } after ${cutoffTime.toISOString()}`
-    );
-
-    const price = await this.priceHistoryRepository.findOne(
-      {
-        tradingPair: pair,
-        timestamp: { $gte: cutoffTime },
-      },
-      {
-        orderBy: { timestamp: 'DESC' },
-      }
-    );
-
-    if (price) {
-      const ageHours =
-        (Date.now() - price.timestamp.getTime()) / (1000 * 60 * 60);
-      this.logger.debug(
-        `Found recent price for ${pair.baseAsset.symbol}/${
-          pair.quoteAsset.symbol
-        }: ${price.price} (age: ${ageHours.toFixed(2)} hours)`
-      );
-    } else {
-      this.logger.debug(
-        `No recent price found for ${pair.baseAsset.symbol}/${pair.quoteAsset.symbol} within ${this.TIME_DECAY_HOURS} hours`
-      );
-    }
-
-    return price;
   }
 
   /**

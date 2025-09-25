@@ -158,20 +158,3 @@ export class PriceStatisticsResponseDto {
   })
   count!: number;
 }
-
-/**
- * DTO for admin test response
- */
-export class AdminTestResponseDto {
-  @ApiProperty({
-    description: 'Test message',
-    example: 'Price history controller is working',
-  })
-  message!: string;
-
-  @ApiProperty({
-    description: 'Current timestamp',
-    example: '2024-01-01T00:00:00.000Z',
-  })
-  timestamp!: string;
-}

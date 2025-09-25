@@ -1,23 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Query,
-  ParseIntPipe,
-  Logger,
-} from '@nestjs/common';
+import { Controller, Get, Query, ParseIntPipe, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import {
   PriceHistoryService,
   PriceHistoryQuery,
 } from '@/app/crypto/services/price-history.service';
 import { PriceHistory } from '@/entities/price-history.entity';
-import {
-  UpdatePriceDto,
-  PriceStatisticsResponseDto,
-  AdminTestResponseDto,
-} from '@/app/crypto/dto/price-history.dto';
+import { PriceStatisticsResponseDto } from '@/app/crypto/dto/price-history.dto';
 
 /**
  * Controller for managing price history data
@@ -290,27 +278,5 @@ export class PriceHistoryController {
     }
 
     return result;
-  }
-
-  /**
-   * Admin test endpoint
-   */
-  @Get('admin/test')
-  @ApiOperation({
-    summary: 'Admin test endpoint',
-    description: 'Health check endpoint for the price history controller',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Controller is working properly',
-    type: AdminTestResponseDto,
-  })
-  async adminTest(): Promise<{ message: string; timestamp: string }> {
-    this.logger.log('Admin test endpoint called');
-
-    return {
-      message: 'Price history controller is working',
-      timestamp: new Date().toISOString(),
-    };
   }
 }
