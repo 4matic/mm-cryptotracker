@@ -1,8 +1,12 @@
-import type { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
-
 interface AssetPriceProps {
-  calculatedPrice: TradingPairModel['calculatedPrice'];
-  quoteAsset: Pick<TradingPairModel['quoteAsset'], 'symbol'>;
+  calculatedPrice?: {
+    price: string;
+    timestamp: Date;
+    metadata?: Record<string, unknown>;
+  } | null;
+  quoteAsset: {
+    symbol: string;
+  };
 }
 
 export function AssetPrice({ calculatedPrice, quoteAsset }: AssetPriceProps) {

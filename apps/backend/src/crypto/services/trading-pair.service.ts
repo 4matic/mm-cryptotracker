@@ -62,6 +62,17 @@ export class TradingPairService {
   }
 
   /**
+   * Finds a trading pair by slug (e.g., "btc-usd")
+   */
+  @EnsureRequestContext()
+  async findBySlug(slug: string): Promise<TradingPair | null> {
+    return this.tradingPairRepository.findOne(
+      { slug },
+      { populate: ['baseAsset', 'quoteAsset'] }
+    );
+  }
+
+  /**
    * Finds a trading pair by ID
    */
   @EnsureRequestContext()

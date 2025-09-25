@@ -4,45 +4,31 @@ import { PriceChart } from '@/components/price-chart';
 import { PairStats } from '@/components/pair-stats';
 import { DataProvider } from '@/components/data-provider';
 import { BackButton } from '@/components/back-button';
+import { getTradingPair } from '@/lib/actions';
 
-// Mock data for different pairs
-const pairData = {
-  'ton-usdt': {
-    pair: 'TON/USDT',
-    baseSymbol: 'TON',
-    quoteSymbol: 'USDT',
-    price: 5.42,
-    change24h: 2.34,
-    volume24h: 1250000,
-    high24h: 5.67,
-    low24h: 5.12,
-    marketCap: 18500000000,
-    circulatingSupply: 3412000000,
-    allTimeHigh: 8.24,
-    allTimeLow: 0.52,
-    description:
-      'TON (The Open Network) is a decentralized blockchain platform originally developed by Telegram.',
-    priceCalculation: 'Direct trading pair available on major exchanges',
-  },
-  'usdt-ton': {
-    pair: 'USDT/TON',
-    baseSymbol: 'USDT',
-    quoteSymbol: 'TON',
-    price: 0.1845,
-    change24h: -2.28,
-    volume24h: 230000,
-    high24h: 0.1953,
-    low24h: 0.1763,
-    marketCap: 95000000000,
-    circulatingSupply: 95000000000,
-    allTimeHigh: 0.1953,
-    allTimeLow: 0.1214,
-    description:
-      'USDT (Tether) is a stablecoin pegged to the US Dollar, widely used for trading.',
+// Helper function to extract additional stats that aren't in the core model
+function getAdditionalStats(
+  apiData: NonNullable<Awaited<ReturnType<typeof getTradingPair>>>
+) {
+  const currentPrice = apiData.calculatedPrice?.price
+    ? parseFloat(apiData.calculatedPrice.price)
+    : 0;
+
+  return {
+    change24h: 0, // TODO: This will need to be calculated from price history
+    volume24h: 0, // TODO: This will need to come from additional data
+    high24h: currentPrice, // TODO: This will need to be calculated from price history
+    low24h: currentPrice, // TODO: This will need to be calculated from price history
+    marketCap: 0, // TODO: This will need to come from additional data
+    circulatingSupply: 0, // TODO: This will need to come from additional data
+    allTimeHigh: currentPrice, // TODO: This will need to come from additional data
+    allTimeLow: currentPrice, // TODO: This will need to come from additional data
     priceCalculation:
-      'Calculated as inverse of TON/USDT pair (1 ÷ TON/USDT price)',
-  },
-};
+      typeof apiData.calculatedPrice?.metadata?.source === 'string'
+        ? apiData.calculatedPrice.metadata.source
+        : 'Calculated price from available data',
+  };
+}
 
 interface PairPageProps {
   params: {
@@ -50,40 +36,60 @@ interface PairPageProps {
   };
 }
 
-export function generateStaticParams() {
-  return [{ slug: 'ton-usdt' }, { slug: 'usdt-ton' }];
-}
+export default async function PairPage({ params }: PairPageProps) {
+  try {
+    const { slug } = await params;
+    const tradingPair = await getTradingPair(slug);
 
-export default function PairPage({ params }: PairPageProps) {
-  const data = pairData[params.slug as keyof typeof pairData];
+    if (!tradingPair) {
+      notFound();
+    }
 
-  if (!data) {
-    notFound();
-  }
+    const additionalStats = getAdditionalStats(tradingPair);
 
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6">
-        <BackButton />
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6">
+          <BackButton />
 
-        <div className="space-y-8">
-          <PairHeader data={data} />
+          <div className="space-y-8">
+            <PairHeader
+              tradingPair={tradingPair}
+              change24h={additionalStats.change24h}
+              volume24h={additionalStats.volume24h}
+              high24h={additionalStats.high24h}
+              low24h={additionalStats.low24h}
+            />
 
-          <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-8">
-              <PriceChart pair={data.pair} disabled={true} />
-              <DataProvider
-                pair={data.pair}
-                calculation={data.priceCalculation}
-              />
-            </div>
+            <div className="grid gap-8 lg:grid-cols-3">
+              <div className="lg:col-span-2 space-y-8">
+                <PriceChart pair={tradingPair.symbol} disabled={true} />
+                <DataProvider
+                  pair={tradingPair.symbol}
+                  calculation={additionalStats.priceCalculation}
+                />
+              </div>
 
-            <div className="space-y-6">
-              <PairStats data={data} />
+              <div className="space-y-6">
+                <PairStats
+                  data={{
+                    baseSymbol: tradingPair.baseAsset.symbol,
+                    quoteSymbol: tradingPair.quoteAsset.symbol,
+                    marketCap: additionalStats.marketCap,
+                    circulatingSupply: additionalStats.circulatingSupply,
+                    allTimeHigh: additionalStats.allTimeHigh,
+                    allTimeLow: additionalStats.allTimeLow,
+                  }}
+                  disabled={false}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error('Error loading trading pair:', error);
+    notFound();
+  }
 }

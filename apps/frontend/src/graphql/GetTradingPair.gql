@@ -1,0 +1,23 @@
+query GetTradingPair($slug: String!) {
+  tradingPairBySlug(slug: $slug) {
+    id
+    symbol
+    slug
+    baseAsset {
+      symbol
+      name
+      description
+      logoUrl
+    }
+    quoteAsset {
+      symbol
+      name
+      logoUrl
+    }
+    calculatedPrice {
+      price
+      timestamp
+      metadata
+    }
+  }
+}

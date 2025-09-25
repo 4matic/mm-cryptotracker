@@ -12,6 +12,11 @@ declare module '*.gql' {
   export default Schema;
 }
 
+// TypeScript definitions for GraphQL files are available in corresponding .gql.d.ts files
+// Example usage:
+// import GetTradingPairDocument from './GetTradingPair.gql'
+// import type { GetTradingPairResponse, GetTradingPairVariables } from './GetTradingPair.gql.d.ts'
+
 declare module '*.graphql' {
   import { DocumentNode } from 'graphql';
   const Schema: DocumentNode;

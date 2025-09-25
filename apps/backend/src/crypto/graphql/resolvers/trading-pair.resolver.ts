@@ -46,6 +46,13 @@ export class TradingPairResolver {
     return this.tradingPairService.findBySymbol(symbol);
   }
 
+  @Query(() => TradingPairModel, { nullable: true })
+  async tradingPairBySlug(
+    @Args('slug') slug: string
+  ): Promise<TradingPair | null> {
+    return this.tradingPairService.findBySlug(slug);
+  }
+
   @Query(() => PaginatedTradingPairsModel)
   async tradingPairsWithPagination(
     @Args('page', { type: () => Int, defaultValue: 1 }) page: number,

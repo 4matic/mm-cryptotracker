@@ -1,12 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Info, Database, Calculator, ExternalLink } from "lucide-react"
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Info, Database, Calculator, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 interface DataProviderProps {
-  pair: string
-  calculation: string
+  pair: string;
+  calculation: string;
 }
 
 export function DataProvider({ pair, calculation }: DataProviderProps) {
@@ -19,7 +19,7 @@ export function DataProvider({ pair, calculation }: DataProviderProps) {
             Data Provider & Methodology
           </CardTitle>
           <Link href="/methodology">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="cursor-pointer">
               View Full Details
               <ExternalLink className="h-4 w-4 ml-2" />
             </Button>
@@ -33,8 +33,9 @@ export function DataProvider({ pair, calculation }: DataProviderProps) {
             <div className="space-y-2">
               <h4 className="font-semibold">Price Data Sources</h4>
               <p className="text-sm text-muted-foreground text-pretty">
-                Price data is aggregated from multiple cryptocurrency exchanges including Binance, OKX, and Bybit to
-                ensure accuracy and reliability.
+                Price data is aggregated from multiple cryptocurrency exchanges
+                including Binance, OKX, and Bybit to ensure accuracy and
+                reliability.
               </p>
             </div>
           </div>
@@ -43,27 +44,22 @@ export function DataProvider({ pair, calculation }: DataProviderProps) {
             <Calculator className="h-5 w-5 text-primary mt-0.5" />
             <div className="space-y-2">
               <h4 className="font-semibold">Price Calculation for {pair}</h4>
-              <p className="text-sm text-muted-foreground text-pretty">{calculation}</p>
+              <p className="text-sm text-muted-foreground text-pretty">
+                {calculation}
+              </p>
             </div>
-          </div>
-        </div>
-
-        <div className="border-t border-border pt-4">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">Real-time Data</Badge>
-            <Badge variant="secondary">Multi-Exchange</Badge>
-            <Badge variant="secondary">Volume Weighted</Badge>
-            <Badge variant="secondary">30s Updates</Badge>
           </div>
         </div>
 
         <div className="bg-muted/30 rounded-lg p-4">
           <p className="text-xs text-muted-foreground">
-            <strong>Disclaimer:</strong> Cryptocurrency prices are highly volatile and can change rapidly. This data is
-            provided for informational purposes only and should not be considered as financial advice.
+            <strong>Disclaimer:</strong> Cryptocurrency prices are highly
+            volatile and can change rapidly. This data is provided for
+            informational purposes only and should not be considered as
+            financial advice.
           </p>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
