@@ -1,12 +1,9 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
   Param,
   Query,
   ParseIntPipe,
-  Patch,
   Logger,
 } from '@nestjs/common';
 import {

@@ -4,8 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { TradingPairsParams } from '@/lib/types';
 import type { PaginatedTradingPairsModel } from '@mm-cryptotracker/shared-graphql';
 import GetTradingPairsQuery from '@/graphql/GetTradingPairs.gql';
-import GetTradingPairQuery from '@/graphql/GetTradingPair.gql';
-import type {
+import GetTradingPairQuery, {
   GetTradingPairResponse,
   GetTradingPairVariables,
 } from '@/graphql/GetTradingPair.gql';

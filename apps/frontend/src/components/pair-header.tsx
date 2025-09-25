@@ -3,29 +3,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, BarChart3, Clock } from 'lucide-react';
 import { AssetPrice } from '@/components/asset-price';
 import { PairImage } from '@/components/pair-image';
+import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
+
 interface PairHeaderProps {
-  tradingPair: {
-    id: string;
-    symbol: string;
-    slug: string;
-    baseAsset: {
-      symbol: string;
-      name: string;
-      description?: string;
-      logoUrl?: string;
-    };
-    quoteAsset: {
-      symbol: string;
-      name: string;
-      logoUrl?: string;
-    };
-    calculatedPrice?: {
-      price: string;
-      timestamp: Date;
-      metadata?: Record<string, unknown>;
-    } | null;
-  };
-  volume24h?: number;
+  tradingPair: TradingPairModel;
   high24h?: number;
   low24h?: number;
   change24h?: number;
@@ -33,14 +14,12 @@ interface PairHeaderProps {
 
 export function PairHeader({
   tradingPair,
-  volume24h = 0,
   high24h = 0,
   low24h = 0,
   change24h = 0,
 }: PairHeaderProps) {
   const isPositive = change24h >= 0;
   const hasChangeData = change24h !== 0;
-  const hasVolumeData = volume24h > 0;
   const hasHighLowData = high24h > 0 && low24h > 0;
 
   return (

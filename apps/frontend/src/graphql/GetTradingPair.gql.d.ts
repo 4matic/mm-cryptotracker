@@ -1,27 +1,5 @@
 import { DocumentNode } from 'graphql';
-
-// Types based on backend models from libs/shared/graphql/src/models
-export interface Asset {
-  symbol: string;
-  name: string;
-  description?: string;
-  logoUrl?: string;
-}
-
-export interface PriceHistory {
-  price: string;
-  timestamp: Date;
-  metadata?: Record<string, unknown>;
-}
-
-export interface TradingPair {
-  id: string;
-  symbol: string;
-  slug: string;
-  baseAsset: Asset;
-  quoteAsset: Asset;
-  calculatedPrice?: PriceHistory;
-}
+import type { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 
 // GraphQL Query Variables
 export interface GetTradingPairVariables {
@@ -30,7 +8,7 @@ export interface GetTradingPairVariables {
 
 // GraphQL Query Response
 export interface GetTradingPairResponse {
-  tradingPairBySlug: TradingPair | null;
+  tradingPairBySlug: TradingPairModel | null;
 }
 
 // GraphQL Document

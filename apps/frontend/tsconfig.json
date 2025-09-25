@@ -23,10 +23,10 @@
     },
     "types": ["jest", "node"],
     "outDir": "dist",
-    "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
+    "next.config.ts",
     "../../apps/frontend/.next/types/**/*.ts",
     "../../dist/apps/frontend/.next/types/**/*.ts",
     "next-env.d.ts",

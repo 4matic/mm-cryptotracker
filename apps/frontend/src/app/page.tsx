@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
 import Link from 'next/link';
 import { getTradingPairs } from '@/lib/actions';
+import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 
 export default async function HomePage() {
-  let tradingPairs;
-  let error = null;
+  let tradingPairs: TradingPairModel[] = [];
+  let error: string | null = null;
 
   try {
     const result = await getTradingPairs({

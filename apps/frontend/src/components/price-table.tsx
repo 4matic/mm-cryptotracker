@@ -7,10 +7,7 @@ import { PairImage } from './pair-image';
 import { AssetPrice } from './asset-price';
 
 interface PriceTableProps {
-  tradingPairs: Pick<
-    TradingPairModel,
-    'id' | 'symbol' | 'quoteAsset' | 'calculatedPrice' | 'baseAsset' | 'slug'
-  >[];
+  tradingPairs: TradingPairModel[];
 }
 
 export function PriceTable({ tradingPairs }: PriceTableProps) {

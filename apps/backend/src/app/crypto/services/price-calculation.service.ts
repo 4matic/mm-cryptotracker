@@ -1,10 +1,6 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  EntityRepository,
-  EnsureRequestContext,
-  EntityManager,
-} from '@mikro-orm/core';
+import { EntityRepository, EnsureRequestContext } from '@mikro-orm/core';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { PriceHistory } from '@/entities/price-history.entity';
 import { Asset } from '@/entities/asset.entity';
@@ -46,14 +42,15 @@ export class PriceCalculationService {
     @InjectRepository(TradingPair)
     private readonly tradingPairRepository: EntityRepository<TradingPair>,
     @InjectRepository(PriceHistory)
-    private readonly priceHistoryRepository: EntityRepository<PriceHistory>,
-    private readonly em: EntityManager
+    private readonly priceHistoryRepository: EntityRepository<PriceHistory>
   ) {}
 
   /**
    * Calculates price for a trading pair using indirect paths when direct price is not available
    */
-  @EnsureRequestContext()
+  @EnsureRequestContext((self: PriceCalculationService) =>
+    self.tradingPairRepository.getEntityManager()
+  )
   async calculateIndirectPrice(
     targetTradingPair: TradingPair
   ): Promise<PriceHistory | null> {

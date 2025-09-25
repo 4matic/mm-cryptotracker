@@ -56,7 +56,6 @@ export default async function PairPage({ params }: PairPageProps) {
             <PairHeader
               tradingPair={tradingPair}
               change24h={additionalStats.change24h}
-              volume24h={additionalStats.volume24h}
               high24h={additionalStats.high24h}
               low24h={additionalStats.low24h}
             />
