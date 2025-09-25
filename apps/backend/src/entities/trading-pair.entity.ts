@@ -28,8 +28,11 @@ export class TradingPair {
   @ManyToOne(() => Asset)
   quoteAsset!: Asset;
 
-  @Property()
+  @Property({ unique: true })
   symbol!: string;
+
+  @Property({ unique: true })
+  slug!: string;
 
   @Property({ type: 'boolean', default: true })
   isActive = true;
@@ -50,5 +53,6 @@ export class TradingPair {
     this.baseAsset = baseAsset;
     this.quoteAsset = quoteAsset;
     this.symbol = `${baseAsset.symbol}/${quoteAsset.symbol}`;
+    this.slug = `${baseAsset.symbol.toLowerCase()}-${quoteAsset.symbol.toLowerCase()}`;
   }
 }

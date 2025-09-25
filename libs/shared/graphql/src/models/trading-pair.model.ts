@@ -10,6 +10,9 @@ export class TradingPairModel {
   @Field(() => ID)
   id!: number;
 
+  @Field()
+  slug!: string;
+
   @Field(() => AssetModel)
   baseAsset!: AssetModel;
 

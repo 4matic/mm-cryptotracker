@@ -16,7 +16,6 @@ export class TradingPairRepository extends EntityRepository<TradingPair> {
    * Transforms asset logoUrl for both base and quote assets in a trading pair
    */
   private transformTradingPair<T>(tradingPair: T): T {
-    console.log('transformTradingPair');
     if (tradingPair && typeof tradingPair === 'object') {
       const transformed = { ...tradingPair };
       const pair = transformed as T & {
@@ -49,7 +48,6 @@ export class TradingPairRepository extends EntityRepository<TradingPair> {
    * Transforms array of trading pairs with asset URL transformation
    */
   private transformTradingPairs<T>(tradingPairs: T[]): T[] {
-    console.log('transformTradingPairs');
     return tradingPairs.map((pair) => this.transformTradingPair(pair));
   }
 

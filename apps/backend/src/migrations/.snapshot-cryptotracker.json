@@ -330,6 +330,16 @@
           "length": 255,
           "mappedType": "string"
         },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
         "is_active": {
           "name": "is_active",
           "type": "boolean",
@@ -374,6 +384,26 @@
       "name": "trading_pair",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "symbol"
+          ],
+          "composite": false,
+          "keyName": "trading_pair_symbol_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "slug"
+          ],
+          "composite": false,
+          "keyName": "trading_pair_slug_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
         {
           "keyName": "trading_pair_base_asset_id_quote_asset_id_unique",
           "columnNames": [
