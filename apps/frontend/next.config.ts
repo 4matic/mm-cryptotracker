@@ -9,7 +9,7 @@ const nextConfig: WithNxOptions = {
   poweredByHeader: false,
 
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+    remotePatterns: [{ hostname: 'localhost' }],
   },
 
   webpack: (config, options) => {

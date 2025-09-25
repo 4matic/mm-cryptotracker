@@ -34,9 +34,9 @@ export function PriceTable({ tradingPairs }: PriceTableProps) {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center -space-x-2">
+                  <div className="flex items-center -space-x-2 -space-y-2 -top-1 relative">
                     {pair.baseAsset.logoUrl && (
-                      <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-background z-10">
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden border-background border-2 z-10">
                         <Image
                           src={pair.baseAsset.logoUrl}
                           alt={pair.baseAsset.name}
@@ -46,7 +46,7 @@ export function PriceTable({ tradingPairs }: PriceTableProps) {
                       </div>
                     )}
                     {pair.quoteAsset.logoUrl && (
-                      <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-background">
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden border-background border-2 opacity-70">
                         <Image
                           src={pair.quoteAsset.logoUrl}
                           alt={pair.quoteAsset.name}

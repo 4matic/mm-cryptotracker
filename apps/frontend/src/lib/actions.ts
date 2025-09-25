@@ -11,16 +11,15 @@ import GetTradingPairsQuery from '@/graphql/GetTradingPairs.gql';
 export async function getTradingPairs(
   params: TradingPairsParams = {}
 ): Promise<PaginatedTradingPairsModel> {
-  const backendUrl = process.env.BACKEND_GRAPHQL_URL;
+  const graphqlUrl = process.env.BACKEND_GRAPHQL_URL;
 
-  if (!backendUrl) {
+  if (!graphqlUrl) {
     throw new Error(
       'BACKEND_GRAPHQL_URL environment variable is not configured'
     );
   }
 
-  const graphqlEndpoint = `${backendUrl}/graphql`;
-  const client = new GraphQLClient(graphqlEndpoint);
+  const client = new GraphQLClient(graphqlUrl);
 
   try {
     const { page = 1, limit = 20, isVisible } = params;

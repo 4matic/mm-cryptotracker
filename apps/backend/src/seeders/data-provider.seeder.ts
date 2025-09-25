@@ -1,7 +1,7 @@
 import { EntityManager, Dictionary } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { DataProvider } from '@/entities/data-provider.entity';
-import { DataProviderSlug } from '@/enums/data-provider';
+import { DataProviderSlug } from '@/enums/data-provider.enum';
 
 /**
  * Seeds initial data provider: CoinMarketCap
