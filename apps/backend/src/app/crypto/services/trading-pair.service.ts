@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { TradingPair } from '@/entities/trading-pair.entity';
@@ -11,6 +11,8 @@ import { AssetRepository } from '@/repositories/asset.repository';
  */
 @Injectable()
 export class TradingPairService {
+  private readonly logger = new Logger(TradingPairService.name);
+
   constructor(
     @InjectRepository(TradingPair)
     private readonly tradingPairRepository: TradingPairRepository,
@@ -26,6 +28,8 @@ export class TradingPairService {
     baseSymbol: string,
     quoteSymbol: string
   ): Promise<TradingPair | null> {
+    this.logger.log(`Creating trading pair: ${baseSymbol}/${quoteSymbol}`);
+    
     const baseAsset = await this.assetRepository.findOne({
       symbol: baseSymbol.toUpperCase(),
     });
@@ -34,6 +38,7 @@ export class TradingPairService {
     });
 
     if (!baseAsset || !quoteAsset) {
+      this.logger.warn(`Cannot create trading pair ${baseSymbol}/${quoteSymbol}: missing assets (base: ${!!baseAsset}, quote: ${!!quoteAsset})`);
       return null;
     }
 
@@ -43,22 +48,40 @@ export class TradingPairService {
     });
 
     if (existingPair) {
+      this.logger.log(`Trading pair ${baseSymbol}/${quoteSymbol} already exists (ID: ${existingPair.id})`);
       return existingPair;
     }
 
-    const tradingPair = new TradingPair(baseAsset, quoteAsset);
-    await this.em.persistAndFlush(tradingPair);
-    return tradingPair;
+    try {
+      const tradingPair = new TradingPair(baseAsset, quoteAsset);
+      await this.em.persistAndFlush(tradingPair);
+      
+      this.logger.log(`Successfully created trading pair: ${tradingPair.symbol} (ID: ${tradingPair.id})`);
+      return tradingPair;
+    } catch (error) {
+      this.logger.error(`Failed to create trading pair ${baseSymbol}/${quoteSymbol}: ${error}`);
+      throw error;
+    }
   }
 
   /**
    * Finds a trading pair by symbol (e.g., "BTC/USD")
    */
   async findBySymbol(symbol: string): Promise<TradingPair | null> {
-    return this.tradingPairRepository.findOne(
+    this.logger.debug(`Looking up trading pair by symbol: ${symbol}`);
+    
+    const pair = await this.tradingPairRepository.findOne(
       { symbol },
       { populate: ['baseAsset', 'quoteAsset'] }
     );
+    
+    if (pair) {
+      this.logger.debug(`Found trading pair: ${pair.symbol} (ID: ${pair.id})`);
+    } else {
+      this.logger.debug(`Trading pair not found with symbol: ${symbol}`);
+    }
+    
+    return pair;
   }
 
   /**

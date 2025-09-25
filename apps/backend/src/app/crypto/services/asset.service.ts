@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { Asset } from '@/entities/asset.entity';
@@ -9,6 +9,8 @@ import { AssetRepository } from '@/repositories/asset.repository';
  */
 @Injectable()
 export class AssetService {
+  private readonly logger = new Logger(AssetService.name);
+
   constructor(
     @InjectRepository(Asset)
     private readonly assetRepository: AssetRepository,
@@ -23,16 +25,43 @@ export class AssetService {
     name: string,
     description?: string
   ): Promise<Asset> {
-    const asset = new Asset(symbol, name, description);
-    await this.em.persistAndFlush(asset);
-    return this.assetRepository.findOne(asset.id) as Promise<Asset>;
+    this.logger.log(`Creating asset: ${symbol} (${name})`);
+
+    try {
+      const asset = new Asset(symbol, name, description);
+      await this.em.persistAndFlush(asset);
+
+      const createdAsset = (await this.assetRepository.findOne(
+        asset.id
+      )) as Asset;
+      this.logger.log(
+        `Successfully created asset: ${symbol} with ID ${createdAsset.id}`
+      );
+
+      return createdAsset;
+    } catch (error) {
+      this.logger.error(`Failed to create asset ${symbol}: ${error}`);
+      throw error;
+    }
   }
 
   /**
    * Finds an asset by symbol
    */
   async findBySymbol(symbol: string): Promise<Asset | null> {
-    return this.assetRepository.findOne({ symbol: symbol.toUpperCase() });
+    this.logger.debug(`Looking up asset by symbol: ${symbol}`);
+
+    const asset = await this.assetRepository.findOne({
+      symbol: symbol.toUpperCase(),
+    });
+
+    if (asset) {
+      this.logger.debug(`Found asset: ${asset.symbol} (ID: ${asset.id})`);
+    } else {
+      this.logger.debug(`Asset not found with symbol: ${symbol}`);
+    }
+
+    return asset;
   }
 
   /**
@@ -60,14 +89,28 @@ export class AssetService {
     id: number,
     updateData: Partial<Asset>
   ): Promise<Asset | null> {
+    this.logger.log(`Updating asset with ID: ${id}`);
+
     const asset = await this.assetRepository.findOne(id);
     if (!asset) {
+      this.logger.warn(`Asset not found for update with ID: ${id}`);
       return null;
     }
 
-    this.em.assign(asset, updateData);
-    await this.em.flush();
-    return this.assetRepository.findOne(id);
+    try {
+      this.em.assign(asset, updateData);
+      await this.em.flush();
+
+      const updatedAsset = await this.assetRepository.findOne(id);
+      this.logger.log(
+        `Successfully updated asset: ${asset.symbol} (ID: ${id})`
+      );
+
+      return updatedAsset;
+    } catch (error) {
+      this.logger.error(`Failed to update asset ${id}: ${error}`);
+      throw error;
+    }
   }
 
   /**
@@ -91,6 +134,10 @@ export class AssetService {
     page = 1,
     limit = 20
   ): Promise<{ assets: Asset[]; total: number }> {
+    this.logger.debug(
+      `Fetching assets with pagination - page: ${page}, limit: ${limit}`
+    );
+
     const [assets, total] = await this.assetRepository.findAndCount(
       { isActive: true },
       {
@@ -98,6 +145,10 @@ export class AssetService {
         limit,
         offset: (page - 1) * limit,
       }
+    );
+
+    this.logger.debug(
+      `Retrieved ${assets.length} assets out of ${total} total`
     );
 
     return { assets, total };
