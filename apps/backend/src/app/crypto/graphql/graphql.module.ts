@@ -4,8 +4,8 @@ import {
   TradingPairResolver,
   DataProviderResolver,
   PriceHistoryResolver,
-} from '@/crypto/graphql/resolvers';
-import { CryptoModule } from '@/crypto/crypto.module';
+} from '@/app/crypto/graphql/resolvers';
+import { CryptoModule } from '@/app/crypto/crypto.module';
 
 /**
  * GraphQL module that provides all GraphQL resolvers

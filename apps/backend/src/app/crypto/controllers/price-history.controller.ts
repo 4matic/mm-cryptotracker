@@ -9,7 +9,7 @@ import {
 import {
   PriceHistoryService,
   PriceHistoryQuery,
-} from '@/crypto/services/price-history.service';
+} from '@/app/crypto/services/price-history.service';
 import { PriceHistory } from '@/entities/price-history.entity';
 
 export class CreatePriceHistoryDto {

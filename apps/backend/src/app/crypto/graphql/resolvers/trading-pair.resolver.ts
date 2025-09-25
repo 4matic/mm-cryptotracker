@@ -7,9 +7,9 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-import { TradingPairService } from '@/crypto/services/trading-pair.service';
-import { PriceHistoryService } from '@/crypto/services/price-history.service';
-import { PriceCalculationService } from '@/crypto/services/price-calculation.service';
+import { TradingPairService } from '@/app/crypto/services/trading-pair.service';
+import { PriceHistoryService } from '@/app/crypto/services/price-history.service';
+import { PriceCalculationService } from '@/app/crypto/services/price-calculation.service';
 import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
 import { TradingPair } from '@/entities/trading-pair.entity';

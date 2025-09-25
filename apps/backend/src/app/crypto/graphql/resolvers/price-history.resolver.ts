@@ -6,7 +6,7 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-import { PriceHistoryService } from '@/crypto/services/price-history.service';
+import { PriceHistoryService } from '@/app/crypto/services/price-history.service';
 import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
 import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 import { DataProviderModel } from '@mm-cryptotracker/shared-graphql';

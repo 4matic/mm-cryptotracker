@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AppController } from '@/app/app.controller';
 import { AppService } from '@/app/app.service';
-import { CryptoModule } from '@/crypto/crypto.module';
-import { PriceFetchingModule } from '@/price-fetching/price-fetching.module';
+import { CryptoModule } from '@/app/crypto/crypto.module';
+import { PriceFetchingModule } from '@/app/price-fetching/price-fetching.module';
 // import mikroOrmConfig from '@/mikro-orm.config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { GraphQLApiModule } from '@/crypto/graphql/graphql.module';
+import { GraphQLApiModule } from '@/app/crypto/graphql/graphql.module';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 @Module({

@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { pino } from 'pino';
-import { ConsoleLogger, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   NestFastifyApplication,
@@ -33,8 +33,10 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   const config = new DocumentBuilder()
-    .setTitle('CryptoTracker API')
-    .setDescription('The CryptoTracker API description')
+    .setTitle('MM CryptoTracker API')
+    .setDescription(
+      'API to track cryptocurrency prices with detailed analysis and historical data'
+    )
     .setVersion('1.0')
     .addTag('CryptoTracker')
     .build();

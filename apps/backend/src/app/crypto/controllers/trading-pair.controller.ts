@@ -8,7 +8,7 @@ import {
   ParseIntPipe,
   Patch,
 } from '@nestjs/common';
-import { TradingPairService } from '@/crypto/services/trading-pair.service';
+import { TradingPairService } from '@/app/crypto/services/trading-pair.service';
 import { TradingPair } from '@/entities/trading-pair.entity';
 
 export class CreateTradingPairDto {

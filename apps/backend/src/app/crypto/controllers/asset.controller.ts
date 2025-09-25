@@ -7,7 +7,7 @@ import {
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
-import { AssetService } from '@/crypto/services/asset.service';
+import { AssetService } from '@/app/crypto/services/asset.service';
 import { Asset } from '@/entities/asset.entity';
 
 export class CreateAssetDto {
