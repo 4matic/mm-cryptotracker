@@ -6,6 +6,7 @@ import {
   EnsureRequestContext,
 } from '@mikro-orm/core';
 import { Asset } from '@/entities/asset.entity';
+import { AddAssetUrl } from '@/decorators';
 
 /**
  * Service for managing cryptocurrency assets
@@ -21,6 +22,7 @@ export class AssetService {
   /**
    * Creates a new asset
    */
+  @AddAssetUrl()
   async createAsset(
     symbol: string,
     name: string,
@@ -34,6 +36,7 @@ export class AssetService {
   /**
    * Finds an asset by symbol
    */
+  @AddAssetUrl()
   async findBySymbol(symbol: string): Promise<Asset | null> {
     return this.assetRepository.findOne({ symbol: symbol.toUpperCase() });
   }
@@ -42,6 +45,7 @@ export class AssetService {
    * Finds an asset by ID
    */
   @EnsureRequestContext()
+  @AddAssetUrl()
   async findById(id: number): Promise<Asset | null> {
     return this.assetRepository.findOne(id);
   }
@@ -49,6 +53,7 @@ export class AssetService {
   /**
    * Gets all active assets
    */
+  @AddAssetUrl()
   async findAllActive(): Promise<Asset[]> {
     return this.assetRepository.find(
       { isActive: true },
@@ -59,6 +64,7 @@ export class AssetService {
   /**
    * Updates an asset
    */
+  @AddAssetUrl()
   async updateAsset(
     id: number,
     updateData: Partial<Asset>
@@ -90,6 +96,7 @@ export class AssetService {
   /**
    * Gets assets with pagination
    */
+  @AddAssetUrl<{ assets: Asset[]; total: number }>((result) => result.assets)
   async findWithPagination(
     page = 1,
     limit = 20
