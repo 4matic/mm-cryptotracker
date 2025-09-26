@@ -2,12 +2,12 @@
 # Build the docker image with `npx nx docker:build @mm-cryptotracker/backend`.
 # Tip: Modify "docker:build" options in project.json to change docker build args.
 #
-# Run the container with `nx docker:run @mm-cryptotracker/backend -p 3000:3000`.
+# Run the container with `nx docker:run @mm-cryptotracker/backend -p 4000:4000`.
 #
 FROM docker.io/node:lts-alpine
 
 ENV HOST=0.0.0.0
-ENV PORT=3000
+ENV PORT=4000
 
 
 WORKDIR /app

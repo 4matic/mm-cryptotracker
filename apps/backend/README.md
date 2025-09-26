@@ -55,7 +55,7 @@ DATABASE_NAME=cryptotracker
 
 # Application Configuration
 NODE_ENV=development
-PORT=3000
+PORT=4000
 ```
 
 ### Installation
