@@ -4,6 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { DataProvider, TradingPair, PriceHistory, Asset } from '@/entities';
 import { PriceFetchingService } from './services/price-fetching.service';
 import { PriceFetchingController } from './controllers/price-fetching.controller';
+import { ConfigModule } from '@nestjs/config';
 
 /**
  * Module for price fetching functionality
@@ -17,6 +18,7 @@ import { PriceFetchingController } from './controllers/price-fetching.controller
       maxRedirects: 3,
     }),
     MikroOrmModule.forFeature([DataProvider, TradingPair, PriceHistory, Asset]),
+    ConfigModule,
   ],
   controllers: [PriceFetchingController],
   providers: [PriceFetchingService],

@@ -93,6 +93,7 @@
     "migration:up": "mikro-orm migration:up",
     "migration:down": "mikro-orm migration:down",
     "migration:list": "mikro-orm migration:list",
+    "migration:fresh": "mikro-orm migration:fresh",
     "schema:create": "mikro-orm schema:create",
     "schema:update": "mikro-orm schema:update",
     "schema:drop": "mikro-orm schema:drop",

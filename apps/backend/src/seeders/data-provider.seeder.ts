@@ -2,12 +2,15 @@ import { EntityManager, Dictionary } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { DataProvider } from '@/entities/data-provider.entity';
 import { DataProviderSlug } from '@/enums/data-provider.enum';
+import seederConfig from '@/config/seeder.config';
 
 /**
  * Seeds initial data provider: CoinMarketCap
  */
 export class DataProviderSeeder extends Seeder {
   async run(em: EntityManager, context: Dictionary): Promise<void> {
+    const config = seederConfig();
+
     // Check if CoinMarketCap provider already exists
     let existingProvider = await em.findOne(DataProvider, {
       name: 'CoinMarketCap',
@@ -24,7 +27,7 @@ export class DataProviderSeeder extends Seeder {
       coinMarketCap.rateLimitPerMinute = 1800; // Basic plan limit
       coinMarketCap.priority = 1;
       coinMarketCap.apiConfig = {
-        apiKey: process.env.DATA_PROVIDER_COINMARKETCAP_API_KEY,
+        apiKey: config.coinMarketCapApiKey,
       };
 
       em.persist(coinMarketCap);
