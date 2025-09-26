@@ -30,6 +30,7 @@ export class DataProviderService {
   /**
    * Finds a data provider by name
    */
+  @EnsureRequestContext()
   async findByName(name: string): Promise<DataProvider | null> {
     return this.dataProviderRepository.findOne({ name });
   }
@@ -52,6 +53,7 @@ export class DataProviderService {
   /**
    * Gets all active data providers
    */
+  @EnsureRequestContext()
   async findAllActive(): Promise<DataProvider[]> {
     return this.dataProviderRepository.find(
       { isActive: true },

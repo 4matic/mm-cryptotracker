@@ -8,6 +8,9 @@ import GetTradingPairQuery, {
   GetTradingPairResponse,
   GetTradingPairVariables,
 } from '@/graphql/GetTradingPair.gql';
+import GetDataProvidersQuery, {
+  GetDataProvidersResponse,
+} from '@/graphql/GetDataProviders.gql';
 
 /**
  * Server action to fetch trading pairs from the backend API
@@ -75,6 +78,38 @@ export async function getTradingPair(
       error instanceof Error
         ? `Failed to fetch trading pair: ${error.message}`
         : 'Failed to fetch trading pair: Unknown error'
+    );
+  }
+}
+
+/**
+ * Server action to fetch data providers from the backend API
+ */
+export async function getDataProviders(): Promise<
+  GetDataProvidersResponse['dataProviders']
+> {
+  const graphqlUrl = process.env.BACKEND_GRAPHQL_URL;
+
+  if (!graphqlUrl) {
+    throw new Error(
+      'BACKEND_GRAPHQL_URL environment variable is not configured'
+    );
+  }
+
+  const client = new GraphQLClient(graphqlUrl);
+
+  try {
+    const data = await client.request<GetDataProvidersResponse>(
+      GetDataProvidersQuery
+    );
+
+    return data.dataProviders;
+  } catch (error) {
+    console.error('Error fetching data providers:', error);
+    throw new Error(
+      error instanceof Error
+        ? `Failed to fetch data providers: ${error.message}`
+        : 'Failed to fetch data providers: Unknown error'
     );
   }
 }

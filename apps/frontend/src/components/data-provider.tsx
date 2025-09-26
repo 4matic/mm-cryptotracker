@@ -28,18 +28,6 @@ export function DataProvider({ pair, calculation }: DataProviderProps) {
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-primary mt-0.5" />
-            <div className="space-y-2">
-              <h4 className="font-semibold">Price Data Sources</h4>
-              <p className="text-sm text-muted-foreground text-pretty">
-                Price data is aggregated from multiple cryptocurrency exchanges
-                including Binance, OKX, and Bybit to ensure accuracy and
-                reliability.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
             <Calculator className="h-5 w-5 text-primary mt-0.5" />
             <div className="space-y-2">
               <h4 className="font-semibold">Price Calculation for {pair}</h4>

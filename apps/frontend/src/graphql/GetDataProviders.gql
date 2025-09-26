@@ -1,0 +1,6 @@
+query GetDataProviders {
+  dataProviders {
+    name
+    description
+  }
+}
