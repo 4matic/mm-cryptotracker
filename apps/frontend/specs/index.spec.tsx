@@ -17,11 +17,9 @@ describe('Page', () => {
     expect(baseElement).toBeTruthy();
   });
 
-  it('should display "No trading pairs available at the moment."', async () => {
+  it('should display "No cryptocurrency pairs available"', async () => {
     render(await Page());
-    const element = screen.getByText(
-      'No trading pairs available at the moment.'
-    );
+    const element = screen.getByText('No cryptocurrency pairs available');
     expect(element).toBeTruthy();
   });
 });
