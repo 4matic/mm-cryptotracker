@@ -48,11 +48,17 @@ export default async function PairPage({ params }: PairPageProps) {
     const additionalStats = getAdditionalStats(tradingPair);
 
     return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-6">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 relative overflow-hidden">
+        {/* Enhanced background decoration */}
+        <div className="fixed inset-0 bg-gradient-to-br from-primary/5 via-transparent to-chart-1/5 pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--primary)_0%,_transparent_50%)] opacity-10 pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-20" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl opacity-20" />
+
+        <div className="container mx-auto px-4 py-8 relative z-10">
           <BackButton />
 
-          <div className="space-y-8">
+          <div className="space-y-12 pt-4">
             <PairHeader
               tradingPair={tradingPair}
               change24h={additionalStats.change24h}

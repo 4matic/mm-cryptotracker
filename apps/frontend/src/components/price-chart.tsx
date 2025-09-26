@@ -11,24 +11,41 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { TrendingUp, AlertCircle } from 'lucide-react';
 import { ChartTimeframe, TIMEFRAME_CONFIGS } from '@/enums/chart';
 
-// Mock historical data
-const generateMockData = (days: number, basePrice: number) => {
+// Seeded random number generator for consistent data
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+// Mock historical data with seeded randomness for consistent hydration
+const generateMockData = (days: number, basePrice: number, pair: string) => {
   const data = [];
-  const now = new Date();
+  // Use pair name as seed for consistent randomness
+  const seed = pair
+    .split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+  // Use a fixed reference date to ensure consistency between server and client
+  const referenceDate = new Date('2024-01-01T00:00:00Z');
+  const now = new Date(referenceDate.getTime() + days * 24 * 60 * 60 * 1000);
 
   for (let i = days; i >= 0; i--) {
     const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-    const randomChange = (Math.random() - 0.5) * 0.2; // ±10% random change
+    const randomSeed = seed + i;
+    const randomChange = (seededRandom(randomSeed) - 0.5) * 0.2; // ±10% random change
     const price = basePrice * (1 + randomChange * (i / days));
+
+    const volumeSeed = seed + i + 1000;
+    const volume = Math.floor(seededRandom(volumeSeed) * 1000000) + 500000;
 
     data.push({
       date: date.toISOString().split('T')[0],
       price: Number(price.toFixed(4)),
-      volume: Math.floor(Math.random() * 1000000) + 500000,
+      volume: volume,
       timestamp: date.getTime(),
     });
   }
@@ -60,9 +77,12 @@ export function PriceChart({
     timeframeConfigs[2]?.days || 30 // Default to 1M if available, otherwise first available
   );
 
-  // Generate mock data based on pair
+  // Generate mock data based on pair with memoization to prevent hydration issues
   const basePrice = pair === 'TON/USDT' ? 5.42 : 0.1845;
-  const data = generateMockData(selectedTimeframe, basePrice);
+  const data = useMemo(
+    () => generateMockData(selectedTimeframe, basePrice, pair),
+    [selectedTimeframe, basePrice, pair]
+  );
 
   const currentPrice = data[data.length - 1]?.price || basePrice;
   const previousPrice = data[0]?.price || basePrice;

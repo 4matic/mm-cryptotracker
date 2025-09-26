@@ -10,7 +10,7 @@ interface DataProviderProps {
 
 export function DataProvider({ pair, calculation }: DataProviderProps) {
   return (
-    <Card className="surface-elevated border-border/50">
+    <Card className="bg-card/50 backdrop-blur-sm border border-border/50 shadow-2xl hover:shadow-primary/5 transition-all duration-300">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">

@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, BarChart3, Clock } from 'lucide-react';
+import { TrendingUp, TrendingDown, Clock } from 'lucide-react';
 import { AssetPrice } from '@/components/asset-price';
 import { PairImage } from '@/components/pair-image';
 import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
@@ -20,7 +20,6 @@ export function PairHeader({
 }: PairHeaderProps) {
   const isPositive = change24h >= 0;
   const hasChangeData = change24h !== 0;
-  const hasHighLowData = high24h > 0 && low24h > 0;
 
   return (
     <div className="space-y-8">
@@ -52,10 +51,10 @@ export function PairHeader({
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary/5 to-transparent rounded-full blur-2xl" />
       </div>
 
-      {/* Price and Stats Section */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main Price Card - Takes more space */}
-        <Card className="lg:col-span-2 border-border/50 bg-gradient-to-br from-card via-card to-card/80">
+      {/* Price Section */}
+      <div>
+        {/* Main Price Card */}
+        <Card className="border-border/50 bg-gradient-to-br from-card via-card to-card/80 shadow-xl hover:shadow-primary/5 transition-all duration-300">
           <CardContent className="p-8">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -100,51 +99,6 @@ export function PairHeader({
                     <span className="text-sm text-muted-foreground">24h</span>
                   </div>
                 )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Stats Card */}
-        <Card className="border-border/50">
-          <CardContent className="p-6">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                <h3 className="font-semibold">24h Statistics</h3>
-              </div>
-
-              <div className="space-y-4">
-                {/* High/Low */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">High</p>
-                    {hasHighLowData ? (
-                      <p className="text-lg font-bold font-mono text-green-600 dark:text-green-400">
-                        ${high24h.toFixed(4)}
-                      </p>
-                    ) : (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <div className="w-2 h-2 rounded-full bg-muted animate-pulse" />
-                        <span className="text-xs">N/A</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">Low</p>
-                    {hasHighLowData ? (
-                      <p className="text-lg font-bold font-mono text-red-600 dark:text-red-400">
-                        ${low24h.toFixed(4)}
-                      </p>
-                    ) : (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <div className="w-2 h-2 rounded-full bg-muted animate-pulse" />
-                        <span className="text-xs">N/A</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
           </CardContent>
