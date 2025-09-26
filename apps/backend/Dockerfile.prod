@@ -1,6 +1,11 @@
 # Multi-stage Dockerfile for NestJS backend in Nx workspace
 FROM node:20-alpine AS base
 
+# Add metadata labels for better container management
+LABEL maintainer="root@4matikku.com" \
+    description="NestJS backend application for cryptocurrency tracking" \
+    version="1.0"
+
 # Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
@@ -11,10 +16,12 @@ COPY package.json package-lock.json* ./
 COPY apps/backend/package.json ./apps/backend/
 # Copy workspace configuration
 COPY nx.json tsconfig.base.json ./
-COPY libs/shared/graphql ./libs/shared/graphql
+# Copy shared library package.json for dependency resolution
+COPY libs/shared/graphql/package.json ./libs/shared/graphql/
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install dependencies with cache mount for better performance
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --only=production
 
 # Install all dependencies for build (including dev deps)
 FROM base AS builder-deps
@@ -22,16 +29,24 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci
+# Copy shared library package.json for dependency resolution
+COPY libs/shared/graphql/package.json ./libs/shared/graphql/
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
 # Build the source code
 FROM base AS builder
 WORKDIR /app
 COPY --from=builder-deps /app/node_modules ./node_modules
+# Copy workspace configuration first
+COPY nx.json tsconfig.base.json ./
+# Copy shared library structure
+COPY libs/shared/graphql ./libs/shared/graphql/
+# Copy the entire workspace
 COPY . .
 
-# Build the backend app using Nx
-RUN npx nx build @mm-cryptotracker/backend --prod
+# Sync the Nx workspace, build dependencies and backend app
+RUN npx nx sync && npx nx build @mm-cryptotracker/backend --prod
 
 # Production image
 FROM base AS runner
@@ -41,24 +56,47 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=4000
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nestjs
+# Create non-root user with no home directory and no shell for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --no-create-home --shell /bin/false --ingroup nodejs nestjs
 
-# Copy built application and production node_modules
+# Copy built application and production node_modules with proper permissions
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/dist ./
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/package.json ./package.json
+
+# Set proper file permissions for security
+RUN chmod -R 644 /app && \
+    chmod 755 /app && \
+    find /app -type d -exec chmod 755 {} \; && \
+    chmod 644 /app/main.js
 
 USER nestjs
 
 EXPOSE 4000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "const http = require('http'); \
-    const options = { hostname: 'localhost', port: process.env.PORT || 4000, path: '/health', method: 'GET' }; \
-    const req = http.request(options, (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }); \
-    req.on('error', () => process.exit(1)); \
-    req.end();"
+# Health check - more robust with proper error handling and timeout
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD node -e " \
+    const http = require('http'); \
+    const options = { \
+    hostname: '0.0.0.0', \
+    port: process.env.PORT || 4000, \
+    path: '/health', \
+    method: 'GET', \
+    timeout: 8000 \
+    }; \
+    const req = http.request(options, (res) => { \
+    let data = ''; \
+    res.on('data', chunk => data += chunk); \
+    res.on('end', () => { \
+    console.log('Health check response:', res.statusCode, data); \
+    process.exit(res.statusCode === 200 ? 0 : 1); \
+    }); \
+    }); \
+    req.on('timeout', () => { console.error('Health check timeout'); req.destroy(); process.exit(1); }); \
+    req.on('error', (err) => { console.error('Health check error:', err.message); process.exit(1); }); \
+    req.setTimeout(8000); \
+    req.end();" || exit 1
 
 CMD ["node", "main.js"]

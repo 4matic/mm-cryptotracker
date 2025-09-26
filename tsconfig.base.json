@@ -19,6 +19,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "customConditions": ["@mm-cryptotracker/source"]
+    "customConditions": ["@mm-cryptotracker/source"],
+    "baseUrl": ".",
+    "paths": {
+      "@mm-cryptotracker/shared-graphql": ["libs/shared/graphql/src/index.ts"]
+    }
   }
 }

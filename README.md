@@ -156,7 +156,7 @@ Before getting started, ensure you have the following installed:
    **⚠️ Before seeding, ensure these environment variables are set in `apps/backend/.env`:**
    - `DATA_PROVIDER_COINMARKETCAP_API_KEY` - Your CoinMarketCap API key
    - `ASSETS_PUBLIC_URL` - Public URL for assets (e.g., `http://localhost:4000`)
-   
+   <br/>
    ```bash
    # Seed the database with initial cryptocurrency data
    npx nx run @mm-cryptotracker/backend:seeder:run
