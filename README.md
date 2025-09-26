@@ -18,6 +18,7 @@ A comprehensive cryptocurrency tracking application built with modern web techno
   - [Prerequisites](#prerequisites)
   - [Project Setup](#project-setup)
   - [Running the Project](#running-the-project)
+- [Useful links](#useful-links)
 - [Documentation](#-documentation)
 - [Development](#-development)
 - [Docker & Deployment](#-docker--deployment)
@@ -112,15 +113,58 @@ mm-cryptotracker/
 - **Extensible Data Providers**: Plugin architecture for multiple price data sources
 - **Container-Ready**: Full Docker support for development and production
 
+## 🚀 Quick Start
 
-## Useful links
+### Prerequisites
 
-Learn more:
+Before getting started, ensure you have the following installed:
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **[Node.js 20+](https://nodejs.org)** - JavaScript runtime
+- **[npm](https://npmjs.com)** - Package manager (comes with Node.js)
+- **[Docker](https://docker.com)** - For PostgreSQL database
+- **[Docker Compose](https://docs.docker.com/compose/)** - For container orchestration
+
+### Project Setup
+
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Start database services**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Configure environment variables**
+   ```bash
+   # Copy environment template files
+   cp apps/backend/.env.example apps/backend/.env
+   cp apps/frontend/.env.example apps/frontend/.env
+   ```
+   
+   **Important**: Update `apps/backend/.env` with the database password from `docker-compose.yml`
+
+4. **Setup database**
+   ```bash
+   # Run database migrations (fresh start)
+   npx nx run @mm-cryptotracker/backend:migration:fresh
+   ```
+
+5. **Seed initial data**
+   
+   **⚠️ Before seeding, ensure these environment variables are set in `apps/backend/.env`:**
+   - `DATA_PROVIDER_COINMARKETCAP_API_KEY` - Your CoinMarketCap API key
+   - `ASSETS_PUBLIC_URL` - Public URL for assets (e.g., `http://localhost:4000`)
+   
+   ```bash
+   # Seed the database with initial cryptocurrency data
+   npx nx run @mm-cryptotracker/backend:seeder:run
+   ```
+
+6. **Verify database setup** (Optional)
+   
+   Visit [http://localhost:8080](http://localhost:8080) to access Adminer and verify the data was seeded correctly.
 
 ### Running the Project
 
@@ -148,6 +192,15 @@ npx nx serve frontend     # Web: http://localhost:3000
 - **GraphQL Playground**: [http://localhost:4000/graphql](http://localhost:4000/graphql)
 - **Swagger Documentation**: [http://localhost:4000/api](http://localhost:4000/api)
 - **Database Admin**: [http://localhost:8080](http://localhost:8080)
+
+## Useful links
+
+Learn more:
+
+- [Learn more about this workspace setup](https://nx.dev/nx-api/node)
+- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx)
+- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases)
+- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins)
 
 ## 📚 Documentation
 
