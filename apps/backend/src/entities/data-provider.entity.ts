@@ -4,16 +4,19 @@ import {
   Property,
   OneToMany,
   Collection,
+  EntityRepositoryType,
 } from '@mikro-orm/core';
 import { ApiProperty } from '@nestjs/swagger';
 import { PriceHistory } from './price-history.entity';
+import { DataProviderRepository } from '@/repositories/data-provider.repository';
 
 /**
  * Represents a data provider for cryptocurrency prices
  * Examples: Binance, CoinGecko, CoinMarketCap, etc.
  */
-@Entity()
+@Entity({ repository: () => DataProviderRepository })
 export class DataProvider {
+  [EntityRepositoryType]?: DataProviderRepository;
   @ApiProperty({
     description: 'Unique identifier for the data provider',
     example: 1,

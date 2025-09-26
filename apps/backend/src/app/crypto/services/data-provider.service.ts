@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  EntityRepository,
-  EntityManager,
-  EnsureRequestContext,
-} from '@mikro-orm/core';
+import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { DataProvider } from '@/entities/data-provider.entity';
+import { DataProviderRepository } from '@/repositories';
 
 /**
  * Service for managing data providers
@@ -14,7 +11,7 @@ import { DataProvider } from '@/entities/data-provider.entity';
 export class DataProviderService {
   constructor(
     @InjectRepository(DataProvider)
-    private readonly dataProviderRepository: EntityRepository<DataProvider>,
+    private readonly dataProviderRepository: DataProviderRepository,
     private readonly em: EntityManager
   ) {}
 

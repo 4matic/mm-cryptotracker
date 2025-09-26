@@ -5,11 +5,7 @@ import {
   OnModuleDestroy,
 } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  EntityRepository,
-  EntityManager,
-  EnsureRequestContext,
-} from '@mikro-orm/core';
+import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -23,8 +19,12 @@ import {
   PriceData,
 } from '../interfaces/abstract-data-provider.interface';
 import { CoinmarketcapDataProvider } from '../providers/coinmarketcap-data-provider';
-import { AssetRepository } from '@/repositories/asset.repository';
-import { TradingPairRepository } from '@/repositories/trading-pair.repository';
+import {
+  AssetRepository,
+  TradingPairRepository,
+  DataProviderRepository,
+  PriceHistoryRepository,
+} from '@/repositories';
 import { Timeout } from '@nestjs/schedule';
 import { DataProviderConfig } from '@/config/data-provider.config';
 
@@ -58,11 +58,11 @@ export class PriceFetchingService implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     @InjectRepository(DataProvider)
-    private readonly dataProviderRepository: EntityRepository<DataProvider>,
+    private readonly dataProviderRepository: DataProviderRepository,
     @InjectRepository(TradingPair)
     private readonly tradingPairRepository: TradingPairRepository,
     @InjectRepository(PriceHistory)
-    private readonly priceHistoryRepository: EntityRepository<PriceHistory>,
+    private readonly priceHistoryRepository: PriceHistoryRepository,
     @InjectRepository(Asset)
     private readonly assetRepository: AssetRepository,
     private readonly em: EntityManager,

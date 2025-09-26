@@ -5,21 +5,24 @@ import {
   ManyToOne,
   Index,
   Unique,
+  EntityRepositoryType,
 } from '@mikro-orm/core';
 import { ApiProperty } from '@nestjs/swagger';
 import { TradingPair } from './trading-pair.entity';
 import { DataProvider } from './data-provider.entity';
+import { PriceHistoryRepository } from '@/repositories/price-history.repository';
 
 /**
  * Represents current price data for a trading pair from a specific data provider
  */
-@Entity()
+@Entity({ repository: () => PriceHistoryRepository })
 @Unique({
   properties: ['tradingPair', 'dataProvider', 'timestamp'],
 })
 @Index({ properties: ['tradingPair', 'timestamp'] })
 @Index({ properties: ['dataProvider', 'timestamp'] })
 export class PriceHistory {
+  [EntityRepositoryType]?: PriceHistoryRepository;
   @ApiProperty({
     description: 'Unique identifier for the price history entry',
     example: 1,

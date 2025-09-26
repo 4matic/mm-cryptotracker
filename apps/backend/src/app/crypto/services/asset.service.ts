@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { Asset } from '@/entities/asset.entity';
-import { AssetRepository } from '@/repositories/asset.repository';
+import { AssetRepository } from '@/repositories';
 
 /**
  * Service for managing cryptocurrency assets

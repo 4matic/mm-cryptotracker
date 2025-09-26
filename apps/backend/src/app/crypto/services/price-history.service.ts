@@ -1,13 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  EntityRepository,
-  EntityManager,
-  EnsureRequestContext,
-} from '@mikro-orm/core';
+import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { PriceHistory } from '@/entities/price-history.entity';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { DataProvider } from '@/entities/data-provider.entity';
+import {
+  PriceHistoryRepository,
+  TradingPairRepository,
+  DataProviderRepository,
+} from '@/repositories';
 
 export interface PriceHistoryQuery {
   tradingPairId?: number;
@@ -26,11 +27,11 @@ export class PriceHistoryService {
 
   constructor(
     @InjectRepository(PriceHistory)
-    private readonly priceHistoryRepository: EntityRepository<PriceHistory>,
+    private readonly priceHistoryRepository: PriceHistoryRepository,
     @InjectRepository(TradingPair)
-    private readonly tradingPairRepository: EntityRepository<TradingPair>,
+    private readonly tradingPairRepository: TradingPairRepository,
     @InjectRepository(DataProvider)
-    private readonly dataProviderRepository: EntityRepository<DataProvider>,
+    private readonly dataProviderRepository: DataProviderRepository,
     private readonly em: EntityManager
   ) {}
 
@@ -80,7 +81,9 @@ export class PriceHistoryService {
    * Gets price history with filtering options
    */
   async findPriceHistory(query: PriceHistoryQuery): Promise<PriceHistory[]> {
-    this.logger.debug(`Finding price history with query: ${JSON.stringify(query)}`);
+    this.logger.debug(
+      `Finding price history with query: ${JSON.stringify(query)}`
+    );
     const where: Record<string, unknown> = {};
 
     if (query.tradingPairId) {

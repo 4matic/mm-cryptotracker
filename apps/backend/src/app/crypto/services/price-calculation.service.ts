@@ -1,10 +1,11 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EnsureRequestContext } from '@mikro-orm/core';
+import { EnsureRequestContext } from '@mikro-orm/core';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { PriceHistory } from '@/entities/price-history.entity';
 import { Asset } from '@/entities/asset.entity';
 import { DataProvider } from '@/entities/data-provider.entity';
+import { TradingPairRepository, PriceHistoryRepository } from '@/repositories';
 
 interface PricePath {
   pairs: TradingPair[];
@@ -40,9 +41,9 @@ export class PriceCalculationService {
 
   constructor(
     @InjectRepository(TradingPair)
-    private readonly tradingPairRepository: EntityRepository<TradingPair>,
+    private readonly tradingPairRepository: TradingPairRepository,
     @InjectRepository(PriceHistory)
-    private readonly priceHistoryRepository: EntityRepository<PriceHistory>
+    private readonly priceHistoryRepository: PriceHistoryRepository
   ) {}
 
   /**
