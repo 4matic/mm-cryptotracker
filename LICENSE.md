@@ -2,7 +2,7 @@
 
 **MM CryptoTracker** - A comprehensive cryptocurrency tracking application
 
-Copyright © 2025 - All Rights Reserved
+Copyright © 2025 Maksim Maksimov - All Rights Reserved
 
 ## Personal Project Notice
 
