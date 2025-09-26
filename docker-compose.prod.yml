@@ -1,0 +1,92 @@
+---
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: cryptotracker-postgres-prod
+    environment:
+      POSTGRES_DB: cryptotracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: chee_w<a0quod5Aiphah
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - cryptotracker-network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile.prod
+    container_name: cryptotracker-backend-prod
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: chee_w<a0quod5Aiphah
+      DATABASE_NAME: cryptotracker
+      ASSETS_PUBLIC_URL: http://backend:4000
+      DATA_PROVIDER_FETCH_INTERVAL_MS: 60000
+      DATA_PROVIDER_COINMARKETCAP_API_KEY: >-
+        ${DATA_PROVIDER_COINMARKETCAP_API_KEY:-}
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - cryptotracker-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    container_name: cryptotracker-frontend-prod
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      # Backend API endpoint for the frontend
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_PUBLIC_GRAPHQL_URL: http://localhost:4000/graphql
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - cryptotracker-network
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:4-standalone
+    container_name: cryptotracker-adminer-prod
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: dracula
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - cryptotracker-network
+    restart: unless-stopped
+
+networks:
+  cryptotracker-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local

@@ -8,6 +8,9 @@ const nextConfig: WithNxOptions = {
 
   poweredByHeader: false,
 
+  // Enable standalone output for Docker optimization
+  output: 'standalone',
+
   images: {
     remotePatterns: [{ hostname: 'localhost' }],
   },

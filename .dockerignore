@@ -1,0 +1,112 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm
+.yarn
+
+# Environment files (keep only production template)
+.env
+.env.*
+!.env.prod
+.env.local
+.env.*.local
+
+# Build outputs (will be built inside Docker, but keep existing dist for reference)
+# dist - commented out as we may need existing builds for some processes
+build
+# out
+.next
+
+# Testing
+coverage
+.nyc_output
+*.lcov
+test-output
+apps/*/test-output
+**/coverage
+
+# Nx specific
+.nx
+tmp
+.nx/cache
+
+# Development tools and configs
+.vscode
+.idea
+*.swp
+*.swo
+.editorconfig
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# TypeScript
+*.tsbuildinfo
+
+# Development database
+runtime/
+*.sqlite
+*.db
+
+# Docker files themselves (except the ones we need)
+docker-compose.yml
+docker-compose.*.yml
+!docker-compose.prod.yml
+Dockerfile.*
+!apps/*/Dockerfile
+!apps/*/Dockerfile.prod
+
+# Documentation and development files
+*.md
+!PRODUCTION_SETUP.md
+docs/
+.github/
+
+# Testing files
+jest.config.*
+**/*.spec.ts
+**/*.spec.tsx
+**/*.test.ts
+**/*.test.tsx
+**/e2e/
+**/*-e2e/
+apps/*-e2e/
+tsconfig.spec.json
+
+# Linting
+.eslintcache
+.stylelintcache
+
+# Package manager lock files (npm ci will use package-lock.json)
+yarn.lock
+pnpm-lock.yaml
+
+# Temporary files
+tmp/
+temp/
