@@ -1,4 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleInit,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   EntityRepository,
@@ -6,6 +11,8 @@ import {
   EnsureRequestContext,
 } from '@mikro-orm/core';
 import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { DataProvider } from '@/entities/data-provider.entity';
 import { TradingPair } from '@/entities/trading-pair.entity';
 import { PriceHistory } from '@/entities/price-history.entity';
@@ -18,7 +25,8 @@ import {
 import { CoinmarketcapDataProvider } from '../providers/coinmarketcap-data-provider';
 import { AssetRepository } from '@/repositories/asset.repository';
 import { TradingPairRepository } from '@/repositories/trading-pair.repository';
-import { Interval, Timeout } from '@nestjs/schedule';
+import { Timeout } from '@nestjs/schedule';
+import { DataProviderConfig } from '@/config/data-provider.config';
 
 /**
  * Request DTO for fetching prices
@@ -44,7 +52,7 @@ export interface FetchPricesResponse {
  * and storing them in the database
  */
 @Injectable()
-export class PriceFetchingService {
+export class PriceFetchingService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PriceFetchingService.name);
   private readonly dataProviders = new Map<string, AbstractDataProvider>();
 
@@ -58,7 +66,9 @@ export class PriceFetchingService {
     @InjectRepository(Asset)
     private readonly assetRepository: AssetRepository,
     private readonly em: EntityManager,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+    private readonly schedulerRegistry: SchedulerRegistry
   ) {}
 
   /**
@@ -187,11 +197,54 @@ export class PriceFetchingService {
   }
 
   /**
+   * Sets up the scheduled interval for fetching prices using configuration
+   */
+  async onModuleInit(): Promise<void> {
+    const dataProviderConfig =
+      this.configService.get<DataProviderConfig>('dataProvider');
+    if (!dataProviderConfig) {
+      this.logger.error('Data provider configuration not found');
+      return;
+    }
+
+    const interval = setInterval(async () => {
+      try {
+        await this.fetchAllActivePairPrices();
+      } catch (error) {
+        this.logger.error(
+          `Error in scheduled price fetching: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
+      }
+    }, dataProviderConfig.fetchIntervalMs);
+
+    this.schedulerRegistry.addInterval('fetchAllActivePairPrices', interval);
+
+    this.logger.log(
+      `Scheduled price fetching every ${dataProviderConfig.fetchIntervalMs}ms`
+    );
+  }
+
+  /**
+   * Cleans up scheduled intervals when the module is destroyed
+   */
+  onModuleDestroy(): void {
+    try {
+      this.schedulerRegistry.deleteInterval('fetchAllActivePairPrices');
+      this.logger.log('Cleaned up scheduled price fetching interval');
+    } catch (error) {
+      this.logger.warn(
+        `Failed to cleanup scheduled interval: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
    * Fetches prices for all active trading pairs
    */
-  @Interval(
-    parseInt(process.env.DATA_PROVIDERS_FETCH_INTERVAL_MS || '60000', 10)
-  )
   @EnsureRequestContext()
   async fetchAllActivePairPrices(
     convertTo = 'USD'
