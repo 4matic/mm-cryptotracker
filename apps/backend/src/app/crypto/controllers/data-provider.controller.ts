@@ -14,8 +14,10 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { DataProviderService } from '@/app/crypto/services/data-provider.service';
-import { DataProvider } from '@/entities/data-provider.entity';
-import { PaginatedDataProvidersResponseDto } from '@/app/crypto/dto/data-provider.dto';
+import {
+  PaginatedDataProvidersResponseDto,
+  DataProviderResponseDto,
+} from '@/app/crypto/dto/data-provider.dto';
 
 /**
  * Controller for managing data providers
@@ -64,12 +66,7 @@ export class DataProviderController {
     @Query('page') page = 1,
     @Query('limit') limit = 20,
     @Query('activeOnly') activeOnly = true
-  ): Promise<{
-    dataProviders: DataProvider[];
-    total: number;
-    page: number;
-    limit: number;
-  }> {
+  ): Promise<PaginatedDataProvidersResponseDto> {
     this.logger.log(
       `Fetching data providers - page: ${page}, limit: ${limit}, activeOnly: ${activeOnly}`
     );
@@ -85,7 +82,10 @@ export class DataProviderController {
     );
 
     return {
-      ...result,
+      dataProviders: result.dataProviders.map((provider) =>
+        DataProviderResponseDto.fromEntity(provider)
+      ),
+      total: result.total,
       page,
       limit,
     };
@@ -107,7 +107,7 @@ export class DataProviderController {
   @ApiResponse({
     status: 200,
     description: 'Data provider found',
-    type: DataProvider,
+    type: DataProviderResponseDto,
   })
   @ApiResponse({
     status: 404,
@@ -115,18 +115,18 @@ export class DataProviderController {
   })
   async getDataProviderById(
     @Param('id', ParseIntPipe) id: number
-  ): Promise<DataProvider | null> {
+  ): Promise<DataProviderResponseDto | null> {
     this.logger.log(`Fetching data provider by ID: ${id}`);
 
     const dataProvider = await this.dataProviderService.findById(id);
 
     if (dataProvider) {
       this.logger.log(`Found data provider: ${dataProvider.name} (ID: ${id})`);
+      return DataProviderResponseDto.fromEntity(dataProvider);
     } else {
       this.logger.warn(`Data provider not found with ID: ${id}`);
+      return null;
     }
-
-    return dataProvider;
   }
 
   /**
@@ -146,7 +146,7 @@ export class DataProviderController {
   @ApiResponse({
     status: 200,
     description: 'Data provider found',
-    type: DataProvider,
+    type: DataProviderResponseDto,
   })
   @ApiResponse({
     status: 404,
@@ -154,7 +154,7 @@ export class DataProviderController {
   })
   async getDataProviderBySlug(
     @Param('slug') slug: string
-  ): Promise<DataProvider | null> {
+  ): Promise<DataProviderResponseDto | null> {
     this.logger.log(`Fetching data provider by slug: ${slug}`);
 
     const dataProvider = await this.dataProviderService.findBySlug(slug);
@@ -163,10 +163,10 @@ export class DataProviderController {
       this.logger.log(
         `Found data provider: ${dataProvider.name} (${dataProvider.slug})`
       );
+      return DataProviderResponseDto.fromEntity(dataProvider);
     } else {
       this.logger.warn(`Data provider not found with slug: ${slug}`);
+      return null;
     }
-
-    return dataProvider;
   }
 }

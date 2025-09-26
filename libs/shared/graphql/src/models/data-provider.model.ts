@@ -1,5 +1,4 @@
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
-import { GraphQLJSON } from 'graphql-type-json';
 
 /**
  * GraphQL model for DataProvider entity
