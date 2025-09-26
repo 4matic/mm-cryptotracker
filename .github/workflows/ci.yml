@@ -34,3 +34,7 @@ jobs:
       - run: npm ci --legacy-peer-deps
 
       - run: npx nx run-many -t lint test build typecheck
+
+      - run: npx playwright install --with-deps
+
+      - run: npx nx run frontend-e2e:e2e

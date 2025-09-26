@@ -21,12 +21,15 @@ export default defineConfig({
     baseURL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    /* Show browser UI during test execution */
+    headless: true,
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npx nx run @mm-cryptotracker/frontend:start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
+    command: 'npx nx run @mm-cryptotracker/frontend:dev --outputStyle stream',
+    url: baseURL,
+    timeout: 60 * 1000,
+    reuseExistingServer: false,
     cwd: workspaceRoot,
   },
   projects: [
@@ -35,15 +38,15 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     // Uncomment for mobile browsers support
     /* {
