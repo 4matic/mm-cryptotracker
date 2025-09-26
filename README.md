@@ -320,11 +320,9 @@ This is a personal project, so external contributions are not expected. However,
 
 ## 📄 License
 
-**Personal License**
+This is a personal project with all rights reserved. See **[LICENSE.md](LICENSE.md)** for complete license terms and usage permissions.
 
-This is a personal project created for learning and demonstration purposes. All rights reserved.
-
-The code is provided as-is for educational reference. Feel free to study the architecture and implementation patterns, but please respect that this is personal work.
+**Summary**: Educational reference and study permitted • Commercial use prohibited • Respect intellectual property
 
 **Technologies Used**: All third-party libraries and frameworks maintain their respective licenses.
 
