@@ -35,6 +35,13 @@ export class DataProviderService {
   }
 
   /**
+   * Finds a data provider by slug
+   */
+  async findBySlug(slug: string): Promise<DataProvider | null> {
+    return this.dataProviderRepository.findOne({ slug });
+  }
+
+  /**
    * Finds a data provider by ID
    */
   @EnsureRequestContext()
@@ -50,6 +57,26 @@ export class DataProviderService {
       { isActive: true },
       { orderBy: { priority: 'DESC', name: 'ASC' } }
     );
+  }
+
+  /**
+   * Gets data providers with pagination
+   */
+  async findWithPagination(
+    page = 1,
+    limit = 20,
+    activeOnly = true
+  ): Promise<{ dataProviders: DataProvider[]; total: number }> {
+    const whereCondition = activeOnly ? { isActive: true } : {};
+
+    const [dataProviders, total] =
+      await this.dataProviderRepository.findAndCount(whereCondition, {
+        orderBy: { priority: 'DESC', name: 'ASC' },
+        limit,
+        offset: (page - 1) * limit,
+      });
+
+    return { dataProviders, total };
   }
 
   /**

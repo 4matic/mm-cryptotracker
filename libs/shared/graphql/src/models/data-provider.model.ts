@@ -24,9 +24,6 @@ export class DataProviderModel {
   @Field({ nullable: true })
   website?: string;
 
-  @Field(() => GraphQLJSON, { nullable: true })
-  apiConfig?: Record<string, unknown>;
-
   @Field()
   isActive!: boolean;
 

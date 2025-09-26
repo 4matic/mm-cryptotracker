@@ -62,11 +62,6 @@ export class DataProvider {
   @Property({ nullable: true })
   website?: string;
 
-  @ApiProperty({
-    description: 'API configuration and settings',
-    example: { apiKey: 'xxx', timeout: 5000 },
-    required: false,
-  })
   @Property({ type: 'json', nullable: true })
   apiConfig?: Record<string, unknown>;
 

@@ -9,12 +9,18 @@ import { PriceCalculationService } from '@/app/crypto/services/price-calculation
 import { AssetController } from '@/app/crypto/controllers/asset.controller';
 import { TradingPairController } from '@/app/crypto/controllers/trading-pair.controller';
 import { PriceHistoryController } from '@/app/crypto/controllers/price-history.controller';
+import { DataProviderController } from '@/app/crypto/controllers/data-provider.controller';
 
 @Module({
   imports: [
     MikroOrmModule.forFeature([Asset, TradingPair, DataProvider, PriceHistory]),
   ],
-  controllers: [AssetController, TradingPairController, PriceHistoryController],
+  controllers: [
+    AssetController,
+    TradingPairController,
+    PriceHistoryController,
+    DataProviderController,
+  ],
   providers: [
     AssetService,
     TradingPairService,

@@ -21,14 +21,6 @@ const appConfigSchema = z.object({
    */
   nestDebug: z.coerce.boolean().default(false),
   /**
-   * @description Public URL for serving static assets
-   * @remarks Must be a valid URL format
-   * @example "https://cdn.example.com"
-   */
-  assetsPublicUrl: z.url({
-    error: 'ASSETS_PUBLIC_URL is required and must be a valid URL',
-  }),
-  /**
    * @description Computed boolean indicating if the application is running in production mode
    * @remarks Derived from nodeEnv property
    * @example true
