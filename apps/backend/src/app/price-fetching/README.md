@@ -92,7 +92,7 @@ const result = await this.priceFetchingService.fetchAndStorePrices({
 Make sure to set the CoinMarketCap API key in your environment:
 
 ```bash
-CMC_API_KEY=your_coinmarketcap_api_key_here
+DATA_PROVIDER_COINMARKETCAP_API_KEY=your_coinmarketcap_api_key_here
 ```
 
 ### Database Setup
@@ -115,7 +115,7 @@ const coinMarketCap = new DataProvider(
 );
 coinMarketCap.apiUrl = 'https://pro-api.coinmarketcap.com';
 coinMarketCap.apiConfig = {
-  apiKey: process.env.CMC_API_KEY,
+  apiKey: process.env.DATA_PROVIDER_COINMARKETCAP_API_KEY,
 };
 ```
 

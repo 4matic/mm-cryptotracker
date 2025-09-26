@@ -24,7 +24,7 @@ export class DataProviderSeeder extends Seeder {
       coinMarketCap.rateLimitPerMinute = 1800; // Basic plan limit
       coinMarketCap.priority = 1;
       coinMarketCap.apiConfig = {
-        apiKey: process.env.CMC_API_KEY,
+        apiKey: process.env.DATA_PROVIDER_COINMARKETCAP_API_KEY,
       };
 
       em.persist(coinMarketCap);

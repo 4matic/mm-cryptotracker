@@ -1,12 +1,12 @@
 /**
- * Transforms asset logoUrl by adding ASSETS_URL prefix
+ * Transforms asset logoUrl by adding ASSETS_PUBLIC_URL prefix
  */
 export function transformAssetUrl(logoUrl?: string): string | undefined {
   if (!logoUrl) {
     return logoUrl;
   }
 
-  const assetsUrl = process.env.ASSETS_URL || '';
+  const assetsUrl = process.env.ASSETS_PUBLIC_URL || '';
   if (!assetsUrl) {
     return logoUrl;
   }

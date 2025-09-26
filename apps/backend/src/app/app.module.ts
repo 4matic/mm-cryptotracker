@@ -7,6 +7,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLApiModule } from '@/app/crypto/graphql/graphql.module';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
       autoSchemaFile: true,
       sortSchema: true,
     }),
+    ScheduleModule.forRoot(),
   ],
 })
 export class AppModule {}

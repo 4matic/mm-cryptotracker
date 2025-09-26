@@ -83,10 +83,6 @@ export class PriceFetchingController {
       fetchAllDto.convertTo
     );
 
-    this.logger.log(
-      `All active pairs price fetching completed. Updated ${result.pricesUpdated} prices with ${result.errors.length} errors`
-    );
-
     return result;
   }
 
@@ -124,8 +120,6 @@ export class PriceFetchingController {
     this.logger.log('Received request to initialize data providers');
 
     await this.priceFetchingService.initializeDataProviders();
-
-    this.logger.log('Data providers initialization completed');
 
     return { message: 'Data providers initialized successfully' };
   }

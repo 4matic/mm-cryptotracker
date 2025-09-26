@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EntityManager } from '@mikro-orm/core';
+import {
+  EntityRepository,
+  EntityManager,
+  EnsureRequestContext,
+} from '@mikro-orm/core';
 import { HttpService } from '@nestjs/axios';
 import { DataProvider } from '@/entities/data-provider.entity';
 import { TradingPair } from '@/entities/trading-pair.entity';
@@ -14,6 +18,7 @@ import {
 import { CoinmarketcapDataProvider } from '../providers/coinmarketcap-data-provider';
 import { AssetRepository } from '@/repositories/asset.repository';
 import { TradingPairRepository } from '@/repositories/trading-pair.repository';
+import { Interval, Timeout } from '@nestjs/schedule';
 
 /**
  * Request DTO for fetching prices
@@ -59,33 +64,45 @@ export class PriceFetchingService {
   /**
    * Initializes data providers by loading them from the database
    */
+  @Timeout(1000)
+  @EnsureRequestContext()
   async initializeDataProviders(): Promise<void> {
-    const activeProviders = await this.dataProviderRepository.find({
-      isActive: true,
-    });
+    try {
+      const activeProviders = await this.dataProviderRepository.find({
+        isActive: true,
+      });
 
-    this.logger.log(
-      `Initializing ${activeProviders.length} active data providers`
-    );
+      this.logger.log(
+        `Initializing ${activeProviders.length} active data providers`
+      );
 
-    for (const provider of activeProviders) {
-      try {
-        const dataProvider = this.createDataProvider(provider);
-        if (dataProvider.isConfigured()) {
-          this.dataProviders.set(provider.slug, dataProvider);
-          this.logger.log(`Initialized data provider: ${provider.name}`);
-        } else {
-          this.logger.warn(
-            `Data provider ${provider.name} is not properly configured`
+      for (const provider of activeProviders) {
+        try {
+          const dataProvider = this.createDataProvider(provider);
+          if (dataProvider.isConfigured()) {
+            this.dataProviders.set(provider.slug, dataProvider);
+            this.logger.log(`Initialized data provider: ${provider.name}`);
+          } else {
+            this.logger.warn(
+              `Data provider ${provider.name} is not properly configured`
+            );
+          }
+        } catch (error) {
+          this.logger.error(
+            `Failed to initialize data provider ${provider.name}: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           );
         }
-      } catch (error) {
-        this.logger.error(
-          `Failed to initialize data provider ${provider.name}: ${
-            error instanceof Error ? error.message : String(error)
-          }`
-        );
       }
+
+      this.logger.log('Data providers initialization completed');
+    } catch (error) {
+      this.logger.error(
+        `Failed to initialize data providers: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
     }
   }
 
@@ -172,6 +189,10 @@ export class PriceFetchingService {
   /**
    * Fetches prices for all active trading pairs
    */
+  @Interval(
+    parseInt(process.env.DATA_PROVIDERS_FETCH_INTERVAL_MS || '60000', 10)
+  )
+  @EnsureRequestContext()
   async fetchAllActivePairPrices(
     convertTo = 'USD'
   ): Promise<FetchPricesResponse> {
@@ -198,7 +219,13 @@ export class PriceFetchingService {
       `Fetching prices for ${symbols.length} unique symbols from ${activePairs.length} active trading pairs`
     );
 
-    return this.fetchAndStorePrices({ symbols, convertTo });
+    const response = await this.fetchAndStorePrices({ symbols, convertTo });
+
+    this.logger.log(
+      `All active pairs price fetching completed. Updated ${response.pricesUpdated} prices with ${response.errors.length} errors`
+    );
+
+    return response;
   }
 
   /**
