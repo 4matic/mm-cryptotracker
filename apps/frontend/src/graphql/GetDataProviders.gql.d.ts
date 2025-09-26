@@ -3,7 +3,7 @@ import type { DataProviderModel } from '@mm-cryptotracker/shared-graphql';
 
 // GraphQL Query Response
 export interface GetDataProvidersResponse {
-  dataProviders: Pick<DataProviderModel, 'name' | 'description'>[];
+  dataProviders: DataProviderModel[];
 }
 
 // GraphQL Document

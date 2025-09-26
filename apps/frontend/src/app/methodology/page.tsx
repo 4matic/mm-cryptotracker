@@ -3,10 +3,10 @@ import { Badge } from '@/components/ui/badge';
 import { BackButton } from '@/components/back-button';
 import { Database, Calculator } from 'lucide-react';
 import { getDataProviders } from '@/lib/actions';
-import type { DataProvider } from '@/graphql/GetDataProviders.gql';
+import type { DataProviderModel } from '@mm-cryptotracker/shared-graphql';
 
 export default async function MethodologyPage() {
-  let dataProviders: DataProvider[] = [];
+  let dataProviders: DataProviderModel[] = [];
 
   try {
     dataProviders = await getDataProviders();

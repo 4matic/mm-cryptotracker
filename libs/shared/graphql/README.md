@@ -83,6 +83,6 @@ nx lint graphql
 
 ## Related Documentation
 
-- [Backend GraphQL API Documentation](../../apps/backend/src/app/crypto/README.md)
-- [Database Entities](../../apps/backend/src/entities/)
-- [Frontend GraphQL Integration](../../apps/frontend/src/graphql/)
+- [Backend GraphQL API Documentation](../../../apps/backend/src/app/crypto/README.md)
+- [Database Entities](../../../apps/backend/src/entities/)
+- [Frontend GraphQL Integration](../../../apps/frontend/src/graphql/)
