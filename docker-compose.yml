@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: cryptotracker-postgres
-    restart: unless-stopped
     environment:
       POSTGRES_DB: cryptotracker
       POSTGRES_USER: postgres
@@ -19,7 +18,6 @@ services:
   adminer:
     image: adminer:4-standalone
     container_name: cryptotracker-adminer
-    restart: unless-stopped
     environment:
       ADMINER_DEFAULT_SERVER: postgres
       ADMINER_DESIGN: dracula
