@@ -45,7 +45,7 @@ services:
       - cryptotracker-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:4000/api/healthcheck || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
