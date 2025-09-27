@@ -8,8 +8,11 @@ The Crypto module is the core component of the cryptocurrency tracking system, p
 crypto/
 ├── controllers/          # REST API endpoints
 ├── services/            # Business logic and data operations
+├── entities/            # MikroORM entity definitions
+├── repositories/        # Custom repository implementations
 ├── dto/                 # Data Transfer Objects for API validation
 ├── graphql/            # GraphQL resolvers and module
+│   └── resolvers/      # GraphQL resolver implementations
 └── crypto.module.ts    # Main module configuration
 ```
 
@@ -17,25 +20,25 @@ crypto/
 
 The module manages four primary entities:
 
-### 1. **Asset** (`asset.entity.ts`)
+### 1. **Asset** (`entities/asset.entity.ts`)
 Represents individual cryptocurrencies (BTC, ETH, etc.)
 - Symbol, name, description
 - Logo URL and website information
 - Active status management
 
-### 2. **TradingPair** (`trading-pair.entity.ts`)
+### 2. **TradingPair** (`entities/trading-pair.entity.ts`)
 Represents trading relationships between two assets (e.g., BTC/USD)
 - Base and quote asset relationships
 - Visibility and active status
 - Symbol generation and management
 
-### 3. **DataProvider** (`data-provider.entity.ts`)
+### 3. **DataProvider** (`entities/data-provider.entity.ts`)
 Represents sources of price data (exchanges, APIs)
 - Name, description, and priority
 - Active status and slug identification
 - Rate limiting and reliability tracking
 
-### 4. **PriceHistory** (`price-history.entity.ts`)
+### 4. **PriceHistory** (`entities/price-history.entity.ts`)
 Stores historical price data for trading pairs
 - Timestamp-based price records
 - Data provider attribution
@@ -70,22 +73,22 @@ Stores historical price data for trading pairs
 
 The module provides GraphQL resolvers for all entities:
 
-#### AssetResolver
+#### AssetResolver (`graphql/resolvers/asset.resolver.ts`)
 - `assets` - Query all active assets
 - `asset(id)` - Query asset by ID
 - `assetBySymbol(symbol)` - Query asset by symbol
 - `assetsWithPagination(page, limit)` - Paginated asset query
 
-#### TradingPairResolver
+#### TradingPairResolver (`graphql/resolvers/trading-pair.resolver.ts`)
 - `tradingPairs` - Query all trading pairs
 - `tradingPair(id)` - Query trading pair by ID
 - `tradingPairBySymbol(symbol)` - Query by symbol
 
-#### DataProviderResolver
+#### DataProviderResolver (`graphql/resolvers/data-provider.resolver.ts`)
 - `dataProviders` - Query all data providers
 - `dataProvider(id)` - Query by ID
 
-#### PriceHistoryResolver
+#### PriceHistoryResolver (`graphql/resolvers/price-history.resolver.ts`)
 - `priceHistory(tradingPairId)` - Query price history
 - `latestPrice(tradingPairId)` - Query latest price
 
@@ -165,6 +168,34 @@ const indirectPrice = await priceCalculationService
 - Confidence scoring algorithms
 - Synthetic price generation
 
+## Repository Pattern
+
+### Custom Repository Implementations
+
+The module includes custom repository implementations that follow the repository pattern for future extensibility:
+
+#### AssetRepository (`repositories/asset.repository.ts`)
+- **Status**: Placeholder implementation extending MikroORM base repository
+- **Purpose**: Demonstrates repository pattern and provides extension point for asset-specific database operations
+- **Future capabilities**: Symbol-based lookups, validation, and active status filtering
+
+#### TradingPairRepository (`repositories/trading-pair.repository.ts`)
+- **Status**: Placeholder implementation extending MikroORM base repository
+- **Purpose**: Demonstrates repository pattern and provides extension point for trading pair operations
+- **Future capabilities**: Complex queries, base asset relationship management, and symbol construction
+
+#### DataProviderRepository (`repositories/data-provider.repository.ts`)
+- **Status**: Placeholder implementation extending MikroORM base repository
+- **Purpose**: Demonstrates repository pattern and provides extension point for data provider operations
+- **Future capabilities**: Priority-based ordering, lifecycle operations, and slug-based identification
+
+#### PriceHistoryRepository (`repositories/price-history.repository.ts`)
+- **Status**: Placeholder implementation extending MikroORM base repository
+- **Purpose**: Demonstrates repository pattern and provides extension point for price history operations
+- **Future capabilities**: Time-series data operations, date range queries, and latest price optimization
+
+**Note**: Currently, all repositories are empty implementations that extend the base MikroORM repository functionality. They serve as demonstration of the repository pattern and provide extension points for future custom database operations and optimizations.
+
 ## Database Integration
 
 The module uses **MikroORM** with the following configuration:
@@ -195,14 +226,14 @@ All REST endpoints are documented with **Swagger/OpenAPI**:
 ## Testing
 
 ### Unit Tests
-- `asset.controller.spec.ts` - Asset controller testing
-- `price-calculation.service.spec.ts` - Price calculation logic testing
+- `controllers/asset.controller.spec.ts` - Asset controller testing
+- `services/price-calculation.service.spec.ts` - Price calculation logic testing
 
 ### Test Coverage
-- Controller endpoint validation
-- Service business logic verification
-- Price calculation algorithm testing
-- Error handling scenarios
+- **Controller Tests**: Asset controller endpoint validation and response handling
+- **Service Tests**: Price calculation algorithm testing with mock data
+- **Business Logic**: Service method verification and edge case handling
+- **Error Handling**: Exception scenarios and validation testing
 
 ## Logging and Monitoring
 
@@ -228,6 +259,8 @@ The module implements comprehensive logging:
 export class GraphQLApiModule {}
 ```
 
+All resolvers are located in the `graphql/resolvers/` directory for better organization and maintainability.
+
 ### Schema Generation
 - Automatic schema generation from TypeScript types
 - Shared GraphQL models via `@mm-cryptotracker/shared-graphql`
@@ -236,8 +269,10 @@ export class GraphQLApiModule {}
 ## Module Dependencies
 
 ### Internal Dependencies
-- `@/entities` - Entity definitions
-- `@/repositories` - Custom repository implementations
+- `./entities` - MikroORM entity definitions and database models
+- `./repositories` - Custom repository implementations for data access
+- `./services` - Business logic and data operations
+- `./dto` - Data Transfer Objects for API validation
 - `@mm-cryptotracker/shared-graphql` - Shared GraphQL types
 
 ### External Dependencies

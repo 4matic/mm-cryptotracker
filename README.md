@@ -137,13 +137,17 @@ Before getting started, ensure you have the following installed:
    ```
 
 3. **Configure environment variables**
+   
+   Copy the environment template files and configure your settings:
    ```bash
    # Copy environment template files
    cp apps/backend/.env.example apps/backend/.env
    cp apps/frontend/.env.example apps/frontend/.env
    ```
    
-   **Important**: Update `apps/backend/.env` with the database password from `docker-compose.yml`
+   **Important**: Update `apps/backend/.env` with required variables. See **[`env.example`](env.example)** for all available configuration options:
+   - Database password from `docker-compose.yml`
+   - CoinMarketCap API key (required for price data fetching)
 
 4. **Setup database**
    ```bash
@@ -204,23 +208,34 @@ Learn more:
 
 ## 📚 Documentation
 
+### Quick Reference Files
+- **[`env.example`](env.example)** - Environment variables template with all configuration options
+- **[`LICENSE.md`](LICENSE.md)** - Complete license terms and usage permissions
+
 ### Application Documentation
-- **[Production Setup Guide](PRODUCTION_SETUP.md)** - Complete production deployment instructions
-- **[Backend API Documentation](apps/backend/README.md)** - NestJS backend with detailed architecture
-- **[Frontend Application](apps/frontend/README.md)** - Next.js frontend with modern React patterns
+- **[Production Setup Guide](PRODUCTION_SETUP.md)** - Complete production deployment instructions with Docker Compose
+- **[Backend API Documentation](apps/backend/README.md)** - NestJS backend with detailed architecture and API reference
+- **[Frontend Application](apps/frontend/README.md)** - Next.js frontend with modern React patterns and components
 
 ### Backend Module Documentation
-- **[Crypto Module](apps/backend/src/app/crypto/README.md)** - Core cryptocurrency functionality and services
-- **[Price Fetching Module](apps/backend/src/app/price-fetching/README.md)** - External API integration and automation
-- **[GraphQL API](apps/backend/src/app/crypto/graphql/README.md)** - GraphQL schema and resolver documentation
+- **[Crypto Module](apps/backend/src/app/crypto/README.md)** - Core cryptocurrency functionality, entities, and services
+  - Contains entity definitions, repositories, GraphQL resolvers, and business logic
+  - Price calculation algorithms and trading pair management
+- **[Price Fetching Module](apps/backend/src/app/price-fetching/README.md)** - External API integration and automated data fetching
+  - CoinMarketCap API integration and data provider management
 
-### Shared Libraries
-- **[Shared GraphQL Types](libs/shared/graphql/README.md)** - Common GraphQL schema definitions
+### Shared Libraries & Types
+- **[Shared GraphQL Types](libs/shared/graphql/README.md)** - Common GraphQL schema definitions and type mappings
+  - Cross-references database entities and frontend GraphQL queries
 
-### API References
-- **GraphQL Playground**: Available at `/graphql` in development
-- **OpenAPI/Swagger**: Available at `/api` in development
-- **REST API Endpoints**: Comprehensive CRUD operations for all entities
+### API References & Interactive Tools
+- **GraphQL Playground**: [http://localhost:4000/graphql](http://localhost:4000/graphql) - Interactive GraphQL API explorer
+- **OpenAPI/Swagger Documentation**: [http://localhost:4000/api](http://localhost:4000/api) - REST API documentation
+- **Database Administration**: [http://localhost:8080](http://localhost:8080) - Adminer interface for database management
+
+### Build & Deployment Scripts
+- **[`scripts/build-prod.sh`](scripts/build-prod.sh)** - Production build automation script
+  - ⚠️ **Warning**: This script includes Docker system purge commands. Review carefully before execution.
 
 ## 🔧 Development
 
@@ -274,23 +289,46 @@ docker-compose down
 ```
 
 ### Production Deployment
-```bash
-# Production deployment (includes apps)
-docker-compose -f docker-compose.prod.yml up --build -d
 
-# Access production services
-# Frontend: http://localhost:3000
-# Backend: http://localhost:4000
-# Database: http://localhost:8080
+**Quick Production Setup**:
+```bash
+# 1. Configure environment variables first (see env.example)
+cp env.example .env
+# Edit .env with your production settings
+
+# 2. Standard production deployment process
+docker-compose -f docker-compose.prod.yml up -d database
+docker-compose -f docker-compose.prod.yml --profile cli run --rm cli migration:fresh
+docker-compose -f docker-compose.prod.yml --profile cli run --rm cli seeder:run
+docker-compose -f docker-compose.prod.yml up -d
+
+# 3. Monitor deployment
+docker-compose -f docker-compose.prod.yml ps
+docker-compose -f docker-compose.prod.yml logs -f
 ```
 
-**📖 [Complete Production Setup Guide](PRODUCTION_SETUP.md)**
+**Alternative One-Command Deployment** (legacy):
+```bash
+# Build and run everything at once
+docker-compose -f docker-compose.prod.yml up --build -d
+```
+
+**Access Production Services**:
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:4000](http://localhost:4000)
+- **Database Admin**: [http://localhost:8080](http://localhost:8080)
+
+**📖 [Complete Production Setup Guide](PRODUCTION_SETUP.md)** - Comprehensive deployment documentation with troubleshooting
 
 ### Docker Configuration
 - **Backend**: Optimized multi-stage build with `Dockerfile.prod`
 - **Frontend**: Next.js standalone output for minimal container size
 - **Database**: PostgreSQL 17 Alpine with persistent volumes
 - **Admin**: Adminer with Dracula theme for database management
+
+### Build Automation
+- **[`scripts/build-prod.sh`](scripts/build-prod.sh)** - Automated production build script
+  - ⚠️ **Warning**: Script includes Docker system purge operations that remove all unused containers, networks, and images. Review before use.
 
 ## 🧪 Testing
 

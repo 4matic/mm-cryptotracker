@@ -34,7 +34,7 @@ export default defineConfig({
   password: process.env.DATABASE_PASSWORD,
   dbName: process.env.DATABASE_NAME,
   entities: [Asset, TradingPair, PriceHistory, DataProvider],
-  // entitiesTs: ['./src/entities/*.entity.ts'],
+  // entitiesTs: ['./src/app/crypto/entities/*.entity.ts'],
   discovery: {
     warnWhenNoEntities: true,
     requireEntitiesArray: false,

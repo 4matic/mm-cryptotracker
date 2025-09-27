@@ -2,6 +2,8 @@
 
 A modern Next.js application for tracking cryptocurrency prices with detailed analysis and historical data. Built with React 19, Next.js 15, and Tailwind CSS.
 
+> 📖 **This is part of the MM CryptoTracker monorepo.** For complete project information, setup instructions, and overall architecture, see the **[main project README](../../README.md)**.
+
 ## 🚀 Features
 
 - **Real-time Cryptocurrency Tracking**: Monitor cryptocurrency prices with live updates
@@ -15,29 +17,31 @@ A modern Next.js application for tracking cryptocurrency prices with detailed an
 
 ## 🛠 Tech Stack
 
-### Core Framework
+> 🔗 **For the complete technology stack** including backend, database, and DevOps technologies, see the **[main Tech Stack section](../../README.md#-technology-stack)**.
+
+### Frontend-Specific Technologies
+
+#### Core Framework
 - **Next.js 15.5.4** - React framework with App Router
 - **React 19** - UI library
 - **TypeScript** - Type safety and better developer experience
 
-### UI & Styling
+#### UI & Styling
 - **Tailwind CSS 4** - Utility-first CSS framework
 - **Shadcn/ui** - High-quality accessible UI components
 - **Radix UI** - Low-level UI primitives
 - **Lucide React** - Icon library
 - **Geist Font** - Modern typography
 
-### Data & State Management
+#### Data & State Management
 - **GraphQL** - API query language
 - **graphql-request** - GraphQL client
-- **React Hook Form** - Forms with validation
-- **Zod** - Schema validation
 
-### Charts & Visualization
+#### Charts & Visualization
 - **Recharts** - Chart library for React
 - **Embla Carousel** - Carousel components
 
-### Development Tools
+#### Development Tools
 - **Jest** - Testing framework
 - **ESLint** - Code linting
 - **Nx** - Monorepo management
@@ -61,9 +65,11 @@ apps/frontend/
 │   │   ├── pair-*.tsx         # Trading pair related components
 │   │   ├── price-*.tsx        # Price related components
 │   │   └── theme-provider.tsx # Theme management
-│   ├── graphql/               # GraphQL queries and types
-│   │   ├── *.gql             # GraphQL query files
-│   │   └── *.gql.d.ts        # Generated TypeScript types
+│   ├── graphql/               # GraphQL queries and TypeScript definitions
+│   │   ├── GetTradingPairs.gql      # Trading pairs pagination query
+│   │   ├── GetTradingPair.gql       # Single trading pair query
+│   │   ├── GetDataProviders.gql     # Data providers query
+│   │   └── *.gql.d.ts              # Generated TypeScript definitions
 │   ├── hooks/                 # Custom React hooks
 │   ├── lib/                   # Utility libraries
 │   │   ├── actions.ts         # Server actions
@@ -83,9 +89,12 @@ apps/frontend/
 
 ### Prerequisites
 
+> 🔗 **For complete project setup** including database configuration and backend setup, follow the **[main Quick Start guide](../../README.md#-quick-start)**.
+
+**Frontend-specific requirements:**
 - Node.js 18+
 - npm package manager
-- Backend GraphQL API running
+- Backend GraphQL API running (see [Backend Documentation](../backend/README.md))
 
 ### Installation
 
@@ -100,6 +109,7 @@ apps/frontend/
    ```env
    BACKEND_GRAPHQL_URL=http://localhost:4000/graphql
    ```
+   See the [Environment Variables](#🌐-environment-variables) section for complete configuration options.
 
 3. **Start the development server**:
    ```bash
@@ -157,11 +167,33 @@ The app uses a custom Next.js configuration (`next.config.ts`) that includes:
 
 ## 📊 GraphQL Integration
 
+> 🔗 **For GraphQL schema details and shared types**, see the **[Shared GraphQL Library Documentation](../../libs/shared/graphql/README.md)**.
+
 The frontend uses GraphQL for data fetching with these main queries:
 
-- `GetTradingPairs` - Fetch paginated trading pairs
-- `GetTradingPair` - Fetch single trading pair by slug
+- `GetTradingPairs` - Fetch paginated trading pairs with pagination support
+- `GetTradingPair` - Fetch single trading pair by slug with detailed asset information  
 - `GetDataProviders` - Fetch data provider information
+
+### GraphQL Query Files
+
+Located in `src/graphql/`, the application uses `.gql` files for GraphQL queries with corresponding TypeScript definitions:
+
+```
+src/graphql/
+├── GetTradingPairs.gql          # Trading pairs pagination query
+├── GetTradingPairs.gql.d.ts     # TypeScript definitions
+├── GetTradingPair.gql           # Single trading pair query
+├── GetTradingPair.gql.d.ts      # TypeScript definitions  
+├── GetDataProviders.gql         # Data providers query
+└── GetDataProviders.gql.d.ts    # TypeScript definitions
+```
+
+**Key Features:**
+- **Type Safety**: Generated TypeScript definitions provide full type safety
+- **Code Completion**: IDE support with auto-completion for queries and variables
+- **Webpack Integration**: `.gql` files are loaded via `graphql-tag/loader`
+- **Shared Types**: Uses types from `@mm-cryptotracker/shared-graphql` library
 
 ### Server Actions
 
@@ -207,6 +239,8 @@ nx test frontend --coverage # Run with coverage report
 
 ## 🔄 Data Flow
 
+> 🔗 **For backend API details and data architecture**, see the **[Backend Documentation](../backend/README.md)**, **[Crypto Module Documentation](../backend/src/app/crypto/README.md)**, and **[Price Fetching Documentation](../backend/src/app/price-fetching/README.md)**.
+
 1. **Pages** use Server Actions to fetch data
 2. **Server Actions** make GraphQL requests to the backend
 3. **Components** receive data as props from pages
@@ -214,9 +248,44 @@ nx test frontend --coverage # Run with coverage report
 
 ## 🌐 Environment Variables
 
-| Variable              | Description          | Required | Default |
-| --------------------- | -------------------- | -------- | ------- |
-| `BACKEND_GRAPHQL_URL` | GraphQL API endpoint | Yes      | -       |
+### Required Variables
+
+| Variable              | Description          | Required | Default | Example                         |
+| --------------------- | -------------------- | -------- | ------- | ------------------------------- |
+| `BACKEND_GRAPHQL_URL` | GraphQL API endpoint | Yes      | -       | `http://localhost:4000/graphql` |
+
+### Optional Variables
+
+| Variable                  | Description                              | Required | Default       | Example      |
+| ------------------------- | ---------------------------------------- | -------- | ------------- | ------------ |
+| `USE_LOGGER`              | Enable logging with pino and next-logger | No       | `false`       | `true`       |
+| `NODE_ENV`                | Node.js environment                      | No       | `development` | `production` |
+| `PORT`                    | Server port                              | No       | `3000`        | `3000`       |
+| `HOSTNAME`                | Server hostname                          | No       | `localhost`   | `0.0.0.0`    |
+| `NEXT_TELEMETRY_DISABLED` | Disable Next.js telemetry                | No       | `false`       | `1`          |
+
+### Next.js System Variables
+
+| Variable       | Description                 | Set By  | Usage                                 |
+| -------------- | --------------------------- | ------- | ------------------------------------- |
+| `NEXT_RUNTIME` | Next.js runtime environment | Next.js | Used internally for runtime detection |
+
+### Environment File Setup
+
+Create a `.env.local` file in the frontend directory for development:
+
+```env
+# Required
+BACKEND_GRAPHQL_URL=http://localhost:4000/graphql
+
+# Optional - Enable logging
+USE_LOGGER=true
+
+# Optional - Custom port
+PORT=3000
+```
+
+For production deployment, ensure all required environment variables are set in your deployment platform or Docker configuration.
 
 ## 📦 Dependencies
 
@@ -226,8 +295,6 @@ nx test frontend --coverage # Run with coverage report
 - **Styling**: Tailwind CSS, Radix UI components
 - **Data Fetching**: GraphQL, graphql-request
 - **Charts**: Recharts, date-fns
-- **Forms**: React Hook Form, Zod validation
-- **Analytics**: Vercel Analytics
 
 ### Development Dependencies
 
@@ -236,6 +303,10 @@ nx test frontend --coverage # Run with coverage report
 - **Code Quality**: ESLint configuration
 
 ## 🚀 Deployment
+
+> 🔗 **For complete production deployment** including Docker setup, database configuration, and infrastructure, see the **[Production Setup Guide](../../PRODUCTION_SETUP.md)** and **[Docker & Deployment section](../../README.md#-docker--deployment)**.
+
+### Frontend-Only Deployment
 
 The frontend is configured for deployment on Vercel or any Node.js hosting platform:
 
@@ -252,8 +323,19 @@ The frontend is configured for deployment on Vercel or any Node.js hosting platf
 3. **Static Export** (if needed):
    Add `output: 'export'` to `next.config.ts` for static deployment
 
+### Full Stack Deployment
+
+For deploying the entire application with Docker:
+```bash
+# From the workspace root
+docker-compose -f docker-compose.prod.yml up --build -d
+```
+
 ## 🤝 Contributing
 
+> 🔗 **For general contribution guidelines and project standards**, see the **[main Contributing section](../../README.md#-contributing)**.
+
+**Frontend-specific guidelines:**
 1. Follow the established code style and patterns
 2. Use TypeScript for all new code
 3. Write tests for new functionality
@@ -262,4 +344,4 @@ The frontend is configured for deployment on Vercel or any Node.js hosting platf
 
 ## 📝 License
 
-This project is part of the MM CryptoTracker monorepo. See the main README for license information.
+This project is part of the MM CryptoTracker monorepo. See the **[main README](../../README.md)** for license information.

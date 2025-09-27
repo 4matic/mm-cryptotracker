@@ -15,17 +15,21 @@ apps/backend/
 │   │   ├── crypto/                   # Core crypto module
 │   │   │   ├── controllers/          # REST API endpoints
 │   │   │   ├── services/            # Business logic
+│   │   │   ├── entities/            # Database entities
+│   │   │   ├── repositories/        # Custom repositories
 │   │   │   ├── dto/                 # Data transfer objects
 │   │   │   └── graphql/             # GraphQL resolvers
+│   │   │       └── resolvers/      # GraphQL resolver implementations
 │   │   └── price-fetching/          # Price data fetching module
 │   │       ├── controllers/         # Price fetching endpoints
 │   │       ├── services/           # Fetching logic
-│   │       └── providers/          # External data providers
-│   ├── entities/                    # Database entities
-│   ├── repositories/               # Custom repositories
+│   │       ├── providers/          # External data providers
+│   │       ├── dto/                # Data transfer objects
+│   │       └── interfaces/         # Provider interfaces
 │   ├── config/                     # Application configuration
 │   ├── migrations/                 # Database migrations
-│   └── seeders/                    # Database seeders
+│   ├── seeders/                    # Database seeders
+│   └── enums/                      # Shared enumerations
 ├── Dockerfile                      # Container configuration
 └── package.json                   # Project dependencies
 ```
@@ -90,25 +94,25 @@ Flexible GraphQL interface for efficient data querying.
 
 ### Primary Entities
 
-1. **Asset** (`entities/asset.entity.ts`)
+1. **Asset** (`src/app/crypto/entities/asset.entity.ts`)
    - Cryptocurrency and fiat currency definitions
    - Symbol, name, description, and metadata
    - Active status and categorization
    - Market information and external references
 
-2. **TradingPair** (`entities/trading-pair.entity.ts`)  
+2. **TradingPair** (`src/app/crypto/entities/trading-pair.entity.ts`)  
    - Relationships between base and quote assets
    - Visibility and active status management
    - Current price and market statistics
    - Symbol generation and validation
 
-3. **DataProvider** (`entities/data-provider.entity.ts`)
+3. **DataProvider** (`src/app/crypto/entities/data-provider.entity.ts`)
    - External price data source configuration
    - API credentials and rate limiting
    - Priority ordering and fallback logic
    - Status monitoring and health checks
 
-4. **PriceHistory** (`entities/price-history.entity.ts`)
+4. **PriceHistory** (`src/app/crypto/entities/price-history.entity.ts`)
    - Historical price data with timestamps
    - Provider attribution and metadata
    - Calculated vs. direct price tracking
@@ -425,7 +429,7 @@ nx serve backend
 #### Adding New Features
 
 1. **Plan the feature**: Define entities, services, and endpoints
-2. **Create/Update entities**: Add to `src/entities/`
+2. **Create/Update entities**: Add to `src/app/crypto/entities/`
 3. **Generate migration**: `npm run migration:create`
 4. **Add service logic**: Business logic in `src/app/crypto/services/`
 5. **Create DTOs**: Request/response objects in `dto/` folders
