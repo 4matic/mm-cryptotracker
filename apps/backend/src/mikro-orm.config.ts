@@ -15,10 +15,10 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
 import { SeedManager } from '@mikro-orm/seeder';
 
-import { Asset } from '@/entities/asset.entity';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { PriceHistory } from '@/entities/price-history.entity';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 
 config({ path: join(__dirname, '../.env') });
 

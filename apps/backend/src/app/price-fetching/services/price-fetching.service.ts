@@ -9,10 +9,10 @@ import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { DataProvider } from '@/entities/data-provider.entity';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { PriceHistory } from '@/entities/price-history.entity';
-import { Asset } from '@/entities/asset.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
 import { DataProviderSlug } from '@/enums/data-provider.enum';
 import {
   AbstractDataProvider,
@@ -24,7 +24,7 @@ import {
   TradingPairRepository,
   DataProviderRepository,
   PriceHistoryRepository,
-} from '@/repositories';
+} from '@/app/crypto/repositories';
 import { Timeout } from '@nestjs/schedule';
 import { DataProviderConfig } from '@/config/data-provider.config';
 

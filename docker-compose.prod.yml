@@ -3,7 +3,7 @@ version: '3.8'
 services:
   database:
     image: postgres:17-alpine
-    container_name: cryptotracker-database-prod
+    container_name: mm-cryptotracker-database-prod
     env_file:
       - .env
     environment:
@@ -22,12 +22,14 @@ services:
     build:
       context: .
       dockerfile: apps/backend/Dockerfile.prod
-    container_name: cryptotracker-backend-prod
+    image: mm-cryptotracker-backend:prod
+    container_name: mm-cryptotracker-backend-prod
     env_file:
       - .env
     environment:
       NODE_ENV: production
       PORT: 4000
+      HOSTNAME: 0.0.0.0
       DATABASE_HOST: database
       DATABASE_PORT: 5432
       DATABASE_USER: ${DATABASE_USER}
@@ -55,7 +57,8 @@ services:
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile.prod
-    container_name: cryptotracker-frontend-prod
+    image: mm-cryptotracker-frontend:prod
+    container_name: mm-cryptotracker-frontend-prod
     env_file:
       - .env
     environment:
@@ -72,7 +75,7 @@ services:
 
   adminer:
     image: adminer:4-standalone
-    container_name: cryptotracker-adminer-prod
+    container_name: mm-cryptotracker-adminer-prod
     environment:
       ADMINER_DEFAULT_SERVER: database
       ADMINER_DESIGN: dracula
@@ -90,7 +93,8 @@ services:
       context: .
       dockerfile: apps/backend/Dockerfile.prod
       target: cli
-    container_name: cryptotracker-cli-prod
+    image: mm-cryptotracker-cli:prod
+    container_name: mm-cryptotracker-cli-prod
     env_file:
       - .env
     environment:

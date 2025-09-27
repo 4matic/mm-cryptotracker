@@ -10,7 +10,7 @@ import { PriceHistoryService } from '@/app/crypto/services/price-history.service
 import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
 import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 import { DataProviderModel } from '@mm-cryptotracker/shared-graphql';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
 
 /**
  * GraphQL resolver for PriceHistory entity

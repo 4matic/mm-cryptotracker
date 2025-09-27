@@ -1,6 +1,6 @@
 import { EntityManager, Dictionary } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 import { DataProviderSlug } from '@/enums/data-provider.enum';
 import seederConfig from '@/config/seeder.config';
 

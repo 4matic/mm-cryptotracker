@@ -1,5 +1,5 @@
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 
 /**
  * Custom repository for DataProvider entity

@@ -110,3 +110,4 @@ pnpm-lock.yaml
 # Temporary files
 tmp/
 temp/
+scripts/

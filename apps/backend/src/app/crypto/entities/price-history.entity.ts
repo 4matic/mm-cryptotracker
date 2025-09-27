@@ -10,7 +10,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { TradingPair } from './trading-pair.entity';
 import { DataProvider } from './data-provider.entity';
-import { PriceHistoryRepository } from '@/repositories/price-history.repository';
+import { PriceHistoryRepository } from '@/app/crypto/repositories/price-history.repository';
 
 /**
  * Represents current price data for a trading pair from a specific data provider

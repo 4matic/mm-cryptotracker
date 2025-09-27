@@ -14,7 +14,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { AssetService } from '@/app/crypto/services/asset.service';
-import { Asset } from '@/entities/asset.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
 import { PaginatedAssetsResponseDto } from '@/app/crypto/dto/asset.dto';
 
 /**

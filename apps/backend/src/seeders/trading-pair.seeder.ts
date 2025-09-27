@@ -1,7 +1,7 @@
 import { EntityManager, Dictionary } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { Asset } from '@/entities/asset.entity';
-import { TradingPair } from '@/entities/trading-pair.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 

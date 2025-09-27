@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 import { DataProviderSlug } from '@/enums/data-provider.enum';
 import {
   AbstractDataProvider,

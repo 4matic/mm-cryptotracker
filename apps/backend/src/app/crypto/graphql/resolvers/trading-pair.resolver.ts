@@ -12,8 +12,8 @@ import { PriceHistoryService } from '@/app/crypto/services/price-history.service
 import { PriceCalculationService } from '@/app/crypto/services/price-calculation.service';
 import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 import { PriceHistoryModel } from '@mm-cryptotracker/shared-graphql';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
 import { PaginatedTradingPairsModel } from '@mm-cryptotracker/shared-graphql';
 
 /**

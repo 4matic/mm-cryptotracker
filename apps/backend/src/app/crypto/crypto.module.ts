@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Asset, TradingPair, DataProvider, PriceHistory } from '@/entities';
+import {
+  Asset,
+  TradingPair,
+  DataProvider,
+  PriceHistory,
+} from '@/app/crypto/entities';
 import { AssetService } from '@/app/crypto/services/asset.service';
 import { TradingPairService } from '@/app/crypto/services/trading-pair.service';
 import { DataProviderService } from '@/app/crypto/services/data-provider.service';

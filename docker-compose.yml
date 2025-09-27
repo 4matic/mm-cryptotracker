@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  postgres:
+  database:
     image: postgres:17-alpine
     container_name: cryptotracker-postgres
     environment:
@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./runtime/postgres-data:/var/lib/postgresql/data
+      - dev-database-data:/var/lib/postgresql/data
     networks:
       - cryptotracker-network
 
@@ -19,15 +19,20 @@ services:
     image: adminer:4-standalone
     container_name: cryptotracker-adminer
     environment:
-      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DEFAULT_SERVER: database
       ADMINER_DESIGN: dracula
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      - database
     networks:
       - cryptotracker-network
 
 networks:
   cryptotracker-network:
     driver: bridge
+
+
+volumes:
+  dev-database-data:
+    driver: local

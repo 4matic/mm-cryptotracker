@@ -1,9 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { Asset } from '@/entities/asset.entity';
-import { TradingPairRepository, AssetRepository } from '@/repositories';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
+import {
+  TradingPairRepository,
+  AssetRepository,
+} from '@/app/crypto/repositories';
 
 /**
  * Service for managing trading pairs
@@ -74,6 +77,7 @@ export class TradingPairService {
   /**
    * Finds a trading pair by symbol (e.g., "BTC/USD")
    */
+  @EnsureRequestContext()
   async findBySymbol(symbol: string): Promise<TradingPair | null> {
     this.logger.debug(`Looking up trading pair by symbol: ${symbol}`);
 

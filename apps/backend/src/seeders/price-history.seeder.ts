@@ -1,8 +1,8 @@
 import { EntityManager, Dictionary } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { PriceHistory } from '@/entities/price-history.entity';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 
 interface TradingPairWithPriceData {
   pair: TradingPair;

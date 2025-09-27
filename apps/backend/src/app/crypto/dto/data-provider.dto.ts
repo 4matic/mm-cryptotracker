@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 
 /**
  * DTO for data provider response (excludes sensitive apiConfig)

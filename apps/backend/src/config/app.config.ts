@@ -15,6 +15,12 @@ const appConfigSchema = z.object({
    */
   port: z.coerce.number().int().positive().default(4000),
   /**
+   * @description Hostname on which the application server will listen
+   * @default "localhost"
+   * @example "0.0.0.0"
+   */
+  hostname: z.string().default('localhost'),
+  /**
    * @description Enable debug mode for NestJS framework
    * @default false
    * @example true
@@ -35,6 +41,7 @@ export default registerAs('app', () => {
   const config = {
     nodeEnv,
     port: process.env.PORT,
+    hostname: process.env.HOSTNAME,
     nestDebug: process.env.NEST_DEBUG,
     assetsPublicUrl: process.env.ASSETS_PUBLIC_URL,
     isProduction: nodeEnv === 'production',

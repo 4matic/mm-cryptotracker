@@ -7,8 +7,8 @@ import {
   EntityRepositoryType,
 } from '@mikro-orm/core';
 import { ApiProperty } from '@nestjs/swagger';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { AssetRepository } from '@/repositories/asset.repository';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { AssetRepository } from '@/app/crypto/repositories/asset.repository';
 
 /**
  * Represents a cryptocurrency or trading asset

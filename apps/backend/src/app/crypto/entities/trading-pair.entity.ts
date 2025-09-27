@@ -11,7 +11,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Asset } from './asset.entity';
 import { PriceHistory } from './price-history.entity';
-import { TradingPairRepository } from '@/repositories/trading-pair.repository';
+import { TradingPairRepository } from '@/app/crypto/repositories/trading-pair.repository';
 
 /**
  * Represents a trading pair (e.g., BTC/USD, ETH/BTC)

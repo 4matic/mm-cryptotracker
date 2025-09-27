@@ -8,7 +8,7 @@ import {
 } from '@mikro-orm/core';
 import { ApiProperty } from '@nestjs/swagger';
 import { PriceHistory } from './price-history.entity';
-import { DataProviderRepository } from '@/repositories/data-provider.repository';
+import { DataProviderRepository } from '@/app/crypto/repositories/data-provider.repository';
 
 /**
  * Represents a data provider for cryptocurrency prices

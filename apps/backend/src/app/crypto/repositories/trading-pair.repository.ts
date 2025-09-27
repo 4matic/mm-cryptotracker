@@ -1,5 +1,5 @@
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { TradingPair } from '@/entities/trading-pair.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
 
 /**
  * Custom repository for TradingPair entity

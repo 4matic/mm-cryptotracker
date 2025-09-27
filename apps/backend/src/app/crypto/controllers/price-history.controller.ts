@@ -4,7 +4,7 @@ import {
   PriceHistoryService,
   PriceHistoryQuery,
 } from '@/app/crypto/services/price-history.service';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
 import { PriceStatisticsResponseDto } from '@/app/crypto/dto/price-history.dto';
 
 /**

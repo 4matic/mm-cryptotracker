@@ -1,11 +1,14 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EnsureRequestContext } from '@mikro-orm/core';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { PriceHistory } from '@/entities/price-history.entity';
-import { Asset } from '@/entities/asset.entity';
-import { DataProvider } from '@/entities/data-provider.entity';
-import { TradingPairRepository, PriceHistoryRepository } from '@/repositories';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
+import {
+  TradingPairRepository,
+  PriceHistoryRepository,
+} from '@/app/crypto/repositories';
 
 interface PricePath {
   pairs: TradingPair[];

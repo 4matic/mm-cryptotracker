@@ -14,7 +14,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { TradingPairService } from '@/app/crypto/services/trading-pair.service';
-import { TradingPair } from '@/entities/trading-pair.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
 import { PaginatedTradingPairsResponseDto } from '@/app/crypto/dto/trading-pair.dto';
 
 /**

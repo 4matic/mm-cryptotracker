@@ -1,7 +1,7 @@
 import { Resolver, Query, Args, ID, Int } from '@nestjs/graphql';
 import { AssetService } from '@/app/crypto/services/asset.service';
 import { AssetModel } from '@mm-cryptotracker/shared-graphql';
-import { Asset } from '@/entities/asset.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
 
 /**
  * GraphQL resolver for Asset entity

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
-import { DataProvider } from '@/entities/data-provider.entity';
-import { DataProviderRepository } from '@/repositories';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
+import { DataProviderRepository } from '@/app/crypto/repositories';
 
 /**
  * Service for managing data providers

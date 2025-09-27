@@ -1,5 +1,5 @@
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
 
 /**
  * Custom repository for PriceHistory entity

@@ -1,4 +1,4 @@
-import { DataProvider } from '@/entities/data-provider.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 
 /**
  * Interface for price data response from external APIs

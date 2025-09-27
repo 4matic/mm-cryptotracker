@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
-import { Asset } from '@/entities/asset.entity';
-import { AssetRepository } from '@/repositories';
+import { Asset } from '@/app/crypto/entities/asset.entity';
+import { AssetRepository } from '@/app/crypto/repositories';
 
 /**
  * Service for managing cryptocurrency assets
@@ -48,6 +48,7 @@ export class AssetService {
   /**
    * Finds an asset by symbol
    */
+  @EnsureRequestContext()
   async findBySymbol(symbol: string): Promise<Asset | null> {
     this.logger.debug(`Looking up asset by symbol: ${symbol}`);
 
@@ -75,6 +76,7 @@ export class AssetService {
   /**
    * Gets all active assets
    */
+  @EnsureRequestContext()
   async findAllActive(): Promise<Asset[]> {
     return this.assetRepository.find(
       { isActive: true },
@@ -130,6 +132,7 @@ export class AssetService {
   /**
    * Gets assets with pagination
    */
+  @EnsureRequestContext()
   async findWithPagination(
     page = 1,
     limit = 20

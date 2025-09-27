@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EnsureRequestContext } from '@mikro-orm/core';
-import { PriceHistory } from '@/entities/price-history.entity';
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { DataProvider } from '@/entities/data-provider.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { DataProvider } from '@/app/crypto/entities/data-provider.entity';
 import {
   PriceHistoryRepository,
   TradingPairRepository,
   DataProviderRepository,
-} from '@/repositories';
+} from '@/app/crypto/repositories';
 
 export interface PriceHistoryQuery {
   tradingPairId?: number;
@@ -80,6 +80,7 @@ export class PriceHistoryService {
   /**
    * Gets price history with filtering options
    */
+  @EnsureRequestContext()
   async findPriceHistory(query: PriceHistoryQuery): Promise<PriceHistory[]> {
     this.logger.debug(
       `Finding price history with query: ${JSON.stringify(query)}`
@@ -138,6 +139,7 @@ export class PriceHistoryService {
   /**
    * Gets price history for chart data
    */
+  @EnsureRequestContext()
   async getChartData(
     tradingPairId: number,
     startDate: Date,

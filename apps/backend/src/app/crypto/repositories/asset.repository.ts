@@ -1,5 +1,5 @@
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { Asset } from '@/entities/asset.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
 
 /**
  * Custom repository for Asset entity

@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { Asset } from '@/entities/asset.entity';
+import { Asset } from '@/app/crypto/entities/asset.entity';
 import seederConfig from '@/config/seeder.config';
 
 /**
