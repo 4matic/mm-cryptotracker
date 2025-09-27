@@ -1,0 +1,81 @@
+# Multi-stage Dockerfile for Next.js app in Nx workspace
+FROM node:20-alpine AS base
+
+# Add metadata labels for better container management
+LABEL maintainer="root@4matikku.com" \
+    description="Next.js frontend application for cryptocurrency tracking" \
+    version="1.0"
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy all package.json files for proper Nx workspace dependency resolution
+COPY package.json package-lock.json* ./
+COPY apps/frontend/package.json ./apps/frontend/
+COPY libs/shared/graphql/package.json ./libs/shared/graphql/
+
+# Install all dependencies (both production and dev for building)
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+# Build the source code
+FROM base AS builder
+WORKDIR /app
+
+# Copy node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy entire workspace structure for Nx to work properly
+COPY . .
+
+# Build the shared library first, then the frontend with Nx
+RUN npx nx build frontend
+
+RUN cd apps/frontend && \
+    cp -r public .next/standalone/apps/frontend/ && \
+    cp -r .next/static .next/standalone/apps/frontend/.next/
+
+# Production image  
+FROM base AS runner
+RUN apk add --no-cache wget
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+# Disable Next.js telemetry during runtime
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Create non-root user with no home directory and no shell for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --no-create-home --shell /bin/false --ingroup nodejs nextjs
+
+# Copy the Next.js standalone output (entire dist folder contains the standalone app)
+COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/standalone/apps/frontend ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/package.json ./
+
+# Install production dependencies
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --omit=dev
+
+# Static files and public folder are already included in the dist copy above
+# No additional copying needed as Next.js standalone output contains everything
+
+# Set proper file permissions for security
+# RUN chmod -R 644 /app && \
+#     chmod 755 /app && \
+#     find /app/.next -type d -exec chmod 755 {} \; && \
+#     chmod 755 /app/server.js
+
+USER nextjs
+
+EXPOSE 3000
+
+# Health check for container monitoring (simplified for standalone mode)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+
+# Start the application using the standalone server
+CMD ["node", "/app/server.js"]

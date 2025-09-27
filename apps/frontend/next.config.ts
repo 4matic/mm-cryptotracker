@@ -1,5 +1,6 @@
 import { composePlugins, withNx } from '@nx/next';
 import { WithNxOptions } from '@nx/next/plugins/with-nx';
+import path from 'path';
 
 const nextConfig: WithNxOptions = {
   // Use this to set Nx-specific options
@@ -15,12 +16,21 @@ const nextConfig: WithNxOptions = {
     remotePatterns: [{ hostname: 'localhost' }],
   },
 
-  webpack: (config, options) => {
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.(graphql|gql)/,
       exclude: /node_modules/,
       loader: 'graphql-tag/loader',
     });
+
+    // Ensure proper path resolution for TypeScript aliases
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, './src'),
+      },
+    };
 
     return config;
   },

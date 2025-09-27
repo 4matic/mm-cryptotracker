@@ -1,4 +1,5 @@
 ---
+version: '3.8'
 services:
   postgres:
     image: postgres:17-alpine
@@ -50,16 +51,12 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: apps/frontend/Dockerfile
+      dockerfile: apps/frontend/Dockerfile.prod
     container_name: cryptotracker-frontend-prod
     environment:
-      NODE_ENV: production
-      NEXT_TELEMETRY_DISABLED: 1
       PORT: 3000
       HOSTNAME: "0.0.0.0"
-      # Backend API endpoint for the frontend
-      NEXT_PUBLIC_API_URL: http://localhost:4000
-      NEXT_PUBLIC_GRAPHQL_URL: http://localhost:4000/graphql
+      NEXT_PUBLIC_GRAPHQL_URL: http://backend:4000/graphql
     ports:
       - "3000:3000"
     depends_on:
