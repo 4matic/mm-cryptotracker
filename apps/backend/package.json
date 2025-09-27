@@ -2,6 +2,18 @@
   "name": "@mm-cryptotracker/backend",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "migration:create": "mikro-orm migration:create",
+    "migration:up": "mikro-orm migration:up",
+    "migration:down": "mikro-orm migration:down",
+    "migration:list": "mikro-orm migration:list",
+    "migration:fresh": "mikro-orm migration:fresh",
+    "schema:create": "mikro-orm schema:create",
+    "schema:update": "mikro-orm schema:update",
+    "schema:drop": "mikro-orm schema:drop",
+    "seeder:run": "mikro-orm seeder:run",
+    "seeder:create": "mikro-orm seeder:create"
+  },
   "nx": {
     "targets": {
       "build": {
@@ -88,19 +100,9 @@
       }
     }
   },
-  "scripts": {
-    "migration:create": "mikro-orm migration:create",
-    "migration:up": "mikro-orm migration:up",
-    "migration:down": "mikro-orm migration:down",
-    "migration:list": "mikro-orm migration:list",
-    "migration:fresh": "mikro-orm migration:fresh",
-    "schema:create": "mikro-orm schema:create",
-    "schema:update": "mikro-orm schema:update",
-    "schema:drop": "mikro-orm schema:drop",
-    "seeder:run": "mikro-orm seeder:run",
-    "seeder:create": "mikro-orm seeder:create"
-  },
   "devDependencies": {
-    "@mikro-orm/cli": "^6.5.5"
+    "@mikro-orm/cli": "^6.5.5",
+    "@mikro-orm/migrations": "^6.5.5",
+    "@mikro-orm/seeder": "^6.5.5"
   }
 }

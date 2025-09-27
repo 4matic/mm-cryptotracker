@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 # Multi-stage Dockerfile for NestJS backend in Nx workspace
 FROM node:20-alpine AS base
 
@@ -19,9 +20,8 @@ COPY nx.json tsconfig.base.json ./
 # Copy shared library package.json for dependency resolution
 COPY libs/shared/graphql/package.json ./libs/shared/graphql/
 
-# Install dependencies with cache mount for better performance
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --only=production
+# Install dependencies
+RUN npm ci --omit=dev
 
 # Install all dependencies for build (including dev deps)
 FROM base AS builder-deps
@@ -31,8 +31,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 # Copy shared library package.json for dependency resolution
 COPY libs/shared/graphql/package.json ./libs/shared/graphql/
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN npm ci
 
 # Build the source code
 FROM base AS builder
@@ -48,9 +47,43 @@ COPY . .
 # Sync the Nx workspace, build dependencies and backend app
 RUN npx nx sync && npx nx build @mm-cryptotracker/backend --prod
 
+# CLI image with dev dependencies for migrations and seeders
+FROM base AS cli
+WORKDIR /app
+
+# Install all dependencies (including dev dependencies) for CLI operations
+COPY package.json package-lock.json* ./
+COPY apps/backend/package.json ./apps/backend/
+COPY nx.json tsconfig.base.json ./
+COPY libs/shared/graphql/package.json ./libs/shared/graphql/
+
+# Install all dependencies including dev dependencies
+RUN npm ci
+
+# Copy workspace configuration and source code
+COPY libs/shared/graphql ./libs/shared/graphql/
+COPY . .
+
+# Build the application for CLI operations (needed for TypeScript compilation)
+RUN npx nx sync && npx nx build @mm-cryptotracker/backend --prod
+
+# Set working directory to backend app source (not dist) for CLI operations
+WORKDIR /app/apps/backend
+
+ENV NODE_ENV=production
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --no-create-home --shell /bin/false --ingroup nodejs nestjs
+
+USER nestjs
+
 # Production image
 FROM base AS runner
 WORKDIR /app
+
+# Install wget for healthcheck
+RUN apk add --no-cache wget
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
@@ -66,37 +99,17 @@ COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/dist ./
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/package.json ./package.json
 
 # Set proper file permissions for security
-RUN chmod -R 644 /app && \
-    chmod 755 /app && \
-    find /app -type d -exec chmod 755 {} \; && \
-    chmod 644 /app/main.js
+# RUN chmod -R 644 /app && \
+#     chmod 755 /app && \
+#     find /app -type d -exec chmod 755 {} \; && \
+#     chmod 644 /app/main.js
 
 USER nestjs
 
 EXPOSE 4000
 
-# Health check - more robust with proper error handling and timeout
+# Health check - simple wget command
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD node -e " \
-    const http = require('http'); \
-    const options = { \
-    hostname: '0.0.0.0', \
-    port: process.env.PORT || 4000, \
-    path: '/health', \
-    method: 'GET', \
-    timeout: 8000 \
-    }; \
-    const req = http.request(options, (res) => { \
-    let data = ''; \
-    res.on('data', chunk => data += chunk); \
-    res.on('end', () => { \
-    console.log('Health check response:', res.statusCode, data); \
-    process.exit(res.statusCode === 200 ? 0 : 1); \
-    }); \
-    }); \
-    req.on('timeout', () => { console.error('Health check timeout'); req.destroy(); process.exit(1); }); \
-    req.on('error', (err) => { console.error('Health check error:', err.message); process.exit(1); }); \
-    req.setTimeout(8000); \
-    req.end();" || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
 
 CMD ["node", "main.js"]

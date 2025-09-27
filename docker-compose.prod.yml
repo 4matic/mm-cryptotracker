@@ -1,17 +1,19 @@
 ---
 version: '3.8'
 services:
-  postgres:
+  database:
     image: postgres:17-alpine
-    container_name: cryptotracker-postgres-prod
+    container_name: cryptotracker-database-prod
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: cryptotracker
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: chee_w<a0quod5Aiphah
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - database-data:/var/lib/postgresql/data
     networks:
       - cryptotracker-network
     restart: unless-stopped
@@ -21,28 +23,29 @@ services:
       context: .
       dockerfile: apps/backend/Dockerfile.prod
     container_name: cryptotracker-backend-prod
+    env_file:
+      - .env
     environment:
       NODE_ENV: production
       PORT: 4000
-      DATABASE_HOST: postgres
+      DATABASE_HOST: database
       DATABASE_PORT: 5432
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: chee_w<a0quod5Aiphah
-      DATABASE_NAME: cryptotracker
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
       ASSETS_PUBLIC_URL: http://backend:4000
-      DATA_PROVIDER_FETCH_INTERVAL_MS: 60000
-      DATA_PROVIDER_COINMARKETCAP_API_KEY: >-
-        ${DATA_PROVIDER_COINMARKETCAP_API_KEY:-}
+      DATA_PROVIDER_FETCH_INTERVAL_MS: ${DATA_PROVIDER_FETCH_INTERVAL_MS}
+      DATA_PROVIDER_COINMARKETCAP_API_KEY: ${DATA_PROVIDER_COINMARKETCAP_API_KEY:-}
     ports:
       - "4000:4000"
     depends_on:
-      postgres:
+      database:
         condition: service_started
     networks:
       - cryptotracker-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:4000/health || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -53,10 +56,11 @@ services:
       context: .
       dockerfile: apps/frontend/Dockerfile.prod
     container_name: cryptotracker-frontend-prod
+    env_file:
+      - .env
     environment:
       PORT: 3000
-      HOSTNAME: "0.0.0.0"
-      NEXT_PUBLIC_GRAPHQL_URL: http://backend:4000/graphql
+      BACKEND_GRAPHQL_URL: http://backend:4000/graphql
     ports:
       - "3000:3000"
     depends_on:
@@ -70,20 +74,51 @@ services:
     image: adminer:4-standalone
     container_name: cryptotracker-adminer-prod
     environment:
-      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DEFAULT_SERVER: database
       ADMINER_DESIGN: dracula
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      - database
     networks:
       - cryptotracker-network
     restart: unless-stopped
+
+  # CLI service for migrations and seeders
+  cli:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile.prod
+      target: cli
+    container_name: cryptotracker-cli-prod
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+    depends_on:
+      database:
+        condition: service_started
+    networks:
+      - cryptotracker-network
+    profiles:
+      - cli
+    working_dir: /app/apps/backend
+    entrypoint: ["npm", "run"]
+    # Usage examples:
+    # Migrations: docker-compose --profile cli run --rm cli migration:fresh
+    # Seeders:    docker-compose --profile cli run --rm cli seeder:run
+    # Available migration commands: migration:create, migration:up, migration:down, migration:list, migration:fresh
+    # Available seeder commands: seeder:run, seeder:create
 
 networks:
   cryptotracker-network:
     driver: bridge
 
 volumes:
-  postgres-data:
+  database-data:
     driver: local
