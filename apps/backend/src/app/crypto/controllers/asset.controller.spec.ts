@@ -19,11 +19,11 @@ jest.mock('@mikro-orm/core', () => {
 });
 
 // Mock the entity imports to prevent circular dependency
-jest.mock('@/entities/asset.entity', () => ({
+jest.mock('@/app/crypto/entities/asset.entity', () => ({
   Asset: class MockAssetClass {},
 }));
 
-jest.mock('@/entities/trading-pair.entity', () => ({
+jest.mock('@/app/crypto/entities/trading-pair.entity', () => ({
   TradingPair: class MockTradingPairClass {},
 }));
 

@@ -20,11 +20,11 @@ jest.mock('@mikro-orm/core', () => {
 
 // Mock the entity imports to prevent circular dependency
 // Each entity needs a unique constructor function for getRepositoryToken to work correctly
-jest.mock('@/entities/trading-pair.entity', () => ({
+jest.mock('@/app/crypto/entities/trading-pair.entity', () => ({
   TradingPair: class MockTradingPairClass {},
 }));
 
-jest.mock('@/entities/price-history.entity', () => ({
+jest.mock('@/app/crypto/entities/price-history.entity', () => ({
   PriceHistory: class MockPriceHistoryClass {
     tradingPair: unknown;
     dataProvider: unknown;
@@ -51,11 +51,11 @@ jest.mock('@/entities/price-history.entity', () => ({
   },
 }));
 
-jest.mock('@/entities/asset.entity', () => ({
+jest.mock('@/app/crypto/entities/asset.entity', () => ({
   Asset: class MockAssetClass {},
 }));
 
-jest.mock('@/entities/data-provider.entity', () => ({
+jest.mock('@/app/crypto/entities/data-provider.entity', () => ({
   DataProvider: class MockDataProviderClass {},
 }));
 
@@ -63,8 +63,8 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { PriceCalculationService } from './price-calculation.service';
 
 // Import actual entity classes for proper token generation
-import { TradingPair } from '@/entities/trading-pair.entity';
-import { PriceHistory } from '@/entities/price-history.entity';
+import { TradingPair } from '@/app/crypto/entities/trading-pair.entity';
+import { PriceHistory } from '@/app/crypto/entities/price-history.entity';
 
 // Define mock entity types to avoid circular dependency issues
 interface MockAsset {

@@ -9,11 +9,21 @@ const nextConfig: WithNxOptions = {
 
   poweredByHeader: false,
 
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
+
   // Enable standalone output for Docker optimization
   output: 'standalone',
 
   images: {
     remotePatterns: [{ hostname: 'localhost' }],
+  },
+
+  compiler: {
+    removeConsole: false,
   },
 
   webpack: (config) => {

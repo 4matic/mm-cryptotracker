@@ -13,32 +13,57 @@ import GetDataProvidersQuery, {
 } from '@/graphql/GetDataProviders.gql';
 
 /**
- * Server action to fetch trading pairs from the backend API
+ * Creates and configures a GraphQL client instance
  */
-export async function getTradingPairs(
-  params: TradingPairsParams = {}
-): Promise<PaginatedTradingPairsModel> {
+function createGraphQLClient(): GraphQLClient {
   const graphqlUrl = process.env.BACKEND_GRAPHQL_URL;
 
   if (!graphqlUrl) {
+    console.error(
+      'GraphQL client creation failed: BACKEND_GRAPHQL_URL environment variable is not configured'
+    );
     throw new Error(
       'BACKEND_GRAPHQL_URL environment variable is not configured'
     );
   }
 
-  const client = new GraphQLClient(graphqlUrl);
+  console.log('Creating GraphQL client with URL:', graphqlUrl);
+  return new GraphQLClient(graphqlUrl);
+}
+
+/**
+ * Server action to fetch trading pairs from the backend API
+ */
+export async function getTradingPairs(
+  params: TradingPairsParams = {}
+): Promise<PaginatedTradingPairsModel> {
+  console.log('getTradingPairs called with params:', params);
+
+  const client = createGraphQLClient();
 
   try {
     const { page = 1, limit = 20, isVisible } = params;
     const variables = { page, limit, isVisible };
 
+    console.log('Executing getTradingPairs query with variables:', variables);
+
     const data = await client.request<{
       tradingPairsWithPagination: PaginatedTradingPairsModel;
     }>(GetTradingPairsQuery, variables);
 
+    console.log('Successfully fetched trading pairs:', {
+      total: data.tradingPairsWithPagination.total,
+      page: data.tradingPairsWithPagination.page,
+      pairsCount: data.tradingPairsWithPagination.pairs?.length || 0,
+    });
+
     return data.tradingPairsWithPagination;
   } catch (error) {
-    console.error('Error fetching trading pairs:', error);
+    console.error('Error fetching trading pairs:', {
+      params,
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     throw new Error(
       error instanceof Error
         ? `Failed to fetch trading pairs: ${error.message}`
@@ -53,27 +78,34 @@ export async function getTradingPairs(
 export async function getTradingPair(
   slug: string
 ): Promise<GetTradingPairResponse['tradingPairBySlug']> {
-  const graphqlUrl = process.env.BACKEND_GRAPHQL_URL;
+  console.log('getTradingPair called with slug:', slug);
 
-  if (!graphqlUrl) {
-    throw new Error(
-      'BACKEND_GRAPHQL_URL environment variable is not configured'
-    );
-  }
-
-  const client = new GraphQLClient(graphqlUrl);
+  const client = createGraphQLClient();
 
   try {
     const variables: GetTradingPairVariables = { slug };
+
+    console.log('Executing getTradingPair query with variables:', variables);
 
     const data = await client.request<GetTradingPairResponse>(
       GetTradingPairQuery,
       variables
     );
 
+    console.log('Successfully fetched trading pair:', {
+      slug: data.tradingPairBySlug?.slug,
+      symbol: data.tradingPairBySlug?.symbol,
+      hasLatestPrice: !!data.tradingPairBySlug?.latestPrice,
+      hasCalculatedPrice: !!data.tradingPairBySlug?.calculatedPrice,
+    });
+
     return data.tradingPairBySlug;
   } catch (error) {
-    console.error('Error fetching trading pair:', error);
+    console.error('Error fetching trading pair:', {
+      slug,
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     throw new Error(
       error instanceof Error
         ? `Failed to fetch trading pair: ${error.message}`
@@ -88,24 +120,28 @@ export async function getTradingPair(
 export async function getDataProviders(): Promise<
   GetDataProvidersResponse['dataProviders']
 > {
-  const graphqlUrl = process.env.BACKEND_GRAPHQL_URL;
+  console.log('getDataProviders called');
 
-  if (!graphqlUrl) {
-    throw new Error(
-      'BACKEND_GRAPHQL_URL environment variable is not configured'
-    );
-  }
-
-  const client = new GraphQLClient(graphqlUrl);
+  const client = createGraphQLClient();
 
   try {
+    console.log('Executing getDataProviders query');
+
     const data = await client.request<GetDataProvidersResponse>(
       GetDataProvidersQuery
     );
 
+    console.log('Successfully fetched data providers:', {
+      count: data.dataProviders?.length || 0,
+      providers: data.dataProviders?.map((p) => p.name) || [],
+    });
+
     return data.dataProviders;
   } catch (error) {
-    console.error('Error fetching data providers:', error);
+    console.error('Error fetching data providers:', {
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     throw new Error(
       error instanceof Error
         ? `Failed to fetch data providers: ${error.message}`

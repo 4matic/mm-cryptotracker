@@ -11,7 +11,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig, { DatabaseConfig } from '@/config/database.config';
 import appConfig, { AppConfig } from '@/config/app.config';
 import dataProviderConfig from '@/config/data-provider.config';
-import { HealthcheckController } from '@/app/controllers/healthcheck.controller';
+import { AppController } from '@/app/controllers/app.controller';
+import { AppService } from '@/app/services/app.service';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { HealthcheckController } from '@/app/controllers/healthcheck.controller'
     }),
     ScheduleModule.forRoot(),
   ],
-  controllers: [HealthcheckController],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -1,13 +1,17 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  AppService,
+  type HealthCheckResponse,
+} from '@/app/services/app.service';
 
 /**
- * Controller for application health check
+ * Main application controller
  */
-@ApiTags('Health')
+@ApiTags('App')
 @Controller()
-export class HealthcheckController {
-  private readonly logger = new Logger(HealthcheckController.name);
+export class AppController {
+  constructor(private readonly appService: AppService) {}
 
   /**
    * Health check endpoint
@@ -38,17 +42,7 @@ export class HealthcheckController {
       },
     },
   })
-  getHealthCheck(): {
-    status: string;
-    timestamp: string;
-    uptime: number;
-  } {
-    this.logger.log('Health check requested');
-
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-    };
+  getHealthCheck(): HealthCheckResponse {
+    return this.appService.getHealthCheck();
   }
 }
