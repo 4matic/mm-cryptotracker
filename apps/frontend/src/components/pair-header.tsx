@@ -7,17 +7,10 @@ import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 
 interface PairHeaderProps {
   tradingPair: TradingPairModel;
-  high24h?: number;
-  low24h?: number;
   change24h?: number;
 }
 
-export function PairHeader({
-  tradingPair,
-  high24h = 0,
-  low24h = 0,
-  change24h = 0,
-}: PairHeaderProps) {
+export function PairHeader({ tradingPair, change24h = 0 }: PairHeaderProps) {
   const isPositive = change24h >= 0;
   const hasChangeData = change24h !== 0;
 

@@ -9,6 +9,7 @@ A modern Next.js application for tracking cryptocurrency prices with detailed an
 - [MM CryptoTracker Frontend](#mm-cryptotracker-frontend)
   - [📋 Table of Contents](#-table-of-contents)
   - [🚀 Features](#-features)
+  - [⚠️ Current Limitations](#️-current-limitations)
   - [🛠 Tech Stack](#-tech-stack)
     - [Frontend-Specific Technologies](#frontend-specific-technologies)
       - [Core Framework](#core-framework)
@@ -59,6 +60,11 @@ A modern Next.js application for tracking cryptocurrency prices with detailed an
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **TypeScript**: Full type safety throughout the application
 - **GraphQL Integration**: Efficient data fetching with GraphQL queries
+
+## ⚠️ Current Limitations
+
+- **Historical Chart Data**: Temporarily unavailable - feature not yet implemented
+- **Market Statistics**: Temporarily unavailable - feature not yet implemented
 
 ## 🛠 Tech Stack
 

@@ -36,6 +36,13 @@ export class TradingPairSeeder extends Seeder {
     }> = [];
 
     for (const pairData of tradingPairsData) {
+      // Override lastUpdated with current date
+      const currentDate = new Date().toISOString();
+      const updatedPairData = {
+        ...pairData,
+        lastUpdated: currentDate,
+      };
+
       // Find or create base asset
       let baseAsset = await em.findOne(Asset, {
         symbol: pairData.baseAsset.symbol,
@@ -74,11 +81,11 @@ export class TradingPairSeeder extends Seeder {
         const tradingPair = new TradingPair(baseAsset, quoteAsset);
         em.persist(tradingPair);
 
-        // Save to context with price data for PriceHistorySeeder
-        tradingPairs.push({ pair: tradingPair, priceData: pairData });
+        // Save to context with updated price data for PriceHistorySeeder
+        tradingPairs.push({ pair: tradingPair, priceData: updatedPairData });
       } else {
-        // If pair exists, still add to context for price history
-        tradingPairs.push({ pair: existingPair, priceData: pairData });
+        // If pair exists, still add to context for price history with updated data
+        tradingPairs.push({ pair: existingPair, priceData: updatedPairData });
       }
     }
 

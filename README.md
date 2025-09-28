@@ -14,6 +14,7 @@ A comprehensive cryptocurrency tracking application built with modern web techno
 
 - [Screenshots](#-screenshots)
 - [Features](#-features)
+- [Current Limitations](#️-current-limitations)
 - [Technology Stack](#-technology-stack)
 - [Project Architecture](#-project-architecture)
 - [System Architecture](#-system-architecture)
@@ -34,8 +35,8 @@ A comprehensive cryptocurrency tracking application built with modern web techno
 
 - **Real-time Cryptocurrency Tracking**: Monitor live cryptocurrency prices from multiple data providers
 - **Advanced Price Calculations**: Multi-hop indirect price calculation with confidence scoring
-- **Historical Data Analysis**: Complete historical price data storage and visualization
-- **Interactive Price Charts**: Responsive charts using Recharts with detailed market data
+- **Historical Data Storage**: Complete historical price data storage infrastructure (visualization pending)
+- **Price Chart Framework**: Responsive charts using Recharts (historical data integration pending)
 - **Data Provider Management**: Extensible system supporting multiple external APIs (CoinMarketCap, etc.)
 - **GraphQL & REST APIs**: Dual API interfaces for flexible data access
 - **Dark Mode Support**: Modern UI with dark theme and responsive design
@@ -43,6 +44,11 @@ A comprehensive cryptocurrency tracking application built with modern web techno
 - **Real-time Updates**: Automated price fetching with configurable intervals
 - **TypeScript**: Full type safety across the entire monorepo
 - **Docker Support**: Complete containerization for development and production
+
+## ⚠️ Current Limitations
+
+- **Historical Chart Data**: Temporarily unavailable - feature not yet implemented
+- **Market Statistics**: Temporarily unavailable - feature not yet implemented
 
 ## 🛠 Technology Stack
 
