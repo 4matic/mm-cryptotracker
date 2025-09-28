@@ -215,7 +215,7 @@ This production configuration provides a complete containerized environment with
 # Configure environment and deploy everything using docker-compose.prod.yml
 cp env.example .env && \
 docker-compose -f docker-compose.prod.yml up -d database && \
-docker-compose -f docker-compose.prod.yml --profile cli run --rm cli migration:fresh && \
+docker-compose -f docker-compose.prod.yml --profile cli run cli migration:fresh && \
 docker-compose -f docker-compose.prod.yml --profile cli run --rm cli seeder:run && \
 docker-compose -f docker-compose.prod.yml up -d && \
 docker-compose -f docker-compose.prod.yml ps
@@ -333,7 +333,7 @@ cp env.example .env
 
 # 2. Standard production deployment process
 docker-compose -f docker-compose.prod.yml up -d database
-docker-compose -f docker-compose.prod.yml --profile cli run --rm cli migration:fresh
+docker-compose -f docker-compose.prod.yml --profile cli run cli migration:fresh
 docker-compose -f docker-compose.prod.yml --profile cli run --rm cli seeder:run
 docker-compose -f docker-compose.prod.yml up -d
 
