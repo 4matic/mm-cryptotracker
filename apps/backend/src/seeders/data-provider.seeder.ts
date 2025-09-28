@@ -26,9 +26,17 @@ export class DataProviderSeeder extends Seeder {
       coinMarketCap.website = 'https://coinmarketcap.com';
       coinMarketCap.rateLimitPerMinute = 1800; // Basic plan limit
       coinMarketCap.priority = 1;
-      coinMarketCap.apiConfig = {
-        apiKey: config.coinMarketCapApiKey,
-      };
+
+      if (config.coinMarketCapApiKey) {
+        coinMarketCap.apiConfig = {
+          apiKey: config.coinMarketCapApiKey,
+        };
+      } else {
+        console.log(
+          'ℹ️  CoinMarketCap API key not provided - the system will run in demo mode with limited functionality. Real-time price updates will not be available.'
+        );
+        coinMarketCap.apiConfig = {};
+      }
 
       em.persist(coinMarketCap);
       await em.flush();

@@ -12,14 +12,12 @@ const seederConfigSchema = z.object({
     error: 'ASSETS_PUBLIC_URL is required and must be a valid URL',
   }),
   /**
-   * @description CoinMarketCap API key for data provider seeder
-   * @remarks Used to configure the data provider during seeding
+   * @description CoinMarketCap API key for data provider seeder (optional)
+   * @remarks Used to configure the data provider during seeding. If not provided, the system will work in demo mode with limited functionality
    * @example "your-coinmarketcap-api-key"
    * @see DataProviderSeeder
    */
-  coinMarketCapApiKey: z
-    .string()
-    .min(1, 'DATA_PROVIDER_COINMARKETCAP_API_KEY is required'),
+  coinMarketCapApiKey: z.string().optional(),
 });
 
 export type SeederConfig = z.infer<typeof seederConfigSchema>;

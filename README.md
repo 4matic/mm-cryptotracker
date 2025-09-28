@@ -1,5 +1,7 @@
 # MM CryptoTracker
 
+[![CI](https://github.com/4matic/mm-cryptotracker/actions/workflows/.github/workflows/ci.yml/badge.svg)](https://github.com/4matic/mm-cryptotracker/actions)
+
 A comprehensive cryptocurrency tracking application built with modern web technologies, featuring real-time price monitoring, historical data analysis, and advanced price calculation algorithms.
 
 ## 📸 Screenshots
@@ -99,7 +101,6 @@ mm-cryptotracker/
 │       └── graphql/            # Shared GraphQL schema definitions
 ├── assets/
 │   └── screenshots/            # Application screenshots
-├── runtime/                    # Runtime data (Docker volumes, etc.)
 ├── docker-compose.yml          # Development containers
 ├── docker-compose.prod.yml     # Production containers
 └── .github/workflows/          # CI/CD pipeline
@@ -147,7 +148,7 @@ Before getting started, ensure you have the following installed:
    
    **Important**: Update `apps/backend/.env` with required variables. See **[`env.example`](env.example)** for all available configuration options:
    - Database password from `docker-compose.yml`
-   - CoinMarketCap API key (required for price data fetching)
+   - CoinMarketCap API key (optional - enables real-time price data fetching, system runs in demo mode without it)
 
 4. **Setup database**
    ```bash
@@ -157,8 +158,8 @@ Before getting started, ensure you have the following installed:
 
 5. **Seed initial data**
    
-   **⚠️ Before seeding, ensure these environment variables are set in `apps/backend/.env`:**
-   - `DATA_PROVIDER_COINMARKETCAP_API_KEY` - Your CoinMarketCap API key
+   **⚠️ Before seeding, configure these environment variables in `apps/backend/.env`:**
+   - `DATA_PROVIDER_COINMARKETCAP_API_KEY` - Your CoinMarketCap API key (optional - without it, system runs in demo mode)
    - `ASSETS_PUBLIC_URL` - Public URL for assets (e.g., `http://localhost:4000`)
    <br/>
    ```bash
@@ -172,16 +173,20 @@ Before getting started, ensure you have the following installed:
 
 ### Running the Project
 
-**Option 1: Two Terminal Setup** (Recommended)
+Choose your preferred setup method:
+
+#### 🔧 Development Mode (Local Development)
+
+**Two Terminal Setup** (Recommended for development)
 ```bash
-# Terminal 1: Backend API server
+# Terminal 1: Start backend API server
 npx nx serve backend
 
-# Terminal 2: Frontend application
+# Terminal 2: Start frontend application  
 npx nx serve frontend
 ```
 
-**Option 2: Individual Services**
+**Individual Services** (For testing specific components)
 ```bash
 # Backend only
 npx nx serve backend      # API: http://localhost:4000
@@ -190,12 +195,38 @@ npx nx serve backend      # API: http://localhost:4000
 npx nx serve frontend     # Web: http://localhost:3000
 ```
 
-**Access the application**:
-- **Frontend**: [http://localhost:3000](http://localhost:3000)
-- **Backend API**: [http://localhost:4000](http://localhost:4000)
-- **GraphQL Playground**: [http://localhost:4000/graphql](http://localhost:4000/graphql)
-- **Swagger Documentation**: [http://localhost:4000/api](http://localhost:4000/api)
-- **Database Admin**: [http://localhost:8080](http://localhost:8080)
+#### 🐳 Production Mode (Docker Deployment)
+
+**Using [`docker-compose.prod.yml`](docker-compose.prod.yml)** - Production-optimized container orchestration:
+
+This production configuration provides a complete containerized environment with:
+- **PostgreSQL 17 Database** with persistent data volumes
+- **Optimized Backend API** (multi-stage Docker build)  
+- **Frontend Application** (Next.js standalone output)
+- **Database Admin Interface** (Adminer with Dracula theme)
+- **CLI Tools** for migrations and seeding (via Docker profiles)
+
+**Complete Production Setup**
+```bash
+# Configure environment and deploy everything using docker-compose.prod.yml
+cp env.example .env && \
+docker-compose -f docker-compose.prod.yml up -d database && \
+docker-compose -f docker-compose.prod.yml --profile cli run --rm cli migration:fresh && \
+docker-compose -f docker-compose.prod.yml --profile cli run --rm cli seeder:run && \
+docker-compose -f docker-compose.prod.yml up -d && \
+docker-compose -f docker-compose.prod.yml ps
+```
+
+**📋 Important**: Edit the `.env` file with a secure database password before running. Optionally add your CoinMarketCap API key for real-time price data (system runs in demo mode without it). The `docker-compose.prod.yml` file uses these environment variables for production configuration. See **[Production Setup Guide](PRODUCTION_SETUP.md)** for detailed configuration and troubleshooting.
+
+#### 🌐 Access Your Application
+
+Once running, visit these URLs:
+- **🏠 Frontend Web App**: [http://localhost:3000](http://localhost:3000)
+- **🔧 Backend API**: [http://localhost:4000](http://localhost:4000)
+- **🔍 GraphQL Playground**: [http://localhost:4000/graphql](http://localhost:4000/graphql)
+- **📚 API Documentation**: [http://localhost:4000/api](http://localhost:4000/api)
+- **🗄️ Database Admin**: [http://localhost:8080](http://localhost:8080)
 
 ## Useful links
 
@@ -209,7 +240,7 @@ Learn more:
 ## 📚 Documentation
 
 ### Quick Reference Files
-- **[`env.example`](env.example)** - Environment variables template with all configuration options
+- **[`env.example`](env.example)** - Environment variables template with all configuration options for [docker-compose.prod.yml](docker-compose.prod.yml)
 - **[`LICENSE.md`](LICENSE.md)** - Complete license terms and usage permissions
 
 ### Application Documentation
@@ -382,6 +413,12 @@ GitHub Actions pipeline includes:
 
 ### Development Experience
 - **GraphQL Code Generation**: Add `.d.ts` files generator for `.gql` files in `apps/frontend/src/graphql/`
+  - **Type Safety**: Generate TypeScript types from GraphQL schema and queries for compile-time validation
+  - **IntelliSense Support**: Get autocomplete and error detection for GraphQL query fields and variables
+  - **Query Validation**: Detect missing or unused fields at build time, preventing runtime errors
+  - **Schema Sync**: Automatically update types when backend GraphQL schema changes
+  - **Developer Productivity**: Reduce boilerplate code and improve development speed with generated hooks and utilities
+  - **Runtime Safety**: Know exactly which properties are available in returned data, eliminating guesswork
 - **API Testing**: Comprehensive API test suite with fixtures
 - **Monitoring**: Application performance monitoring and error tracking
 - **Documentation**: Interactive API documentation with examples
