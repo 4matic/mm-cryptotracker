@@ -16,6 +16,7 @@ A comprehensive cryptocurrency tracking application built with modern web techno
 - [Features](#-features)
 - [Technology Stack](#-technology-stack)
 - [Project Architecture](#-project-architecture)
+- [System Architecture](#-system-architecture)
 - [Quick Start](#-quick-start)
   - [Prerequisites](#prerequisites)
   - [Project Setup](#project-setup)
@@ -33,7 +34,7 @@ A comprehensive cryptocurrency tracking application built with modern web techno
 
 - **Real-time Cryptocurrency Tracking**: Monitor live cryptocurrency prices from multiple data providers
 - **Advanced Price Calculations**: Multi-hop indirect price calculation with confidence scoring
-- **Historical Data Analysis**: Complete OHLCV data storage and visualization
+- **Historical Data Analysis**: Complete historical price data storage and visualization
 - **Interactive Price Charts**: Responsive charts using Recharts with detailed market data
 - **Data Provider Management**: Extensible system supporting multiple external APIs (CoinMarketCap, etc.)
 - **GraphQL & REST APIs**: Dual API interfaces for flexible data access
@@ -113,6 +114,318 @@ mm-cryptotracker/
 - **API-First**: GraphQL and REST APIs with comprehensive documentation
 - **Extensible Data Providers**: Plugin architecture for multiple price data sources
 - **Container-Ready**: Full Docker support for development and production
+
+## 🏛 System Architecture
+
+This section provides a comprehensive overview of the entire system architecture, showing how all components interact to deliver the cryptocurrency tracking functionality.
+
+### High-Level Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                               🌐 External Layer                                    │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐                │
+│  │  CoinMarketCap  │    │  Other Data     │    │  Future APIs    │                │
+│  │      API        │    │   Providers     │    │  (Extensible)   │                │
+│  └─────────────────┘    └─────────────────┘    └─────────────────┘                │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                             HTTP/REST API Calls
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                              🎯 Backend Layer (NestJS)                             │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        📡 API Layer                                            │ │
+│  │  ┌─────────────────┐              ┌─────────────────┐                        │ │
+│  │  │   GraphQL API   │              │    REST API     │                        │ │
+│  │  │  (Apollo/Type)  │              │   (Fastify)     │                        │ │
+│  │  │   Port: 4000    │              │   Port: 4000    │                        │ │
+│  │  └─────────────────┘              └─────────────────┘                        │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                       🧠 Business Logic Layer                                  │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │ │
+│  │  │ Crypto      │  │ Price       │  │ Asset       │  │ Trading     │           │ │
+│  │  │ Services    │  │ Fetching    │  │ Management  │  │ Pairs       │           │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘           │ │
+│  │                                                                                │ │
+│  │  ┌─────────────────────────────────────────────────────────────────────────┐   │ │
+│  │  │            Advanced Price Calculation Engine                           │   │ │
+│  │  │  • Multi-hop indirect pricing  • Confidence scoring                   │   │ │
+│  │  │  • Provider priority system    • Fallback mechanisms                  │   │ │
+│  │  └─────────────────────────────────────────────────────────────────────────┘   │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        💾 Data Access Layer                                    │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │ │
+│  │  │   Entity    │  │ Repository  │  │ Migration   │  │   Seeder    │           │ │
+│  │  │ Management  │  │  Pattern    │  │  System     │  │   System    │           │ │
+│  │  │ (MikroORM)  │  │ (Custom)    │  │ (TypeScript)│  │ (TypeScript)│           │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘           │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                              GraphQL Queries (graphql-request)
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                            🖥 Frontend Layer (Next.js 15)                          │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                       🌐 Presentation Layer                                     │ │
+│  │  ┌─────────────────┐              ┌─────────────────┐                        │ │
+│  │  │ React Server    │              │ Client          │                        │ │
+│  │  │ Components      │              │ Components      │                        │ │
+│  │  │ (RSC)           │              │ (Interactivity) │                        │ │
+│  │  └─────────────────┘              └─────────────────┘                        │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        ⚡ Server Actions Layer                                 │ │
+│  │  ┌─────────────────────────────────────────────────────────────────────────┐   │ │
+│  │  │                    Server Actions (src/lib/actions.ts)                 │   │ │
+│  │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                    │   │ │
+│  │  │  │getTradingPairs│  │getTradingPair│  │getDataProviders│                    │   │ │
+│  │  │  │(Pagination) │  │  (Single)   │  │  (Providers)│                    │   │ │
+│  │  │  └─────────────┘  └─────────────┘  └─────────────┘                    │   │ │
+│  │  │                                                                       │   │ │
+│  │  │  GraphQL Client Configuration:                                        │   │ │
+│  │  │  • graphql-request for HTTP transport                                 │   │ │
+│  │  │  • Type-safe queries with .gql files                                  │   │ │
+│  │  │  • Environment-based endpoint configuration                          │   │ │
+│  │  └─────────────────────────────────────────────────────────────────────────┘   │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                       🔧 GraphQL Integration Layer                             │ │
+│  │  ┌─────────────────────────────────────────────────────────────────────────┐   │ │
+│  │  │                   GraphQL Query Files (.gql)                           │   │ │
+│  │  │  • GetTradingPairs.gql    • GetTradingPair.gql                         │   │ │
+│  │  │  • GetDataProviders.gql   • TypeScript definitions (.gql.d.ts)        │   │ │
+│  │  │                                                                       │   │ │
+│  │  │  Webpack Integration:                                                  │   │ │
+│  │  │  • graphql-tag/loader for .gql file processing                        │   │ │
+│  │  │  • Compile-time query parsing and validation                          │   │ │
+│  │  │  • Tree-shaking support for unused queries                            │   │ │
+│  │  └─────────────────────────────────────────────────────────────────────────┘   │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        🎨 UI Component Layer                                   │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │ │
+│  │  │  Shadcn/ui  │  │ Tailwind    │  │  Radix UI   │  │ Custom      │           │ │
+│  │  │ Components  │  │ CSS (v4)    │  │ Primitives  │  │ Components  │           │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘           │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                PostgreSQL Queries
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                            🗄 Database Layer (PostgreSQL 17)                       │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                         📊 Core Database Tables                                 │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │ │
+│  │  │   Assets    │  │ Trading     │  │ Price       │  │ Data        │           │ │
+│  │  │ (crypto/    │  │ Pairs       │  │ History     │  │ Providers   │           │ │
+│  │  │  fiat)      │  │ (relationships)│  │ (Price Data)│  │ (config)    │           │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘           │ │
+│  │                                                                                │ │
+│  │  Features:                                                                     │ │
+│  │  • ACID compliance with transaction support                                   │ │
+│  │  • Advanced indexing for price queries                                        │ │
+│  │  • JSON columns for flexible metadata storage                                 │ │
+│  │  • Foreign key constraints for data integrity                                 │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                               Shared Types & Interfaces
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                         📚 Shared Libraries Layer                                  │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐ │
+│  │                    @mm-cryptotracker/shared-graphql                            │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │ │
+│  │  │ AssetModel  │  │TradingPair  │  │PriceHistory │  │DataProvider │           │ │
+│  │  │   (Types)   │  │   Model     │  │   Model     │  │   Model     │           │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘           │ │
+│  │                                                                                │ │
+│  │  • End-to-end type safety between frontend and backend                        │ │
+│  │  • GraphQL schema definitions with NestJS decorators                          │ │
+│  │  • Shared pagination models and complex object relationships                  │ │
+│  └─────────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Architecture Layers Explained
+
+#### 1. **External Layer** 🌐
+- **Data Providers**: CoinMarketCap and other cryptocurrency APIs
+- **Rate Limiting**: Managed per-provider with fallback mechanisms
+- **API Health Monitoring**: Automatic provider status checking
+
+#### 2. **Backend Layer** 🎯 (NestJS)
+- **API Layer**: Dual GraphQL and REST interfaces
+- **Business Logic**: Modular services with dependency injection
+- **Data Access**: MikroORM entities with custom repositories
+- **Advanced Features**: Multi-hop price calculations with confidence scoring
+
+#### 3. **Frontend Layer** 🖥 (Next.js 15)
+- **Server Components**: React Server Components for optimal performance
+- **Server Actions**: Type-safe server-side data fetching functions
+- **GraphQL Integration**: `.gql` files with TypeScript definitions
+- **UI Components**: Modern component system with Shadcn/ui
+
+#### 4. **Database Layer** 🗄 (PostgreSQL 17)
+- **Relational Design**: Normalized schema with proper foreign keys
+- **Performance**: Optimized indexes for price data queries
+- **Flexibility**: JSON columns for metadata and extensible configurations
+
+#### 5. **Shared Libraries** 📚
+- **Type Safety**: End-to-end TypeScript with shared GraphQL models
+- **Code Reuse**: Common interfaces and utilities across applications
+
+### Next.js Server Actions & GraphQL Integration
+
+This application leverages **Next.js 15 Server Actions** combined with GraphQL to create a powerful, type-safe data fetching architecture that optimizes both developer experience and application performance.
+
+#### Server Actions Architecture
+
+**Location**: [`apps/frontend/src/lib/actions.ts`](apps/frontend/src/lib/actions.ts)
+
+Server Actions provide server-side data fetching functions that can be called directly from React Server Components, eliminating the need for client-side API routes and reducing the JavaScript bundle size.
+
+```typescript
+// Server Action example
+'use server';
+
+export async function getTradingPairs(params: TradingPairsParams = {}) {
+  const client = createGraphQLClient();
+  const data = await client.request<{
+    tradingPairsWithPagination: PaginatedTradingPairsModel;
+  }>(GetTradingPairsQuery, variables);
+  
+  return data.tradingPairsWithPagination;
+}
+```
+
+#### Key Server Actions
+
+1. **`getTradingPairs(params)`**
+   - Fetches paginated cryptocurrency trading pairs
+   - Supports filtering by visibility and pagination parameters
+   - Returns type-safe `PaginatedTradingPairsModel` results
+
+2. **`getTradingPair(slug)`**
+   - Fetches individual trading pair by slug identifier
+   - Includes detailed asset information and calculated prices
+   - Returns complete trading pair with relationships
+
+3. **`getDataProviders()`**
+   - Fetches configured data provider information
+   - Used for methodology and provider status displays
+   - Returns array of `DataProviderModel` objects
+
+#### GraphQL Query Integration
+
+**Query Files Structure**:
+```
+src/graphql/
+├── GetTradingPairs.gql          # Pagination query with filtering
+├── GetTradingPairs.gql.d.ts     # Generated TypeScript definitions
+├── GetTradingPair.gql           # Single pair with relationships
+├── GetTradingPair.gql.d.ts      # Generated TypeScript definitions
+├── GetDataProviders.gql         # Provider information query
+└── GetDataProviders.gql.d.ts    # Generated TypeScript definitions
+```
+
+**Example GraphQL Query** (`GetTradingPairs.gql`):
+```graphql
+query GetTradingPairs($page: Int, $limit: Int, $isVisible: Boolean) {
+  tradingPairsWithPagination(page: $page, limit: $limit, isVisible: $isVisible) {
+    pairs {
+      id
+      symbol
+      slug
+      baseAsset { symbol name logoUrl }
+      quoteAsset { symbol name logoUrl }
+      calculatedPrice { price timestamp metadata }
+    }
+    total
+    page
+    limit
+  }
+}
+```
+
+#### Technical Benefits
+
+**1. Server-Side Rendering (SSR) Optimization**
+- Data fetching happens on the server during React rendering
+- Reduces client-side JavaScript bundle size
+- Improves initial page load performance and SEO
+
+**2. Type Safety End-to-End**
+- GraphQL queries have generated TypeScript definitions
+- Server Actions return properly typed data structures
+- Compile-time validation prevents runtime errors
+
+**3. Optimal Performance**
+- Data is fetched once during server rendering
+- No client-side loading states for initial data
+- Reduced network requests from client
+
+**4. Developer Experience**
+- IntelliSense support for GraphQL fields and variables
+- Automatic code completion in IDE
+- Clear separation between server and client logic
+
+#### Server Component Integration
+
+Server Actions are consumed directly in React Server Components:
+
+```typescript
+// app/page.tsx (Server Component)
+export default async function HomePage() {
+  const result = await getTradingPairs({
+    page: 1,
+    limit: 20,
+    isVisible: true,
+  });
+  
+  return <PriceTable tradingPairs={result.pairs} />;
+}
+```
+
+**Key Advantages**:
+- **No Loading States**: Data is available immediately when the component renders
+- **SEO-Friendly**: Content is fully rendered on the server
+- **Reduced Complexity**: No need for useEffect or state management for initial data
+- **Better Performance**: Faster Time to Interactive (TTI) and Largest Contentful Paint (LCP)
+
+#### GraphQL Client Configuration
+
+The GraphQL client is configured with environment-based endpoints:
+
+```typescript
+function createGraphQLClient(): GraphQLClient {
+  const graphqlUrl = process.env.BACKEND_GRAPHQL_URL;
+  return new GraphQLClient(graphqlUrl);
+}
+```
+
+**Environment Configuration**:
+- `BACKEND_GRAPHQL_URL`: Points to the NestJS GraphQL endpoint
+- Supports different environments (development, staging, production)
+- Automatic error handling for missing configuration
+
+#### Future Enhancements
+
+The current architecture provides a solid foundation for advanced features:
+- **Incremental Static Regeneration (ISR)**: For cached price data
+- **Real-time Updates**: WebSocket integration with GraphQL subscriptions  
+- **GraphQL Code Generation**: Automatic TypeScript type generation from schema
+- **Query Optimization**: Request deduplication and intelligent caching
 
 ## 🚀 Quick Start
 
@@ -215,10 +528,18 @@ This production configuration provides a complete containerized environment with
 # Configure environment and deploy everything using docker-compose.prod.yml
 cp env.example .env && \
 docker-compose -f docker-compose.prod.yml up -d database && \
-docker-compose -f docker-compose.prod.yml --profile cli run cli migration:fresh && \
+docker-compose -f docker-compose.prod.yml --profile cli run --rm cli migration:fresh && \
 docker-compose -f docker-compose.prod.yml --profile cli run --rm cli seeder:run && \
 docker-compose -f docker-compose.prod.yml up -d && \
 docker-compose -f docker-compose.prod.yml ps
+
+# Monitor real-time logs from all services (optional)
+# The -f flag follows logs in real-time, showing output from all containers
+# Use Ctrl+C to exit log monitoring
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Stop all services when needed
+docker-compose -f docker-compose.prod.yml down
 ```
 
 **📋 Important**: Edit the `.env` file with a secure database password before running. Optionally add your CoinMarketCap API key for real-time price data (system runs in demo mode without it). The `docker-compose.prod.yml` file uses these environment variables for production configuration. See **[Production Setup Guide](PRODUCTION_SETUP.md)** for detailed configuration and troubleshooting.
@@ -333,7 +654,7 @@ cp env.example .env
 
 # 2. Standard production deployment process
 docker-compose -f docker-compose.prod.yml up -d database
-docker-compose -f docker-compose.prod.yml --profile cli run cli migration:fresh
+docker-compose -f docker-compose.prod.yml --profile cli run --rm cli migration:fresh
 docker-compose -f docker-compose.prod.yml --profile cli run --rm cli seeder:run
 docker-compose -f docker-compose.prod.yml up -d
 

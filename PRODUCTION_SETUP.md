@@ -2,13 +2,63 @@
 
 This comprehensive guide provides step-by-step instructions for deploying the CryptoTracker application in production using Docker Compose. For development setup, refer to the [main project README](README.md).
 
+## Table of Contents
+
+- [Production Deployment Guide](#production-deployment-guide)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+    - [System Requirements](#system-requirements)
+    - [External Services](#external-services)
+    - [Network Requirements](#network-requirements)
+  - [Environment Configuration](#environment-configuration)
+  - [Production Deployment](#production-deployment)
+    - [Standard Deployment Process](#standard-deployment-process)
+    - [Alternative: Automated Build Script](#alternative-automated-build-script)
+    - [Service Access Points](#service-access-points)
+  - [Architecture Overview](#architecture-overview)
+    - [Core Services](#core-services)
+    - [CLI Service](#cli-service)
+  - [Database Management](#database-management)
+    - [Migration Management](#migration-management)
+    - [Data Seeding](#data-seeding)
+  - [Configuration Management](#configuration-management)
+    - [Environment Variables Reference](#environment-variables-reference)
+      - [Required Configuration](#required-configuration)
+      - [Optional Configuration](#optional-configuration)
+    - [External API Integration](#external-api-integration)
+  - [Operations Management](#operations-management)
+    - [Service Control](#service-control)
+    - [Health Monitoring](#health-monitoring)
+    - [Log Management](#log-management)
+  - [Troubleshooting Guide](#troubleshooting-guide)
+    - [Common Issues and Solutions](#common-issues-and-solutions)
+      - [1. Build and Deployment Issues](#1-build-and-deployment-issues)
+      - [2. API and Configuration Issues](#2-api-and-configuration-issues)
+      - [3. Performance and Resource Issues](#3-performance-and-resource-issues)
+    - [Debug Mode](#debug-mode)
+  - [Production Infrastructure Files](#production-infrastructure-files)
+  - [Development vs Production Differences](#development-vs-production-differences)
+    - [Build Optimizations](#build-optimizations)
+    - [Runtime Configuration](#runtime-configuration)
+    - [Monitoring and Maintenance](#monitoring-and-maintenance)
+  - [Related Documentation](#related-documentation)
+    - [Core Documentation](#core-documentation)
+    - [Module-Specific Documentation](#module-specific-documentation)
+    - [Additional Resources](#additional-resources)
+
 ## Prerequisites
 
 Before proceeding with the production deployment, ensure the following requirements are met:
 
-- **Docker Engine** (v24.0+ recommended)
-- **Docker Compose** (v2.0+ recommended)  
+### System Requirements
+- **[Node.js 20+](https://nodejs.org)** - JavaScript runtime (for local development)
+- **[Docker Engine](https://docker.com)** (v24.0+ recommended) - Container runtime
+- **[Docker Compose](https://docs.docker.com/compose/)** (v2.0+ recommended) - Multi-container orchestration
+
+### External Services
 - **CoinMarketCap API Key** - [Register here](https://coinmarketcap.com/api/) for free tier access
+
+### Network Requirements
 - **Available Ports**: 3000 (frontend), 4000 (backend), 5432 (database), 8080 (admin)
 
 ## Environment Configuration
@@ -96,15 +146,17 @@ The production environment consists of multiple containerized services managed v
   - Automatic backup-friendly volume management
 
 - **🚀 Backend API Server** (port 4000)
-  - NestJS application with FastifyJS adapter for high performance
+  - NestJS 11 application with Fastify adapter for high performance
   - GraphQL API with Apollo Server integration
   - REST API endpoints with OpenAPI/Swagger documentation
+  - MikroORM 6.5 with PostgreSQL 17 integration
   - Health monitoring with `/api/healthcheck` endpoint
   - Production-optimized multi-stage Docker build ([`Dockerfile.prod`](apps/backend/Dockerfile.prod))
   - See [Backend Documentation](apps/backend/README.md) for detailed architecture
 
 - **🌐 Frontend Application** (port 3000)
-  - Next.js 15 with React 19 Server Components
+  - Next.js 15.2 with React 19 Server Components
+  - Tailwind CSS 4 with Shadcn/ui components
   - Standalone output for minimal container footprint
   - Optimized multi-stage Docker build with static asset optimization
   - Production-ready error boundaries and monitoring

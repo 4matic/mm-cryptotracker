@@ -4,6 +4,51 @@ A modern Next.js application for tracking cryptocurrency prices with detailed an
 
 > 📖 **This is part of the MM CryptoTracker monorepo.** For complete project information, setup instructions, and overall architecture, see the **[main project README](../../README.md)**.
 
+## 📋 Table of Contents
+
+- [MM CryptoTracker Frontend](#mm-cryptotracker-frontend)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [🚀 Features](#-features)
+  - [🛠 Tech Stack](#-tech-stack)
+    - [Frontend-Specific Technologies](#frontend-specific-technologies)
+      - [Core Framework](#core-framework)
+      - [UI \& Styling](#ui--styling)
+      - [Data \& State Management](#data--state-management)
+      - [Charts \& Visualization](#charts--visualization)
+      - [Development Tools](#development-tools)
+  - [📁 Project Structure](#-project-structure)
+  - [🚦 Getting Started](#-getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Available Scripts](#available-scripts)
+  - [🔧 Configuration](#-configuration)
+    - [Next.js Configuration](#nextjs-configuration)
+    - [TypeScript Configuration](#typescript-configuration)
+    - [Shadcn/ui Configuration](#shadcnui-configuration)
+  - [📊 GraphQL Integration](#-graphql-integration)
+    - [GraphQL Query Files](#graphql-query-files)
+    - [Server Actions](#server-actions)
+  - [🎨 Styling](#-styling)
+    - [Tailwind CSS](#tailwind-css)
+    - [Component Library](#component-library)
+  - [🧪 Testing](#-testing)
+    - [Jest Configuration](#jest-configuration)
+    - [Running Tests](#running-tests)
+  - [🔄 Data Flow](#-data-flow)
+  - [🌐 Environment Variables](#-environment-variables)
+    - [Required Variables](#required-variables)
+    - [Optional Variables](#optional-variables)
+    - [Next.js System Variables](#nextjs-system-variables)
+    - [Environment File Setup](#environment-file-setup)
+  - [📦 Dependencies](#-dependencies)
+    - [Production Dependencies](#production-dependencies)
+    - [Development Dependencies](#development-dependencies)
+  - [🚀 Deployment](#-deployment)
+    - [Frontend-Only Deployment](#frontend-only-deployment)
+    - [Full Stack Deployment](#full-stack-deployment)
+  - [🤝 Contributing](#-contributing)
+  - [📝 License](#-license)
+
 ## 🚀 Features
 
 - **Real-time Cryptocurrency Tracking**: Monitor cryptocurrency prices with live updates

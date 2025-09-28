@@ -2,6 +2,55 @@
 
 A comprehensive NestJS backend application for tracking cryptocurrency prices and historical data, built with MikroORM, GraphQL, and REST APIs.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Features](#features)
+  - [Core Functionality](#core-functionality)
+  - [API Interfaces](#api-interfaces)
+  - [Technical Features](#technical-features)
+- [Core Modules](#core-modules)
+  - [1. Crypto Module](#1-crypto-module)
+  - [2. Price Fetching Module](#2-price-fetching-module)
+  - [3. GraphQL API](#3-graphql-api)
+- [Database Schema](#database-schema)
+  - [Primary Entities](#primary-entities)
+- [Quick Start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Environment Configuration](#environment-configuration)
+  - [Configuration Structure](#configuration-structure)
+  - [Installation & Setup](#installation--setup)
+  - [Running the Application](#running-the-application)
+  - [Docker Deployment](#docker-deployment)
+- [API Reference](#api-reference)
+  - [REST API Endpoints](#rest-api-endpoints)
+  - [GraphQL API](#graphql-api-1)
+  - [API Documentation](#api-documentation)
+- [Database Management](#database-management)
+  - [Migration Commands](#migration-commands)
+  - [Schema Commands (Development Only)](#schema-commands-development-only)
+  - [Seeder Commands](#seeder-commands)
+- [Architecture & Design](#architecture--design)
+  - [Technical Architecture](#technical-architecture)
+  - [Design Principles](#design-principles)
+  - [Key Components](#key-components)
+- [Development Guide](#development-guide)
+  - [Project Setup for Development](#project-setup-for-development)
+  - [Development Workflow](#development-workflow)
+  - [Adding New Data Providers](#adding-new-data-providers)
+  - [Code Quality Standards](#code-quality-standards)
+- [Related Documentation](#related-documentation)
+  - [Backend Modules](#backend-modules)
+  - [Shared Libraries](#shared-libraries)
+  - [Frontend Integration](#frontend-integration)
+  - [Project Documentation](#project-documentation)
+  - [API References](#api-references)
+- [Troubleshooting](#troubleshooting)
+  - [Common Issues](#common-issues)
+  - [Getting Help](#getting-help)
+- [Contributing](#contributing)
+
 ## Overview
 
 This backend serves as the core API layer for the CryptoTracker application, providing robust cryptocurrency price tracking, asset management, and historical data analysis. It supports both REST and GraphQL interfaces, with automated price fetching from multiple external data providers.
@@ -39,7 +88,7 @@ apps/backend/
 ### Core Functionality
 - **Asset Management**: Comprehensive cryptocurrency and fiat asset tracking
 - **Trading Pair Management**: Dynamic trading pair relationships and price monitoring  
-- **Historical Price Data**: Complete OHLCV data storage and retrieval
+- **Historical Price Data**: Complete historical price data storage and retrieval
 - **Multiple Data Providers**: Extensible provider system with fallback support
 - **Advanced Price Calculations**: Multi-hop indirect price calculation with confidence scoring
 
@@ -116,7 +165,7 @@ Flexible GraphQL interface for efficient data querying.
    - Historical price data with timestamps
    - Provider attribution and metadata
    - Calculated vs. direct price tracking
-   - OHLCV data structure
+   - Historical price data structure
 
 ## Quick Start
 
