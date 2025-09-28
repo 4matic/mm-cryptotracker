@@ -148,10 +148,10 @@ PORT=4000
 # See: src/config/data-provider.config.ts
 DATA_PROVIDER_FETCH_INTERVAL_MS=300000  # 5 minutes (default)
 
-# Seeder-Specific Configuration (required for seeding only)
+# Seeder-Specific Configuration (optional for seeding)
 # See: src/config/seeder.config.ts
 ASSETS_PUBLIC_URL=http://localhost:4000              # For asset logos in seeders
-DATA_PROVIDER_COINMARKETCAP_API_KEY=your_api_key_here  # For provider seeder
+DATA_PROVIDER_COINMARKETCAP_API_KEY=your_api_key_here  # For provider seeder (optional - system runs in demo mode without it)
 ```
 
 ### Configuration Structure
@@ -166,9 +166,15 @@ The application uses a structured configuration system with validation:
 
 **Key Points**:
 - All configs use **Zod validation** for type safety and runtime validation
-- **Seeder config** is only required when running `npm run seeder:run`
+- **Seeder config** is optional when running `npm run seeder:run` - without API key, system runs in demo mode with limited functionality
 - **Environment-specific defaults**: Debug mode automatically disabled in production
 - **Required vs Optional**: Missing required variables will cause startup errors with clear messages
+
+**Demo Mode**: When `DATA_PROVIDER_COINMARKETCAP_API_KEY` is not provided, the system operates in demo mode where:
+- Data providers are still created in the database but without API credentials
+- Real-time price fetching will not be available
+- Historical data can still be seeded and accessed
+- All other functionality (GraphQL/REST APIs, database operations) works normally
 
 ### Installation & Setup
 
@@ -344,9 +350,9 @@ npm run seeder:create --name=YourSeederName
 npm run seeder:run -- --class=AssetSeeder
 ```
 
-**Note**: Seeders require additional environment variables defined in [`seeder.config.ts`](src/config/seeder.config.ts):
+**Note**: Seeders support additional environment variables defined in [`seeder.config.ts`](src/config/seeder.config.ts):
 - `ASSETS_PUBLIC_URL` - For asset logo URLs
-- `DATA_PROVIDER_COINMARKETCAP_API_KEY` - For CoinMarketCap provider configuration
+- `DATA_PROVIDER_COINMARKETCAP_API_KEY` - For CoinMarketCap provider configuration (optional - system runs in demo mode without it)
 
 ## Architecture & Design
 
@@ -549,9 +555,9 @@ This README provides an overview of the backend. For detailed information about 
 
 4. **API Key Issues**
    ```bash
-   # Note: API key is only required for seeding, not runtime
+   # Note: API key is optional for seeding - system runs in demo mode without it
    # Verify seeder environment variables are loaded
-   echo $DATA_PROVIDER_COINMARKETCAP_API_KEY
+   echo $DATA_PROVIDER_COINMARKETCAP_API_KEY  # Optional - if empty, runs in demo mode
    echo $ASSETS_PUBLIC_URL
    
    # Check provider status (runtime)
@@ -560,10 +566,10 @@ This README provides an overview of the backend. For detailed information about 
 
 5. **Seeder Configuration Issues**
    ```bash
-   # Required only for npm run seeder:run
+   # Optional for npm run seeder:run - system runs in demo mode without API key
    # Check seeder config validation
    echo $ASSETS_PUBLIC_URL        # Must be valid URL
-   echo $DATA_PROVIDER_COINMARKETCAP_API_KEY  # Must not be empty
+   echo $DATA_PROVIDER_COINMARKETCAP_API_KEY  # Optional - if empty, provider runs in demo mode
    
    # Run specific seeder to test
    npm run seeder:run -- --class=DataProviderSeeder

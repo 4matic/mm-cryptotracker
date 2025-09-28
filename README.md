@@ -127,6 +127,10 @@ Before getting started, ensure you have the following installed:
 
 ### Project Setup
 
+> **💡 Quick Setup Alternative**: For a simpler setup experience, skip the manual steps below and jump directly to **[Production Mode (Docker Deployment)](#-production-mode-docker-deployment)** which handles database setup, migrations, and seeding automatically.
+
+#### Manual Setup (Development)
+
 1. **Install dependencies**
    ```bash
    npm install
@@ -142,11 +146,11 @@ Before getting started, ensure you have the following installed:
    Copy the environment template files and configure your settings:
    ```bash
    # Copy environment template files
-   cp apps/backend/.env.example apps/backend/.env
+   cp apps/backend/.env.example apps/backend/.env.development
    cp apps/frontend/.env.example apps/frontend/.env
    ```
    
-   **Important**: Update `apps/backend/.env` with required variables. See **[`env.example`](env.example)** for all available configuration options:
+   **Important**: Update `apps/backend/.env.development` with required variables. This file contains all minimal setup needed to run the application. See **[`env.example`](env.example)** for all available configuration options:
    - Database password from `docker-compose.yml`
    - CoinMarketCap API key (optional - enables real-time price data fetching, system runs in demo mode without it)
 
@@ -161,7 +165,7 @@ Before getting started, ensure you have the following installed:
    **⚠️ Before seeding, configure these environment variables in `apps/backend/.env`:**
    - `DATA_PROVIDER_COINMARKETCAP_API_KEY` - Your CoinMarketCap API key (optional - without it, system runs in demo mode)
    - `ASSETS_PUBLIC_URL` - Public URL for assets (e.g., `http://localhost:4000`)
-   <br/>
+
    ```bash
    # Seed the database with initial cryptocurrency data
    npx nx run @mm-cryptotracker/backend:seeder:run
