@@ -12,6 +12,8 @@ import {
   Info,
 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MethodologyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 relative overflow-hidden">
