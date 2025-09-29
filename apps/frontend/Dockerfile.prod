@@ -30,7 +30,7 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy entire workspace structure for Nx to work properly
 COPY . .
 
-# Build the shared library first, then the frontend with Nx
+# Build the frontend with Nx
 RUN npx nx build frontend
 
 RUN cd apps/frontend && \
@@ -59,7 +59,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/package.json ./
 
 # Install production dependencies
 RUN --mount=type=cache,target=/root/.npm \
-    npm install --omit=dev
+    npm install
 
 # Static files and public folder are already included in the dist copy above
 # No additional copying needed as Next.js standalone output contains everything
