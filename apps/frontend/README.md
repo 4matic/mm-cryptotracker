@@ -29,6 +29,9 @@ A modern Next.js application for tracking cryptocurrency prices with detailed an
   - [📊 GraphQL Integration](#-graphql-integration)
     - [GraphQL Query Files](#graphql-query-files)
     - [Server Actions](#server-actions)
+    - [Section Components](#section-components)
+      - [TradingPairsSection (`src/components/trading-pairs-section.tsx`)](#tradingpairssection-srccomponentstrading-pairs-sectiontsx)
+      - [DataProvidersSection (`src/components/data-providers-section.tsx`)](#dataproviderssection-srccomponentsdata-providers-sectiontsx)
   - [🎨 Styling](#-styling)
     - [Tailwind CSS](#tailwind-css)
     - [Component Library](#component-library)
@@ -36,6 +39,7 @@ A modern Next.js application for tracking cryptocurrency prices with detailed an
     - [Jest Configuration](#jest-configuration)
     - [Running Tests](#running-tests)
   - [🔄 Data Flow](#-data-flow)
+    - [Key Benefits of This Architecture:](#key-benefits-of-this-architecture)
   - [🌐 Environment Variables](#-environment-variables)
     - [Required Variables](#required-variables)
     - [Optional Variables](#optional-variables)
@@ -112,10 +116,12 @@ apps/frontend/
 │   │   ├── ui/                # Shadcn/ui components
 │   │   ├── asset-price.tsx    # Price display components
 │   │   ├── data-provider.tsx  # Data provider information
+│   │   ├── data-providers-section.tsx # Data providers section with fetching logic
 │   │   ├── header.tsx         # Site header
 │   │   ├── pair-*.tsx         # Trading pair related components
 │   │   ├── price-*.tsx        # Price related components
-│   │   └── theme-provider.tsx # Theme management
+│   │   ├── theme-provider.tsx # Theme management
+│   │   └── trading-pairs-section.tsx # Trading pairs section with fetching logic
 │   ├── graphql/               # GraphQL queries and TypeScript definitions
 │   │   ├── GetTradingPairs.gql      # Trading pairs pagination query
 │   │   ├── GetTradingPair.gql       # Single trading pair query
@@ -254,6 +260,32 @@ Located in `src/lib/actions.ts`, these provide server-side data fetching:
 - `getTradingPair(slug)` - Fetches individual trading pair
 - `getDataProviders()` - Fetches data provider information
 
+### Section Components
+
+The application uses specialized section components that encapsulate data fetching and presentation:
+
+#### TradingPairsSection (`src/components/trading-pairs-section.tsx`)
+- **Purpose**: Handles trading pairs data fetching and display
+- **Features**:
+  - Configurable pagination (`page`, `limit`, `isVisible` props)
+  - Built-in error handling with user-friendly error messages
+  - Renders `PriceTable` component when data loads successfully
+  - Fallback UI for empty states and loading errors
+
+#### DataProvidersSection (`src/components/data-providers-section.tsx`)
+- **Purpose**: Manages data provider information display
+- **Features**:
+  - Fetches data provider information independently
+  - Displays external data providers with status badges
+  - Shows data collection methodology and update frequency
+  - Graceful error handling that doesn't break page rendering
+
+**Benefits of Section Components:**
+- **Encapsulation**: Each component manages its own data lifecycle
+- **Error Boundaries**: Failures are isolated to individual sections
+- **Reusability**: Components can be easily reused across different pages
+- **Maintainability**: Data fetching logic lives close to the UI that consumes it
+
 ## 🎨 Styling
 
 ### Tailwind CSS
@@ -292,10 +324,19 @@ nx test frontend --coverage # Run with coverage report
 
 > 🔗 **For backend API details and data architecture**, see the **[Backend Documentation](../backend/README.md)**, **[Crypto Module Documentation](../backend/src/app/crypto/README.md)**, and **[Price Fetching Documentation](../backend/src/app/price-fetching/README.md)**.
 
-1. **Pages** use Server Actions to fetch data
-2. **Server Actions** make GraphQL requests to the backend
-3. **Components** receive data as props from pages
-4. **UI Components** render the data with Tailwind styling
+The application follows a component-based data fetching architecture:
+
+1. **Section Components** (`TradingPairsSection`, `DataProvidersSection`) handle their own data fetching
+2. **Server Actions** in `lib/actions.ts` make GraphQL requests to the backend
+3. **Section Components** manage error states and render appropriate UI components
+4. **Pages** compose multiple section components without handling data fetching directly
+5. **UI Components** receive processed data as props and render with Tailwind styling
+
+### Key Benefits of This Architecture:
+- **Separation of Concerns**: Each component handles its own data and error states
+- **Reusability**: Section components can be used across different pages
+- **Error Isolation**: Failures in one section don't affect others
+- **Maintainability**: Data fetching logic is co-located with the components that use it
 
 ## 🌐 Environment Variables
 

@@ -4,6 +4,19 @@
 # This script handles the Docker build with proper error handling
 
 echo "🚀 Starting production build for CryptoTracker..."
+echo ""
+echo "⚠️  IMPORTANT WARNING:"
+echo "   This script includes a Docker system purge command (docker system prune -f)"
+echo "   that removes unused Docker images, containers, and build cache."
+echo "   This will free up disk space but may require rebuilding other Docker"
+echo "   images on your system."
+echo ""
+read -p "Do you want to continue? (y/N): " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "❌ Build cancelled by user."
+    exit 0
+fi
 
 # Clear Docker build cache to avoid stale context issues
 echo "📦 Clearing Docker build cache..."

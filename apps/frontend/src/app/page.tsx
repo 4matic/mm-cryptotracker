@@ -1,28 +1,10 @@
-import { PriceTable } from '@/components/price-table';
+import { TradingPairsSection } from '@/components/trading-pairs-section';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Info, TrendingUp, BarChart3, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { getTradingPairs } from '@/lib/actions';
-import { TradingPairModel } from '@mm-cryptotracker/shared-graphql';
 
 export default async function HomePage() {
-  let tradingPairs: TradingPairModel[] = [];
-  let error: string | null = null;
-
-  try {
-    const result = await getTradingPairs({
-      page: 1,
-      limit: 20,
-      isVisible: true,
-    });
-    tradingPairs = result.pairs;
-  } catch (err) {
-    console.error('Failed to fetch trading pairs:', err);
-    error = err instanceof Error ? err.message : 'Failed to load trading pairs';
-    tradingPairs = [];
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95">
       {/* Background decoration */}
@@ -80,41 +62,8 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Enhanced Error State */}
-          {error && (
-            <div className="max-w-md mx-auto">
-              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 text-center space-y-3">
-                <div className="w-12 h-12 bg-destructive/20 rounded-full flex items-center justify-center mx-auto">
-                  <Info className="h-6 w-6 text-destructive" />
-                </div>
-                <div className="space-y-2">
-                  <p className="text-destructive font-medium">
-                    Unable to load trading pairs
-                  </p>
-                  <p className="text-muted-foreground text-sm">{error}</p>
-                  <p className="text-muted-foreground text-xs">
-                    Please ensure the backend server is running and try again
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Enhanced Price Table Section */}
-          <div className="space-y-8 pb-8">
-            {tradingPairs.length > 0 && (
-              <div className="text-center space-y-2">
-                <h2 className="text-2xl font-semibold">
-                  Current Market Prices
-                </h2>
-                <p className="text-muted-foreground">
-                  {tradingPairs.length} cryptocurrency pairs available
-                </p>
-              </div>
-            )}
-
-            <PriceTable tradingPairs={tradingPairs} />
-          </div>
+          {/* Trading Pairs Section */}
+          <TradingPairsSection />
         </div>
       </main>
     </div>
