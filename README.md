@@ -464,12 +464,11 @@ Before getting started, ensure you have the following installed:
    
    Copy the environment template files and configure your settings:
    ```bash
-   # Copy environment template files
-   cp apps/backend/.env.example apps/backend/.env.development
-   cp apps/frontend/.env.example apps/frontend/.env
+   # Copy environment template files (required for migrations and seeders)
+   cp apps/backend/.env.development apps/backend/.env
    ```
    
-   **Important**: Update `apps/backend/.env.development` with required variables. This file contains all minimal setup needed to run the application. See **[`env.example`](env.example)** for all available configuration options:
+   **Important**: This step is **required** for database migrations and seeders to work properly. Update `apps/backend/.env` with required variables. This file contains all minimal setup needed to run the application. See **[`env.example`](env.example)** for all available configuration options:
    - Database password from `docker-compose.yml`
    - CoinMarketCap API key (optional - enables real-time price data fetching, system runs in demo mode without it)
 

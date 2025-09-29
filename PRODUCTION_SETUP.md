@@ -13,6 +13,7 @@ This comprehensive guide provides step-by-step instructions for deploying the Cr
   - [Environment Configuration](#environment-configuration)
   - [Production Deployment](#production-deployment)
     - [Standard Deployment Process](#standard-deployment-process)
+    - [Deployment with Image Rebuilding](#deployment-with-image-rebuilding)
     - [Alternative: Automated Build Script](#alternative-automated-build-script)
     - [Service Access Points](#service-access-points)
   - [Architecture Overview](#architecture-overview)
@@ -111,6 +112,27 @@ docker-compose -f docker-compose.prod.yml ps
 # 6. Monitor application logs
 docker-compose -f docker-compose.prod.yml logs -f
 ```
+
+### Deployment with Image Rebuilding
+
+When you have made code changes and need to ensure the latest version is deployed, use the `--build` flag to rebuild images before starting services:
+
+```bash
+# Rebuild images and start all services (with fresh code changes)
+docker-compose -f docker-compose.prod.yml up --build -d
+
+# Alternative: Rebuild specific service images
+docker-compose -f docker-compose.prod.yml build backend frontend
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+**When to use `--build`:**
+- After code changes in the application source
+- When Dockerfile or dependencies have been modified
+- For deploying the latest version from your development environment
+- When troubleshooting image-related issues
+
+**Note**: The `--build` flag will rebuild all service images, which may take additional time depending on your system performance and the scope of changes.
 
 ### Alternative: Automated Build Script
 
